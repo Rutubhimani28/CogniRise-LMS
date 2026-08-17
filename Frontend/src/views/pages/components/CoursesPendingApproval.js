@@ -9,6 +9,7 @@ import Link from 'next/link'
 export default function CoursesPendingApproval() {
   const [courses, setCourses] = useState([])
   const [categories, setCategories] = useState([])
+  const [usersMap, setUsersMap] = useState({})
 
   const requestApiData = new Requests()
 
@@ -17,7 +18,21 @@ export default function CoursesPendingApproval() {
       .courseRequest()
       .then(res => {
         if (res?.status === 200) {
-          setCourses(res?.data)
+          const fetchedCourses = res?.data
+          setCourses(fetchedCourses)
+
+          // Fetch unique creator names from createdBy IDs
+          const uniqueIds = [...new Set(fetchedCourses.map(c => c.createdBy).filter(Boolean))]
+          const nameMap = {}
+          Promise.all(
+            uniqueIds.map(id =>
+              requestApiData.getUserById(id).then(r => {
+                if (r?.status === 200) {
+                  nameMap[id] = r.data?.profile?.name || r.data?.name || r.data?.email || id
+                }
+              }).catch(() => {})
+            )
+          ).then(() => setUsersMap({ ...nameMap }))
         }
       })
       .catch(err => {
@@ -35,6 +50,12 @@ export default function CoursesPendingApproval() {
         console.log('Get all categories', err)
       })
   }, [])
+
+  const getCreatorName = (createdBy, createdName) => {
+    if (usersMap[createdBy]) return usersMap[createdBy]
+    if (createdName) return createdName
+    return ''
+  }
 
   const getCategoryName = (categoryId) => {
     const found = categories.find(cat => cat._id === categoryId)
@@ -65,7 +86,7 @@ export default function CoursesPendingApproval() {
                 <div>
                   <h6 className='text-black'>{course.title}</h6>
                   <CardText className='text-black' style={{ fontSize: '12px', letterSpacing: '1.0px' }}>
-                    By {course.createdName}
+                    By {getCreatorName(course.createdBy, course.createdName)}
                   </CardText>
                 </div>
               </div>
