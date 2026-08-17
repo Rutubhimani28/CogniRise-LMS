@@ -125,7 +125,7 @@ export const ProfileForm = () => {
                     label='Year of Establishment'
                   >
                     <MenuItem value=''>None</MenuItem>
-                    <MenuItem value='Freshman'>Startup (< 1 Year)</MenuItem>
+                    <MenuItem value='Freshman'>Startup (&lt; 1 Year)</MenuItem>
                     <MenuItem value='Sophomore'>Early Stage (1-3 Years)</MenuItem>
                     <MenuItem value='Masters'>Growth Stage (3-5 Years)</MenuItem>
                     <MenuItem value='PhD'>Established (5+ Years)</MenuItem>
