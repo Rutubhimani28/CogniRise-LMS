@@ -61,7 +61,7 @@ export const AppLayout = ({ children }) => {
                   letterSpacing: '0.5px'
                 }}
               >
-                Eduvanza - Learning Management System
+                Eduvanza - LMS
               </Typography>
 
               {/* Navigation Links */}

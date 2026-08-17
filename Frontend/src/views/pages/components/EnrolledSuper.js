@@ -20,10 +20,10 @@ export default function EnrolledSuper() {
   }, [])
 
   return (
-    <div className='CurrentCourseBox learnningTimeBox d-flex align-items-center justify-content-between'>
+    <div className='learnningTimeBox d-flex align-items-center justify-content-between'>
       <div>
-        <h6 className='text-white'>Enrolled</h6>
-        <h4 className='text-white' style={{ fontWeight: '700', marginBottom: '0' }}>
+        <h6 className='text-start' style={{ fontSize: '14px', color: '#7d9b17' }}>Enrolled</h6>
+        <h4 className='text-black fw-bolder text-start' style={{ marginBottom: '0' }}>
           {allCourse.length}
         </h4>
       </div>
@@ -33,6 +33,7 @@ export default function EnrolledSuper() {
           style={{
             filter: 'invert(41%) sepia(96%) saturate(600%) hue-rotate(27deg) brightness(93%) contrast(102%)'
           }}
+          alt=''
         />
       </div>
     </div>

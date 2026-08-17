@@ -8,6 +8,7 @@ import Link from 'next/link'
 
 export default function CoursesPendingApproval() {
   const [courses, setCourses] = useState([])
+  const [categories, setCategories] = useState([])
 
   const requestApiData = new Requests()
 
@@ -22,7 +23,23 @@ export default function CoursesPendingApproval() {
       .catch(err => {
         console.log('Get all courses', err)
       })
+
+    requestApiData
+      .getCategories()
+      .then(res => {
+        if (res?.status === 200) {
+          setCategories(res?.data)
+        }
+      })
+      .catch(err => {
+        console.log('Get all categories', err)
+      })
   }, [])
+
+  const getCategoryName = (categoryId) => {
+    const found = categories.find(cat => cat._id === categoryId)
+    return found ? found.name : categoryId
+  }
 
   return (
     <div className='learnningTimeBox'>
@@ -52,9 +69,9 @@ export default function CoursesPendingApproval() {
                   </CardText>
                 </div>
               </div>
-              <div>
+              <div className='text-end'>
                 <h6 className='text-black' style={{ fontWeight: '500' }}>
-                  {course.category}
+                  {getCategoryName(course.category)}
                 </h6>
                 <CardText className='text-black' style={{ fontSize: '12px', letterSpacing: '1.0px' }}>
                   {moment(course.createdAt).format('MM/DD/YYYY')}
