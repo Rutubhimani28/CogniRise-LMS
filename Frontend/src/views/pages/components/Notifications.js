@@ -21,7 +21,7 @@ const NotificationsData = [
   {
     icon: imgConst.newCourse,
     title: 'New Course Released',
-    desc: '21 Jun, 19:04, CogniRise',
+    desc: '21 Jun, 19:04, Eduvanza',
     price: 'Enroll'
   }
 ]

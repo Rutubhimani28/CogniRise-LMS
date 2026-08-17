@@ -61,7 +61,7 @@ export const AppLayout = ({ children }) => {
                   letterSpacing: '0.5px'
                 }}
               >
-                CogniRise LMS
+                Eduvanza - Learning Management System
               </Typography>
 
               {/* Navigation Links */}

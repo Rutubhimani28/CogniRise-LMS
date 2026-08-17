@@ -276,7 +276,7 @@ const UserDropdown = () => {
                       <ul className='list-unstyled text-start ps-2'>
                         <h4 className='text-black cur'>About</h4>
                         <li className='py-2 text-black'>Our Story</li>
-                        <li className='py-2 text-black'>Experience CogniRise</li>
+                        <li className='py-2 text-black'>Experience Eduvanza</li>
                         <li className='py-2 text-black'>Partners</li>
                         <li className='py-2 text-black'>The Roadmap</li>
                       </ul>

@@ -355,7 +355,7 @@ export const LandingPageView = () => {
               <Accordion open={open} toggle={acoToggle} className='custom-accordion'>
                 <AccordionItem className='custom-accordion-item'>
                   <AccordionHeader className='custom-accordion-header !text-black' targetId='1'>
-                    Is CogniRise open to everybody and anybody?
+                    Is Eduvanza open to everybody and anybody?
                   </AccordionHeader>
                   <AccordionBody accordionId='1' className='text-left'>
                     Yes, we are an open, no-stakes and low-commitment community, which means anybody can join in on our
@@ -364,7 +364,7 @@ export const LandingPageView = () => {
                 </AccordionItem>
                 <AccordionItem className='custom-accordion-item'>
                   <AccordionHeader className='custom-accordion-header' targetId='2'>
-                    Do I have to pay for access to CogniRise’s Academy?
+                    Do I have to pay for access to Eduvanza’s Academy?
                   </AccordionHeader>
                   <AccordionBody accordionId='2'>
                     Yes, we are an open, no-stakes and low-commitment community, which means anybody can join in on our
@@ -382,7 +382,7 @@ export const LandingPageView = () => {
                 </AccordionItem>
                 <AccordionItem className='custom-accordion-item'>
                   <AccordionHeader className='custom-accordion-header' targetId='4'>
-                    Can I be a part of a student organization and CogniRise?
+                    Can I be a part of a student organization and Eduvanza?
                   </AccordionHeader>
                   <AccordionBody accordionId='4'>
                     Yes, we are an open, no-stakes and low-commitment community, which means anybody can join in on our
@@ -407,16 +407,16 @@ export const LandingPageView = () => {
           <Box className='marquee-container mt-4 overflow-hidden'>
             <Box className='marquee flex items-center'>
               {[
-                { logo: imgConst.logo1, name: 'CogniRise' },
+                { logo: imgConst.logo1, name: 'Eduvanza' },
                 { logo: imgConst.logo2, name: 'Chainlink' },
                 { logo: imgConst.logo3, name: 'TATUM' },
                 { logo: imgConst.logo4, name: 'METAMASK' },
-                { logo: imgConst.logo1, name: 'CogniRise' },
+                { logo: imgConst.logo1, name: 'Eduvanza' },
                 { logo: imgConst.logo5, name: 'TREEHOUSE' },
-                { logo: imgConst.logo1, name: 'CogniRise' },
+                { logo: imgConst.logo1, name: 'Eduvanza' },
                 { logo: imgConst.logo3, name: 'TATUM' },
                 { logo: imgConst.logo4, name: 'METAMASK' },
-                { logo: imgConst.logo1, name: 'CogniRise' }
+                { logo: imgConst.logo1, name: 'Eduvanza' }
               ].map((partner, index) => (
                 <img
                   key={index}
@@ -440,7 +440,7 @@ export const LandingPageView = () => {
           <div className='col-12 col-xl-5  text-center text-xl-start mb-3 '>
             <div className='mb-3 text-black'></div>
             <p className='text-black '>
-              CogniRise is the first and largest student-led community bringing blockchain education and opportunities
+              Eduvanza is the first and largest student-led community bringing blockchain education and opportunities
               to college campuses worldwide
             </p>
           </div>
@@ -471,7 +471,7 @@ export const LandingPageView = () => {
         <div className='container'>
           <div className='row flex-column flex-md-row justify-content-between align-items-center text-center text-md-start'>
             <div className='col-12 col-md-auto mb-3 mb-md-0 order-1 order-md-0'>
-              <p className='mb-0 text-black'>&copy; 2022, CogniRise</p>
+              <p className='mb-0 text-black'>&copy; 2022, Eduvanza</p>
             </div>
 
             <div className='col-12 col-md-auto order-0 order-md-1 mb-3 mb-md-0'>

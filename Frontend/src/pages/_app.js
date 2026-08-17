@@ -57,8 +57,8 @@ const App = props => {
     <Provider store={store}>
       <CacheProvider value={emotionCache}>
         <Head>
-          <title>CogniRise LMS</title>
-          <meta name='description' content='CogniRise LMS LMS' />
+          <title>Eduvanza - Learning Management System</title>
+          <meta name='description' content='Eduvanza - Learning Management System LMS' />
           <meta name='viewport' content='initial-scale=1, width=device-width' />
         </Head>
 

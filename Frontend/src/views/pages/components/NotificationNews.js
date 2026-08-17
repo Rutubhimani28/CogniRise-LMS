@@ -16,7 +16,7 @@ const NotificationsData = [
   {
     icon: '',
     title: 'New Course Released',
-    desc: '21 Jun, 19:04, CogniRise'
+    desc: '21 Jun, 19:04, Eduvanza'
   }
 ]
 
