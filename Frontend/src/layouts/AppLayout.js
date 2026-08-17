@@ -61,7 +61,7 @@ export const AppLayout = ({ children }) => {
                   letterSpacing: '0.5px'
                 }}
               >
-                College DAO Academy
+                CogniRise LMS
               </Typography>
 
               {/* Navigation Links */}
