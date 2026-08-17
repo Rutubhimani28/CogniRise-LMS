@@ -1,0 +1,37 @@
+.instructorwrap {
+    padding: 30px;
+}
+
+.LessoinDraftwrap {
+    font-family: 'DM Sans';
+}
+
+.card {
+    --bs-card-border-width: 0px !important;
+    --bs-card-bg: transparant !important;
+    border-top: 1px dashed white;
+    border-radius: 0 !important;
+}
+
+/* super-Admin */
+.active-student-chart {
+    height: 225px;
+    width: 950px;
+}
+
+
+/* .viewer-chart {
+    height: 100px;
+    width: 950px;
+} */
+
+/* ----------------------------------------------------mediaQuary------------------------------------------ */
+
+
+@media (max-Width:1400px) {}
+
+@media (max-Width:992px) {}
+
+@media (max-Width:768px) {}
+
+@media (max-width: 767px) and (min-width: 360px) {}

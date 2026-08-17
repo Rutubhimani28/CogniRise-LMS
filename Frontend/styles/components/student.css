@@ -1,0 +1,194 @@
+.studentAccountWrap {
+  padding: 0 30px;
+  font-family: 'DM Sans', sans-serif;
+}
+
+/* LearninigTime */
+.learnningTimeBox {
+  /* width: 33.33%; */
+  /* background: #1f1f1f; */
+  border-radius: 20px;
+  padding: 25px 20px;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.iconBox {
+  width: 56px;
+  height: 56px;
+  background: #f4f7fe;
+  border-radius: 50%;
+  line-height: 56px;
+  text-align: center;
+}
+
+/* MyProgress */
+.iconBoxLinear {
+  background: linear-gradient(135deg, #868cff 0%, #0066ff 100%);
+}
+
+/* CurrentCourse */
+.CurrentCourseBox {
+  background: linear-gradient(135deg, #868cff 0%, #0066ff 100%);
+}
+
+.dark-layout .text-dark {
+  color: #1f1f1f !important;
+}
+
+/* blockChain  */
+.Blockchain {
+  width: 295px;
+  height: 280px;
+  border-radius: 15px;
+  background: #000000;
+}
+
+/* .blockchainBox {
+     padding: 30px;
+} */
+
+.blockchainText {
+  line-height: 34px;
+  padding-right: 210px;
+  padding-top: 5px;
+}
+
+/* notification */
+.notificationIconBox {
+  width: 42px;
+  height: 42px;
+  background: #f4f7fe;
+  border-radius: 50%;
+  line-height: 42px;
+  text-align: center;
+}
+
+/* MyCourses */
+.MyCoursesIconBox {
+  width: 48px;
+  height: 48px;
+  background: #111111;
+  border-radius: 50%;
+  line-height: 48px;
+  text-align: center;
+}
+
+.progress {
+  width: 100%;
+}
+
+.enrollBtn {
+  background: #7d9b17;
+  border: none;
+  border-radius: 70px;
+  padding: 10px 50px;
+  font-family: 'DM Sans';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 24px;
+  text-align: center;
+  letter-spacing: -0.02em;
+  margin-top: 10px;
+  color: #ffffff;
+}
+
+.skipBtn {
+  font-family: 'DM Sans';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 28px;
+  display: flex;
+  align-items: center;
+  letter-spacing: -0.02em;
+  /* box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px; */
+  background: transparent;
+  color: black;
+  border: none;
+  left: 222px;
+  bottom: 51px;
+  margin-left: 25px !important;
+  margin-top: 15px !important;
+  align-items: center;
+  justify-content: center;
+}
+
+.informationText {
+  margin-top: 15px !important;
+  color: black !important;
+}
+
+.sliderImage img {
+  border-radius: 20px !important;
+}
+
+.courseText {
+  font-family: 'DM Sans';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 28px;
+  letter-spacing: -0.02em;
+  text-decoration-line: underline;
+  color: #fcfcfc;
+}
+
+.hourseText {
+  font-family: 'DM Sans';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 28px;
+  letter-spacing: -0.02em;
+  color: #fcfcfc;
+}
+
+@media (max-width: 1400px) {
+}
+
+@media (max-width: 1200px) {
+  .learnningTimeBox {
+    margin: 10px 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .studentAccountWrap {
+    padding: 0 10px;
+  }
+
+  .learnningTimeBox {
+    margin: 10px 0;
+  }
+
+  .blockchainText {
+    padding-right: 0px;
+  }
+}
+
+@media (max-width: 767px) and (min-width: 360px) {
+  .container {
+    max-width: 100%;
+  }
+
+  .blockchainButton {
+    margin-bottom: 10px;
+    text-align: center;
+  }
+}
+.google-btn {
+  text-align: center;
+}
+.google-btn button {
+  background-color: transparent !important;
+  color: #fff !important;
+  box-shadow: none !important;
+  font-size: 16px !important;
+}
+.google-btn button > div {
+  background-color: transparent !important;
+}
+.google-btn svg g {
+  fill: #fff;
+}

@@ -1,0 +1,127 @@
+/* Student Account---------------------------------------------------------------------------------------------------------------------------------------- */
+
+.studentAccountWrap {
+  /* margin-left: 260px; */
+  padding: 0 30px;
+}
+
+/* LearninigTime */
+.learnningTimeBox {
+  /* width: 33.33%; */
+  box-shadow:
+    rgba(50, 50, 93, 0.25) 0px 6px 12px -2px,
+    rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+  /* background: white; */
+  border-radius: 20px;
+  padding: 25px 20px;
+}
+.learnningTimeBox2 {
+  /* width: 33.33%; */
+  box-shadow:
+    rgba(50, 50, 93, 0.25) 0px 6px 12px -2px,
+    rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+
+  background: white;
+  border-radius: 20px;
+  padding: 25px 20px;
+}
+
+.iconBox {
+  width: 56px;
+  height: 56px;
+  background: #f4f7fe;
+  border-radius: 50%;
+  line-height: 56px;
+  text-align: center;
+}
+
+/* MyProgress */
+.iconBoxLinear {
+  /* background: linear-gradient(135deg, #94959c 0%, #8199bc 100%); */
+}
+
+/* CurrentCourse */
+.CurrentCourseBox {
+  background: linear-gradient(135deg, #9f9d9d 0%, #a79fad 100%);
+  /* background: linear-gradient(0deg, #f7f3f3, #f3e2ff), linear-gradient(180deg, #f7f3f3 0%, #f7f3f3 100%); */
+}
+
+.dark-layout .text-dark {
+  color: #1f1f1f !important;
+}
+
+/* blockChain  */
+.Blockchain {
+  width: 295px;
+  height: 280px;
+  border-radius: 15px;
+  background: #000000;
+}
+
+.blockchainBox {
+  padding: 30px;
+}
+
+.blockchainText {
+  line-height: 34px;
+  padding-right: 200px;
+  padding-top: 5px;
+}
+
+/* notification */
+.notificationIconBox {
+  width: 42px;
+  height: 42px;
+  background: #f4f7fe;
+  border-radius: 50%;
+  line-height: 42px;
+  text-align: center;
+}
+
+/* MyCourses */
+.MyCoursesIconBox {
+  width: 48px;
+  height: 48px;
+  background: #111111;
+  border-radius: 50%;
+  line-height: 48px;
+  text-align: center;
+}
+
+.progress {
+  width: 100%;
+}
+
+@media (max-width: 1400px) {
+}
+
+@media (max-width: 1200px) {
+  .learnningTimeBox {
+    margin: 10px 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .studentAccountWrap {
+    padding: 0 10px;
+  }
+
+  .learnningTimeBox {
+    margin: 10px 0;
+  }
+
+  .blockchainText {
+    padding-right: 0px;
+  }
+}
+
+@media (max-width: 767px) and (min-width: 360px) {
+  .container {
+    max-width: 100%;
+  }
+
+  .blockchainButton {
+    margin-bottom: 10px;
+    text-align: center;
+  }
+}
