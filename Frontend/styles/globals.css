@@ -69,13 +69,16 @@ code[class*='language-'] {
   background-size: cover;
   background-color: transparent !important;
 }
+
 #demo-multiple-chip-label {
   color: white !important;
 }
+
 .layout-page-content {
   padding-top: 140px !important;
   background-color: white !important;
 }
+
 /* 
 .customebg .layout-page-content {
   background-image: url(../public/images/landingpage/bg-hero\ 2.png);
@@ -125,20 +128,25 @@ code[class*='language-'] {
   padding: 30px !important;
   margin-top: 0 !important;
 }
+
 @media screen and (max-width: 375px) {
   .navbar-content-container {
     max-width: 134% !important;
   }
+
   .navbar {
     padding: 0 -4px !important;
   }
 }
+
 @media screen and (max-width: 500px) {
   .smallColor {
     font-size: 20px !important;
   }
 }
+
 @media screen and (max-width: 600px) {
+
   /* .MuiBox-root {
     display: flex !important;
     flex-wrap: wrap !important;
@@ -155,6 +163,7 @@ code[class*='language-'] {
     text-align: center !important;
     justify-content: center !important;
   }
+
   .header-actions {
     display: inline-masonry !important;
     flex-wrap: nowrap !important;
@@ -165,18 +174,22 @@ code[class*='language-'] {
   .exploreHeader {
     display: contents !important;
   }
+
   /* .MuiBox-root {
     display: inline !important;
   } */
   .shapingBox {
     display: flex !important;
   }
+
   .header-actions {
     display: flex !important;
   }
+
   .actions {
     display: flex !important;
   }
+
   .blackbox {
     display: contents !important;
   }
@@ -250,13 +263,15 @@ code[class*='language-'] {
   /* border: 1px solid #ffffff !important; */
   /* border-left: 0; */
 }
+
 .enterpriser-form .form-control {
   /* background-color: #2c2c2c42 !important; */
-  color: black !important ;
+  color: black !important;
 }
+
 .enterpriser-form .btn-secondary {
   background-color: #5546ff;
-  color: #d9d9d9 !important ;
+  color: #d9d9d9 !important;
 }
 
 /* .MuiPaper-root,
@@ -284,9 +299,11 @@ code[class*='language-'] {
   border-left: 0 !important;
   border-right: 0 !important;
 }
+
 .invertedImage {
   filter: invert(1);
 }
+
 .dropdown-menu {
   color: #b4b7bd !important;
   background-color: white;
@@ -322,13 +339,16 @@ code[class*='language-'] {
 .nav-tabs .nav-item.show .nav-link {
   border-bottom: 1px solid #eae8fa !important;
 }
+
 .drop-btn {
   color: black !important;
   background-color: #eae8fa;
 }
+
 .drop-btn li {
   color: black !important;
 }
+
 /* footer */
 .layout-footer {
   border-top: 1px solid #414141;
@@ -352,18 +372,22 @@ code[class*='language-'] {
 .cursor-pointer {
   cursor: pointer;
 }
+
 .css-smtnqe-MuiToolbar-root {
   box-shadow: none !important;
 }
+
 /* search box */
 .search-text #outlined-adornment-weight {
   padding: 9px 15px !important;
 }
+
 .custom-select {
   padding: 0px 15px !important;
   color: black !important;
   background-color: white !important;
-  border-radius: 5px !important; /* optional */
+  border-radius: 5px !important;
+  /* optional */
   border: 1px solid black !important;
 }
 
@@ -371,12 +395,15 @@ code[class*='language-'] {
   /* For dropdown icon if needed */
   color: black !important;
 }
+
 .search-text .MuiSelect-select {
   padding: 9px 15px !important;
 }
+
 .search-text div div {
   width: 290px;
 }
+
 .marquee {
   display: flex;
   animation: scroll 20s linear infinite;
@@ -386,35 +413,42 @@ code[class*='language-'] {
   0% {
     transform: translateX(100%);
   }
+
   100% {
     transform: translateX(-100%);
   }
 }
+
 @media (max-width: 763px) {
   .search-text div div {
     width: 262px;
   }
 }
+
 @media (max-width: 557px) {
   .search-text div div {
     width: 350px;
   }
 }
+
 @media (max-width: 425px) {
   .search-text div div {
     width: 150px !important;
   }
 }
+
 @media (max-width: 429px) {
   .search-text div div {
     width: 250px;
   }
 }
+
 @media (max-width: 375px) {
   .search-text div div {
     width: 200px;
   }
 }
+
 @media (max-width: 337px) {
   .search-text div div {
     width: 150px;
@@ -461,6 +495,7 @@ code[class*='language-'] {
   height: 100vh;
   width: 100%;
 }
+
 .ragister-page {
   background-color: white !important;
   /* background-image: url(../public/images/landingpage/bg-hero\ 1.png); */
@@ -470,6 +505,7 @@ code[class*='language-'] {
   background-position: center;
   background-size: cover;
 }
+
 /* .MuiDialog-scrollBody {
   background-color: white !important;
 } */
@@ -492,19 +528,23 @@ code[class*='language-'] {
   position: relative;
   z-index: 999;
 }
+
 .layout-ragister {
   box-shadow: none !important;
 }
+
 .layout-content-wrapper .css-nrp8av-MuiPaper-root-MuiAppBar-root {
   /* box-shadow: none !important;
   background-color: transparent !important;
   backdrop-filter: none !important; */
 }
+
 .layout-content-wrapper header {
   position: fixed !important;
   background-color: white !important;
   /* box-shadow: none !important; */
 }
+
 /* .login-wrap::before{
     z-index: -1;
     top: -79px;
@@ -579,14 +619,17 @@ code[class*='language-'] {
 .icon {
   margin: 10px;
 }
+
 .addHeadingColor {
   color: #7d9b17 !important;
 }
+
 .list-unstyled a {
   color: black !important;
   font-size: 19px;
   text-decoration: none;
 }
+
 .header-menu a {
   color: black !important;
   font-size: 19px;
@@ -617,6 +660,7 @@ code[class*='language-'] {
   background-color: white !important;
   -webkit-text-fill-color: black !important;
 }
+
 .student-icon {
   margin: 10px;
 }
@@ -633,6 +677,7 @@ code[class*='language-'] {
 .course-tab-list {
   border-bottom: 0px solid #e4e6f400 !important;
 }
+
 .tab-label {
   font-size: 0.75rem;
 }
@@ -648,6 +693,7 @@ code[class*='language-'] {
     font-size: 1rem;
   }
 }
+
 .Quiz-submit {
   border-radius: 10px;
   padding: 7px 27px;
@@ -669,8 +715,7 @@ code[class*='language-'] {
   max-width: 780px !important;
 } */
 
-.MuiAppBar-positionSticky {
-}
+.MuiAppBar-positionSticky {}
 
 .apexcharts-tooltip {
   background: #f3f3f3;
@@ -682,11 +727,13 @@ a.carousel-control-prev {
   bottom: 80px;
   width: 40px;
 }
+
 a.carousel-control-next {
   width: 40px;
   top: 80px;
   bottom: 80px;
 }
+
 .carousel-indicators {
   display: none;
 }
@@ -715,12 +762,14 @@ a.carousel-control-next {
 .iconify.iconify--tabler {
   color: black;
 }
+
 .bg-custom-brown {
   box-shadow:
     rgba(50, 50, 93, 0.25) 0px 6px 12px -2px,
     rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
   background-color: white !important;
 }
+
 .navbar-collapse .btn:focus,
 .btn:active {
   background-color: transparent !important;
@@ -751,13 +800,15 @@ a.carousel-control-next {
 }
 
 .text {
-  display: block; /* or inline-block */
+  display: block;
+  /* or inline-block */
   text-overflow: ellipsis;
   word-wrap: break-word;
   overflow: hidden;
   max-height: 3.4em;
   line-height: 1.8em;
 }
+
 .form-control:disabled {
   color: white;
   background: transparent !important;
@@ -766,16 +817,19 @@ a.carousel-control-next {
 .rdw-editor-main {
   height: 300px !important;
 }
+
 .model-border-radius,
 .css-19rdwq3 {
   border-radius: 10px !important;
   border: none !important;
 }
+
 .css-1yovagg-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input {
   /* padding: 8.5px 14px !important; */
   /* background: white !important; */
   /* color: white !important; */
 }
+
 .custom-textarea {
   border: 1px solid black !important;
   border-radius: 5px;
@@ -842,7 +896,7 @@ a.carousel-control-next {
 } */
 
 /* When the checkbox is checked, add a blue background */
-.customCheckbox input:checked ~ .checkmark {
+.customCheckbox input:checked~.checkmark {
   background-color: #2c2c2c;
 }
 
@@ -854,7 +908,7 @@ a.carousel-control-next {
 }
 
 /* Show the checkmark when checked */
-.customCheckbox input:checked ~ .checkmark:after {
+.customCheckbox input:checked~.checkmark:after {
   display: block;
 }
 
@@ -869,4 +923,8 @@ a.carousel-control-next {
   -webkit-transform: rotate(35deg);
   -ms-transform: rotate(35deg);
   transform: rotate(35deg);
+}
+
+::-webkit-scrollbar {
+  display: none;
 }

@@ -35,7 +35,16 @@ export const AppLayout = ({ children }) => {
   const navLinks = getNavLinks()
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', backgroundColor: '#F4F5FA' }}>
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        height: user?.role === 'admin' ? '100vh' : 'auto',
+        minHeight: '100vh',
+        overflow: user?.role === 'admin' ? 'hidden' : 'visible',
+        backgroundColor: '#F4F5FA'
+      }}
+    >
       <AppBar
         position='sticky'
         elevation={0}
@@ -155,7 +164,7 @@ export const AppLayout = ({ children }) => {
         </Container>
       </AppBar>
 
-      <Box component='main' sx={{ flexGrow: 1, py: 4 }}>
+      <Box component='main' sx={{ flexGrow: 1, py: 2, overflowY: user?.role === 'admin' ? 'auto' : 'visible' }}>
         <Container maxWidth='xl'>{children}</Container>
       </Box>
     </Box>

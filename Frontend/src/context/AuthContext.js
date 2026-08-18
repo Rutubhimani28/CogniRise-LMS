@@ -38,7 +38,7 @@ const AuthProvider = ({ children }) => {
       const userData = window.localStorage.getItem('userData')
       if (storedToken) {
         setLoading(false)
-        setUser(userData)
+        setUser(JSON.parse(userData))
       } else {
         localStorage.removeItem('userData')
         localStorage.removeItem('refreshToken')

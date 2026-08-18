@@ -106,17 +106,19 @@ function EnhancedTableToolbar(props) {
   const { numSelected } = props
   return (
     <Toolbar
+      variant='dense'
       sx={{
         pl: { sm: 2 },
         pr: { xs: 1, sm: 1 },
+        minHeight: '48px !important',
         ...(numSelected > 0 && {
           bgcolor: theme => alpha(theme.palette.primary.main, theme.palette.action.activatedOpacity)
         })
       }}
     >
       <Typography
-        sx={{ flex: '1 1 100%', color: '#7d9b17' }}
-        variant='h5'
+        sx={{ flex: '1 1 100%', color: '#7d9b17', fontSize: '1.1rem' }}
+        variant='h6'
         id='tableTitle'
         component='div'
         className='ps-4 '
@@ -151,7 +153,7 @@ export const AdminCoursesTable = () => {
   const [orderBy, setOrderBy] = useState('Categories')
   const [selected, setSelected] = useState([])
   const [page, setPage] = useState(0)
-  const [rowsPerPage, setRowsPerPage] = useState(25)
+  const [rowsPerPage, setRowsPerPage] = useState(10)
   const [course, setCourse] = useState([])
   const [confirmApprove, setConfirmApprove] = useState(false)
   const [courseId, setCourseId] = useState({})
@@ -232,7 +234,7 @@ export const AdminCoursesTable = () => {
     <Box sx={{ width: '100%' }} className='enaterpriseCourseWrap'>
       <Paper sx={{ width: '100%', mb: 2, backgroundColor: 'white' }}>
         <EnhancedTableToolbar numSelected={selected.length} />
-        <TableContainer sx={{ maxHeight: 600 }}>
+        <TableContainer sx={{ maxHeight: 'calc(100vh - 300px)' }}>
           <Table
             stickyHeader
             size='small'

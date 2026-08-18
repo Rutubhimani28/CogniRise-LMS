@@ -7,9 +7,15 @@ import FormControl from '@mui/material/FormControl'
 import { styled, useTheme } from '@mui/material/styles'
 import { useAuth } from 'src/hooks/useAuth'
 import { useSettings } from 'src/@core/hooks/useSettings'
-import InputPasswordToggle from 'src/@core/components/input-password-toggle/index'
-import { Row, Col, Form, Card, Input, Label, Button, CardBody, CardTitle, CardHeader, FormFeedback } from 'reactstrap'
-import { Dialog, DialogContent, MenuItem, Select } from '@mui/material'
+import TextField from '@mui/material/TextField'
+import InputLabel from '@mui/material/InputLabel'
+import OutlinedInput from '@mui/material/OutlinedInput'
+import InputAdornment from '@mui/material/InputAdornment'
+import IconButton from '@mui/material/IconButton'
+import Icon from 'src/@core/components/icon'
+import FormHelperText from '@mui/material/FormHelperText'
+import Button from '@mui/material/Button'
+import { MenuItem, Select } from '@mui/material'
 
 import imgConst from 'src/configs/imgConst'
 
@@ -43,6 +49,9 @@ export const RegisterForm = () => {
   const [show1, setShow1] = useState(true)
   const [show, setShow] = useState(false)
   const [formValue, setFormValue] = useState([])
+
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
   useEffect(() => {
     requestApiData
@@ -124,427 +133,379 @@ export const RegisterForm = () => {
   })
 
   return (
-    <div className='login-page ragister-page' style={{ backgroundColor: 'white' }}>
-      <Dialog
-        fullWidth
-        open={show1}
-        maxWidth='sm'
-        scroll='body'
-        onClose={handleBack}
-        sx={{ backgroundColor: 'white' }}
-        BackdropProps={{
-          style: { backgroundColor: 'white' }
-        }}
-        PaperProps={{
-          style: {
-            backgroundColor: 'white !important',
-            borderRadius: '12px'
-          }
-        }}
-      >
-        <DialogContent
-          sx={{
-            position: 'relative',
-            backgroundColor: 'white',
-            px: theme => [`${theme.spacing(5)} !important`, `${theme.spacing(15)} !important`],
-            py: theme => [`${theme.spacing(7)} !important`, `${theme.spacing(12.5)} !important`]
-          }}
-        >
-          <Box className='d-flex justify-content-center align-items-center'>
-            <Box className='login-wrap layout-ragister'>
-              <div className='box-border'></div>
+    <div className='login-page'>
+      {show1 && (
+        <Box className='login-wrap'>
+          <RightWrapper>
+            <Box
+              sx={{
+                p: [6, 12],
+                height: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}
+            >
+              <Box sx={{ width: '100%', maxWidth: 400 }}>
+                <div className='pb-5 d-flex align-items-center justify-content-center w-100'>
+                  <img src={imgConst.mainLogo} alt='LOGO' className='text-black' width={'80px'} height={'80px'} />
+                </div>
 
-              <RightWrapper>
-                <Box
-                  sx={{
-                    p: [6, 12],
-                    height: '100%',
-                    display: 'flex',
-                    color: 'black',
-                    alignItems: 'center',
-                    justifyContent: 'center'
-                  }}
-                >
-                  <Box sx={{ width: '100%', maxWidth: 400 }}>
-                    <Box
-                      sx={{ pb: 10, display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%' }}
-                    >
-                      <img
-                        src={imgConst.mainLogo}
-                        alt='logo'
-                        width={'80px'}
-                        height={'80px'}
-                        style={{ display: 'block', margin: '0 auto' }}
-                      />
-                    </Box>
+                <form noValidate autoComplete='off' onSubmit={formik1.handleSubmit} className='auth-register-form'>
+                  <InputLabel htmlFor='register-email' error={Boolean(formik1.errors.email && formik1.touched.email)} className='text-black'>
+                    Email
+                  </InputLabel>
+                  <FormControl fullWidth sx={{ mb: 3 }}>
+                    <TextField
+                      autoFocus
+                      name='email'
+                      id='register-email'
+                      value={formik1.values.email}
+                      className='custom-input'
+                      sx={{
+                        border: '1px solid black',
+                        borderRadius: '5px',
+                        '& input': {
+                          color: 'black'
+                        },
+                        '& input:focus': {
+                          color: 'black'
+                        }
+                      }}
+                      onBlur={formik1.handleBlur}
+                      onChange={formik1.handleChange}
+                      InputProps={{
+                        classes: { input: 'custom-input' }
+                      }}
+                      placeholder='john@example.edu'
+                      error={Boolean(formik1.errors.email && formik1.touched.email)}
+                    />
+                    {formik1.errors.email && formik1.touched.email && (
+                      <FormHelperText sx={{ color: 'error.main' }}>{formik1.errors.email}</FormHelperText>
+                    )}
+                  </FormControl>
+
+                  <InputLabel htmlFor='register-password' error={Boolean(formik1.errors.password && formik1.touched.password)} className='text-black'>
+                    Password
+                  </InputLabel>
+                  <FormControl fullWidth sx={{ mb: 3 }}>
+                    <OutlinedInput
+                      name='password'
+                      id='register-password'
+                      className='custom-input'
+                      value={formik1.values.password}
+                      onBlur={formik1.handleBlur}
+                      onChange={formik1.handleChange}
+                      sx={{
+                        border: '1px solid black',
+                        borderRadius: '5px',
+                        '& input': {
+                          color: 'black'
+                        },
+                        '& input:focus': {
+                          color: 'black'
+                        }
+                      }}
+                      error={Boolean(formik1.errors.password && formik1.touched.password)}
+                      type={showPassword ? 'text' : 'password'}
+                      placeholder='Password'
+                      inputProps={{
+                        className: 'custom-input'
+                      }}
+                      endAdornment={
+                        <InputAdornment position='end'>
+                          <IconButton
+                            edge='end'
+                            onMouseDown={e => e.preventDefault()}
+                            onClick={() => setShowPassword(!showPassword)}
+                          >
+                            <Icon icon={showPassword ? 'tabler:eye' : 'tabler:eye-off'} fontSize={20} />
+                          </IconButton>
+                        </InputAdornment>
+                      }
+                    />
+                    {formik1.errors.password && formik1.touched.password && (
+                      <FormHelperText sx={{ color: 'error.main' }}>{formik1.errors.password}</FormHelperText>
+                    )}
+                  </FormControl>
+
+                  <InputLabel htmlFor='register-confirmpassword' error={Boolean(formik1.errors.confirmPassword && formik1.touched.confirmPassword)} className='text-black'>
+                    Confirm Password
+                  </InputLabel>
+                  <FormControl fullWidth sx={{ mb: 4 }}>
+                    <OutlinedInput
+                      name='confirmPassword'
+                      id='register-confirmpassword'
+                      className='custom-input'
+                      value={formik1.values.confirmPassword}
+                      onBlur={formik1.handleBlur}
+                      onChange={formik1.handleChange}
+                      sx={{
+                        border: '1px solid black',
+                        borderRadius: '5px',
+                        '& input': {
+                          color: 'black'
+                        },
+                        '& input:focus': {
+                          color: 'black'
+                        }
+                      }}
+                      error={Boolean(formik1.errors.confirmPassword && formik1.touched.confirmPassword)}
+                      type={showConfirmPassword ? 'text' : 'password'}
+                      placeholder='Confirm Password'
+                      inputProps={{
+                        className: 'custom-input'
+                      }}
+                      endAdornment={
+                        <InputAdornment position='end'>
+                          <IconButton
+                            edge='end'
+                            onMouseDown={e => e.preventDefault()}
+                            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                          >
+                            <Icon icon={showConfirmPassword ? 'tabler:eye' : 'tabler:eye-off'} fontSize={20} />
+                          </IconButton>
+                        </InputAdornment>
+                      }
+                    />
+                    {formik1.errors.confirmPassword && formik1.touched.confirmPassword && (
+                      <FormHelperText sx={{ color: 'error.main' }}>{formik1.errors.confirmPassword}</FormHelperText>
+                    )}
+                  </FormControl>
+
+                  <Button fullWidth size='large' type='submit' className='beforeLoginbtn'>
+                    Next
+                  </Button>
+
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      flexWrap: 'wrap',
+                      justifyContent: 'center',
+                      marginTop: '20px'
+                    }}
+                  >
+                    <Typography sx={{ color: 'black', mr: 2 }}>If you already have an account?</Typography>
+                    <Typography variant='body2'>
+                      <LinkStyled href='/login' className='text-black' sx={{ fontSize: '1rem' }}>
+                        Sign In
+                      </LinkStyled>
+                    </Typography>
+                  </Box>
+                </form>
+              </Box>
+            </Box>
+          </RightWrapper>
+        </Box>
+      )}
+
+      {show && (
+        <Box className='login-wrap' sx={{ height: 'auto', maxHeight: '90vh', overflowY: 'auto', width: '700px', py: 4 }}>
+          <RightWrapper sx={{ maxWidth: '100% !important' }}>
+            <Box
+              sx={{
+                p: [4, 8],
+                height: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}
+            >
+              <Box sx={{ width: '100%' }}>
+                <Typography variant='h5' className='text-black mb-4' sx={{ fontWeight: 'bold' }}>
+                  Profile Details
+                </Typography>
+
+                <form noValidate autoComplete='off' onSubmit={formik2.handleSubmit} className='auth-register-form'>
+                  <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 3 }}>
                     <Box>
-                      <Form className='auth-register-form ' onSubmit={formik1.handleSubmit}>
-                        <div className='mb-3'>
-                          <Label className='form-label text-black' for='register-email'>
-                            Email<span className='text-danger'> * </span>
-                          </Label>
-                          <Input
-                            name='email'
-                            type='email'
-                            id='register-email'
-                            placeholder='john@example.edu'
-                            value={formik1.values.email}
-                            onChange={formik1.handleChange}
-                            onBlur={formik1.handleBlur}
-                            invalid={formik1.errors.email && formik1.touched.email == true}
-                          />
-                          {formik1.errors.email && formik1.touched.email == true ? (
-                            <FormFeedback>{formik1.errors.email}</FormFeedback>
-                          ) : null}
-                        </div>
+                      <InputLabel className='text-black'>Name</InputLabel>
+                      <FormControl fullWidth>
+                        <TextField
+                          name='name'
+                          value={formik2.values.name || ''}
+                          className='custom-input'
+                          sx={{ border: '1px solid black', borderRadius: '5px', '& input': { color: 'black' } }}
+                          onBlur={formik2.handleBlur}
+                          onChange={formik2.handleChange}
+                          error={Boolean(formik2.errors.name && formik2.touched.name)}
+                        />
+                        {formik2.errors.name && formik2.touched.name && (
+                          <FormHelperText sx={{ color: 'error.main' }}>{formik2.errors.name}</FormHelperText>
+                        )}
+                      </FormControl>
+                    </Box>
 
-                        <div className='mb-3'>
-                          <Label className='form-label text-black' for='register-password'>
-                            Password<span className='text-danger'> * </span>
-                          </Label>
-                          <InputPasswordToggle
-                            name='password'
-                            className='input-group-merge'
-                            id='register-password'
-                            value={formik1.values.password}
-                            onChange={formik1.handleChange}
-                            onBlur={formik1.handleBlur}
-                            invalid={formik1.errors.password && formik1.touched.password == true}
-                          />
-                          {formik1.errors.password && formik1.touched.password == true ? (
-                            <FormFeedback>{formik1.errors.password}</FormFeedback>
-                          ) : null}
-                        </div>
+                    <Box>
+                      <InputLabel className='text-black'>Graduation</InputLabel>
+                      <FormControl fullWidth>
+                        <TextField
+                          name='graduation'
+                          value={formik2.values.graduation || ''}
+                          className='custom-input'
+                          sx={{ border: '1px solid black', borderRadius: '5px', '& input': { color: 'black' } }}
+                          onChange={formik2.handleChange}
+                        />
+                      </FormControl>
+                    </Box>
 
-                        <div className='mb-4'>
-                          <Label className='form-label text-black' for='register-password'>
-                            Confirm Password<span className='text-danger'> * </span>
-                          </Label>
-                          <InputPasswordToggle
-                            name='confirmPassword'
-                            className='input-group-merge'
-                            id='register-confirmpassword'
-                            value={formik1.values.confirmPassword}
-                            onChange={formik1.handleChange}
-                            onBlur={formik1.handleBlur}
-                            invalid={formik1.errors.confirmPassword && formik1.touched.confirmPassword == true}
-                          />
-                          {formik1.errors.confirmPassword && formik1.touched.confirmPassword == true ? (
-                            <FormFeedback>{formik1.errors.confirmPassword}</FormFeedback>
-                          ) : null}
-                        </div>
-                        <Button className='mb-4 ragisterBtn' type='submit' block>
-                          Next
-                        </Button>
-                        <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'center' }}>
-                          <Typography className='text-black ' sx={{ mr: 2 }}>
-                            If you already have an account?
-                          </Typography>
-                          <Typography variant='body2'>
-                            <LinkStyled href='/login' className='text-black' sx={{ fontSize: '1rem' }}>
-                              Sign In
-                            </LinkStyled>
-                          </Typography>
-                        </Box>
-                      </Form>
+                    <Box sx={{ gridColumn: '1 / -1' }}>
+                      <InputLabel className='text-black'>Profile Slug</InputLabel>
+                      <FormControl fullWidth>
+                        <TextField
+                          name='profileSlug'
+                          value={formik2.values.profileSlug || ''}
+                          className='custom-input'
+                          sx={{ border: '1px solid black', borderRadius: '5px', '& input': { color: 'black' } }}
+                          onChange={formik2.handleChange}
+                        />
+                        <FormHelperText sx={{ color: 'black' }}>
+                          Profile Link: https://collegedao.io/person/{formik2.values.profileSlug}
+                        </FormHelperText>
+                      </FormControl>
+                    </Box>
+
+                    <Box>
+                      <InputLabel className='text-black'>Major</InputLabel>
+                      <FormControl fullWidth>
+                        <TextField
+                          name='major'
+                          value={formik2.values.major || ''}
+                          className='custom-input'
+                          sx={{ border: '1px solid black', borderRadius: '5px', '& input': { color: 'black' } }}
+                          onChange={formik2.handleChange}
+                        />
+                      </FormControl>
+                    </Box>
+
+                    <Box>
+                      <InputLabel className='text-black'>Minor</InputLabel>
+                      <FormControl fullWidth>
+                        <TextField
+                          name='minor'
+                          value={formik2.values.minor || ''}
+                          className='custom-input'
+                          sx={{ border: '1px solid black', borderRadius: '5px', '& input': { color: 'black' } }}
+                          onChange={formik2.handleChange}
+                        />
+                      </FormControl>
+                    </Box>
+
+                    <Box>
+                      <InputLabel className='text-black'>University</InputLabel>
+                      <FormControl fullWidth>
+                        <TextField
+                          name='university'
+                          value={formik2.values.university || ''}
+                          className='custom-input'
+                          sx={{ border: '1px solid black', borderRadius: '5px', '& input': { color: 'black' } }}
+                          onChange={formik2.handleChange}
+                        />
+                      </FormControl>
+                    </Box>
+
+                    <Box>
+                      <InputLabel className='text-black'>Location</InputLabel>
+                      <FormControl fullWidth>
+                        <TextField
+                          name='location'
+                          value={formik2.values.location || ''}
+                          className='custom-input'
+                          sx={{ border: '1px solid black', borderRadius: '5px', '& input': { color: 'black' } }}
+                          onChange={formik2.handleChange}
+                        />
+                      </FormControl>
+                    </Box>
+
+                    <Box>
+                      <InputLabel className='text-black'>Interests</InputLabel>
+                      <FormControl fullWidth>
+                        <Select
+                          name='interests'
+                          value={formik2.values.interests || ''}
+                          onChange={formik2.handleChange}
+                          displayEmpty
+                          sx={{
+                            border: '1px solid black',
+                            borderRadius: '5px',
+                            color: 'black',
+                            backgroundColor: 'white',
+                            '.MuiSelect-icon': { color: 'black' },
+                            '& .MuiOutlinedInput-notchedOutline': { border: 'none' }
+                          }}
+                        >
+                          {allCategory &&
+                            allCategory.map((item, index) => (
+                              <MenuItem key={index} value={item.name} className='text-black'>
+                                {item.name}
+                              </MenuItem>
+                            ))}
+                        </Select>
+                      </FormControl>
+                    </Box>
+
+                    <Box>
+                      <InputLabel className='text-black'>Experience Level</InputLabel>
+                      <FormControl fullWidth>
+                        <TextField
+                          name='expLevel'
+                          value={formik2.values.expLevel || ''}
+                          className='custom-input'
+                          sx={{ border: '1px solid black', borderRadius: '5px', '& input': { color: 'black' } }}
+                          onChange={formik2.handleChange}
+                        />
+                      </FormControl>
+                    </Box>
+
+                    <Box sx={{ gridColumn: '1 / -1', mt: 2 }}>
+                      <Typography variant='h6' className='text-black mb-2'>
+                        Social accounts
+                      </Typography>
+                    </Box>
+
+                    <Box>
+                      <InputLabel className='text-black'>Twitter</InputLabel>
+                      <FormControl fullWidth>
+                        <TextField
+                          name='twitter'
+                          value={formik2.values.twitter || ''}
+                          className='custom-input'
+                          sx={{ border: '1px solid black', borderRadius: '5px', '& input': { color: 'black' } }}
+                          onChange={formik2.handleChange}
+                        />
+                      </FormControl>
+                    </Box>
+
+                    <Box>
+                      <InputLabel className='text-black'>LinkedIn</InputLabel>
+                      <FormControl fullWidth>
+                        <TextField
+                          name='linkedin'
+                          value={formik2.values.linkedin || ''}
+                          className='custom-input'
+                          sx={{ border: '1px solid black', borderRadius: '5px', '& input': { color: 'black' } }}
+                          onChange={formik2.handleChange}
+                        />
+                      </FormControl>
                     </Box>
                   </Box>
-                </Box>
-              </RightWrapper>
+
+                  <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 4, gap: 2 }}>
+                    <Button size='large' className='beforeLoginbtn' onClick={handleBack}>
+                      Back
+                    </Button>
+                    <Button size='large' type='submit' className='beforeLoginbtn'>
+                      Submit
+                    </Button>
+                  </Box>
+                </form>
+              </Box>
             </Box>
-          </Box>
-        </DialogContent>
-      </Dialog>
-
-      <Dialog
-        fullWidth
-        open={show}
-        maxWidth='sm'
-        scroll='body'
-        onClose={() => setShow(true)}
-        BackdropProps={{
-          style: { backgroundColor: 'white' }
-        }}
-        PaperProps={{
-          style: {
-            backgroundColor: 'white',
-            borderRadius: '12px'
-          }
-        }}
-      >
-        <DialogContent
-          sx={{
-            position: 'relative',
-            px: theme => [`${theme.spacing(5)} !important`, `${theme.spacing(15)} !important`],
-            py: theme => [`${theme.spacing(8)} !important`, `${theme.spacing(12.5)} !important`]
-          }}
-        >
-          <Box sx={{ mb: 4 }}>
-            <Card className='border-0  profile-wrap layout-ragister'>
-              <div className='profile-heading'>
-                <CardTitle tag='h4' className='text-black'>
-                  Profile Details
-                </CardTitle>
-              </div>
-              <CardBody>
-                <Form className='mt-4 pt-50' onSubmit={formik2.handleSubmit}>
-                  <Row>
-                    <Col sm='12' className='mb-1 '>
-                      <Row>
-                        <Col sm='3'>
-                          <Label className='form-label text-black' for='studentName'>
-                            Name
-                          </Label>
-                        </Col>
-                        <Col sm='9'>
-                          <Input
-                            className='profile-input-box'
-                            name='name'
-                            type='text'
-                            value={formik2.values.name || ''}
-                            onChange={formik2.handleChange}
-                            onBlur={formik2.handleBlur}
-                            invalid={formik2.errors.name && true}
-                          />
-                          {formik2.errors.name ? <FormFeedback>{formik2.errors.name}</FormFeedback> : null}
-                        </Col>
-                      </Row>
-                    </Col>
-
-                    <Col sm='12' className='mb-1  '>
-                      <Row>
-                        <Col sm='3'>
-                          <Label className='form-label text-black' for='studentName'>
-                            Graduation
-                          </Label>
-                        </Col>
-                        <Col sm='9'>
-                          <Input
-                            className='profile-input-box'
-                            name='graduation'
-                            type='text'
-                            value={formik2.values.graduation || ''}
-                            onChange={formik2.handleChange}
-                          />
-                        </Col>
-                      </Row>
-                    </Col>
-
-                    <Col sm='12' className='mb-4 '>
-                      <Row>
-                        <Col sm='3'>
-                          <Label className='form-label text-black' for='studentName'>
-                            Profile Slug
-                          </Label>
-                        </Col>
-                        <Col sm='9'>
-                          <Input
-                            className='profile-input-box'
-                            name='profileSlug'
-                            type='text'
-                            value={formik2.values.profileSlug || ''}
-                            onChange={formik2.handleChange}
-                          />
-                          <Typography className='text-black'>
-                            Profile Link: https://collegedao.io/person/{formik2.values.profileSlug}
-                          </Typography>
-                        </Col>
-                      </Row>
-                    </Col>
-
-                    <Col sm='12' className='mb-1  '>
-                      <Row>
-                        <Col sm='3'>
-                          <Label className='form-label text-black' for='studentName'>
-                            Major
-                          </Label>
-                        </Col>
-                        <Col sm='9'>
-                          <Input
-                            className='profile-input-box'
-                            name='major'
-                            type='text'
-                            value={formik2.values.major || ''}
-                            onChange={formik2.handleChange}
-                          />
-                        </Col>
-                      </Row>
-                    </Col>
-
-                    <Col sm='12' className='mb-1  '>
-                      <Row>
-                        <Col sm='3'>
-                          <Label className='form-label text-black' for='studentName'>
-                            Minor
-                          </Label>
-                        </Col>
-                        <Col sm='9'>
-                          <Input
-                            className='profile-input-box'
-                            name='minor'
-                            type='text'
-                            value={formik2.values.minor || ''}
-                            onChange={formik2.handleChange}
-                          />
-                        </Col>
-                      </Row>
-                    </Col>
-
-                    <Col sm='12' className='mb-1  '>
-                      <Row>
-                        <Col sm='3'>
-                          <Label className='form-label text-black' for='studentName'>
-                            University
-                          </Label>
-                        </Col>
-                        <Col sm='9'>
-                          <Input
-                            className='profile-input-box'
-                            name='university'
-                            type='text'
-                            value={formik2.values.university || ''}
-                            onChange={formik2.handleChange}
-                          />
-                        </Col>
-                      </Row>
-                    </Col>
-
-                    <Col sm='12' className='mb-1 '>
-                      <Row>
-                        <Col sm='3'>
-                          <Label className='form-label text-black' for='studentName'>
-                            Location
-                          </Label>
-                        </Col>
-                        <Col sm='9'>
-                          <Input
-                            className='profile-input-box'
-                            name='location'
-                            type='text'
-                            value={formik2.values.location || ''}
-                            onChange={formik2.handleChange}
-                          />
-                        </Col>
-                      </Row>
-                    </Col>
-
-                    <Col sm='12' className='mb-4 d-flex'>
-                      <Row>
-                        <Col sm='3'>
-                          <Label className='form-label text-black me-5' for='studentName'>
-                            Interests
-                          </Label>
-                        </Col>
-                        <Col sm='9'>
-                          {/* <FormControl fullWidth size='small'> */}
-                          <FormControl className='search-text' fullWidth>
-                            <Select
-                              name='interests'
-                              className='custom-select text-black'
-                              fullWidth
-                              value={formik2.values.interests || ''}
-                              onChange={formik2.handleChange}
-                              displayEmpty
-                              inputProps={{ 'aria-label': 'Without label' }}
-                              sx={{
-                                border: '1px solid black',
-                                color: 'black',
-                                backgroundColor: 'white',
-                                '.MuiSelect-icon': {
-                                  color: 'black'
-                                },
-                                '& .MuiOutlinedInput-notchedOutline': {
-                                  borderColor: 'white'
-                                }
-                              }}
-                            >
-                              {allCategory &&
-                                allCategory.map((item, index) => (
-                                  <MenuItem key={index} value={item.name} className='text-black'>
-                                    {item.name}
-                                  </MenuItem>
-                                ))}
-                            </Select>
-                          </FormControl>
-                        </Col>
-                      </Row>
-                    </Col>
-
-                    <Col sm='12' className='mb-1 '>
-                      <Row>
-                        <Col sm='3'>
-                          <Label className='form-label text-black' for='studentName'>
-                            Experience Level
-                          </Label>
-                        </Col>
-                        <Col sm='9'>
-                          <Input
-                            className='profile-input-box'
-                            name='expLevel'
-                            type='text'
-                            value={formik2.values.expLevel || ''}
-                            onChange={formik2.handleChange}
-                          />
-                        </Col>
-                      </Row>
-                    </Col>
-                    <CardHeader className='profile-heading mb-2 mt-4' style={{ backgroundColor: 'none' }}>
-                      <CardTitle tag='h4' className='text-black'>
-                        Social accounts
-                      </CardTitle>
-                    </CardHeader>
-                    <Col md='12'>
-                      <Row>
-                        <Col sm='3'>
-                          <Label className='form-label text-black' for='studentName'>
-                            Twitter
-                          </Label>
-                        </Col>
-                        <Col sm='9'>
-                          <Input
-                            className='profile-input-box '
-                            name='twitter'
-                            type='text'
-                            value={formik2.values.twitter || ''}
-                            onChange={formik2.handleChange}
-                          />
-                        </Col>
-                      </Row>
-                    </Col>
-
-                    <Col md='12'>
-                      <Row>
-                        <Col sm='3'>
-                          <Label className='form-label text-black' for='studentName'>
-                            LinkedIn
-                          </Label>
-                        </Col>
-                        <Col sm='9'>
-                          <Input
-                            className='profile-input-box'
-                            name='linkedin'
-                            type='text'
-                            value={formik2.values.linkedin || ''}
-                            onChange={formik2.handleChange}
-                          />
-                        </Col>
-                      </Row>
-                    </Col>
-                    <Col md='12'>
-                      <Button className='mt-5 beforeLoginbtn' onClick={handleBack}>
-                        Back
-                      </Button>
-                      <Button type='submit' className='ms-2 mt-5 beforeLoginbtn'>
-                        Submit
-                      </Button>
-                    </Col>
-                  </Row>
-                </Form>
-              </CardBody>
-            </Card>
-          </Box>
-        </DialogContent>
-      </Dialog>
+          </RightWrapper>
+        </Box>
+      )}
     </div>
   )
 }
+

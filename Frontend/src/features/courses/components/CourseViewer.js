@@ -10,6 +10,7 @@ import { useDispatch } from 'react-redux'
 
 // ** Layout Import
 import Grid from '@mui/material/Grid'
+import Typography from '@mui/material/Typography'
 
 export const CourseViewer = () => {
   // api call
@@ -17,7 +18,7 @@ export const CourseViewer = () => {
   const [lessonData, setLessonData] = useState(null)
   const getLessonData = useSelector(state => state?.course?.selectedLesson)
 
-  const [moduleData, setModuleData] = useState([])
+  const [moduleData, setModuleData] = useState([])  
   const [totalItem, setTotalItem] = useState(0)
   const [itemNo, setItemNo] = useState(1)
   const [navigationData, setNavigationData] = useState({})
@@ -110,13 +111,18 @@ export const CourseViewer = () => {
               lesson={itemNo + '/' + courseData?.totalItems}
               data={navigationData?.data}
             />
-          ) : (
+          ) : navigationData?.data ? (
             <QuizContent
               courseName={courseData?.title}
               instructor={courseData?.createdName}
               lesson={itemNo + '/' + courseData?.totalItems}
               data={navigationData?.data}
             />
+          ) : (
+            <div style={{ padding: '3rem', textAlign: 'center', backgroundColor: 'white', borderRadius: '8px', boxShadow: '#636363 0px 2px 8px 0px' }}>
+              <Typography variant="h6" className="text-black">No content available for this course yet.</Typography>
+              <Typography variant="body2" className="text-black" sx={{ mt: 2 }}>Please check back later or contact the instructor.</Typography>
+            </div>
           )}
 
           <div className='d-flex justify-content-between align-items-center'>

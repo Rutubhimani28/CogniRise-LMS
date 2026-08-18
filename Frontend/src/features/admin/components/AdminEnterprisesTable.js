@@ -97,15 +97,17 @@ function EnhancedTableToolbar(props) {
   const { numSelected } = props
   return (
     <Toolbar
+      variant='dense'
       sx={{
         pl: { sm: 2 },
         pr: { xs: 1, sm: 1 },
+        minHeight: '48px !important',
         ...(numSelected > 0 && {
           boxShadow: '0px 2px 4px 1px rgba(12, 16, 27, 0.15), 0px 3px 4px 0px rgba(12, 16, 27, 0.1), 0px 1px 3px 2px rgba(12, 16, 27, 0.08)'
         })
       }}
     >
-      <Typography sx={{ flex: '1 1 100%' }} variant='h5' id='tableTitle' component='div' className='ps-4 addHeadingColor'>
+      <Typography sx={{ flex: '1 1 100%', fontSize: '1.1rem' }} variant='h6' id='tableTitle' component='div' className='ps-4 addHeadingColor'>
         Enterprise Applications
       </Typography>
     </Toolbar>
@@ -136,7 +138,7 @@ export const AdminEnterprisesTable = () => {
   const [orderBy, setOrderBy] = useState('Categories')
   const [selected, setSelected] = useState([])
   const [page, setPage] = useState(0)
-  const [rowsPerPage, setRowsPerPage] = useState(25)
+  const [rowsPerPage, setRowsPerPage] = useState(10)
   const [enterprises, setEnterprises] = useState([])
   const [confirmApprove, setConfirmApprove] = useState(false)
   const [enterpriseId, setEnterpriseId] = useState(null)
@@ -205,7 +207,7 @@ export const AdminEnterprisesTable = () => {
     <Box sx={{ width: '100%' }} className='enaterpriseCourseWrap'>
       <Paper sx={{ width: '100%', mb: 2, backgroundColor: 'white' }}>
         <EnhancedTableToolbar numSelected={selected.length} />
-        <TableContainer sx={{ maxHeight: 600 }}>
+        <TableContainer sx={{ maxHeight: 'calc(100vh - 300px)' }}>
           <Table
             stickyHeader
             size='small'
@@ -230,17 +232,17 @@ export const AdminEnterprisesTable = () => {
 
                   return (
                     <TableRow hover role='checkbox' tabIndex={-1} key={row.profile.name}>
-                      <TableCell padding='checkbox' className='py-3'></TableCell>
-                      <TableCell align='left' id={labelId} scope='row' padding='none' className='text-black'>
+                      <TableCell padding='checkbox' sx={{ py: 0.5, px: 1 }}></TableCell>
+                      <TableCell align='left' id={labelId} scope='row' padding='none' className='text-black' sx={{ py: 0.5, px: 1 }}>
                         {row?.profile?.name}
                       </TableCell>
-                      <TableCell align='left' className='text-black'>{row?.status}</TableCell>
-                      <TableCell align='left' className='text-black'>
+                      <TableCell align='left' className='text-black' sx={{ py: 0.5, px: 1 }}>{row?.status}</TableCell>
+                      <TableCell align='left' className='text-black' sx={{ py: 0.5, px: 1 }}>
                         {moment(row?.modifiedAt).format('MM/DD/YYYY')}
                       </TableCell>
-                      <TableCell align='left' className='text-black'>
+                      <TableCell align='left' className='text-black' sx={{ py: 0.5, px: 1 }}>
                         <Link className=' text-decoration-none' href={href}>
-                          <Button variant='default' className='me-3 mt-1 beforeLoginbtn border-0'>
+                          <Button variant='default' size='sm' className='me-3 mt-1 beforeLoginbtn border-0'>
                             View Profile
                           </Button>
                         </Link>

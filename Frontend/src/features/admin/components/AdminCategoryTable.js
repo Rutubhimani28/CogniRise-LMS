@@ -62,7 +62,7 @@ function EnhancedTableHead(props) {
   return (
     <TableHead sx={{ '& .css-7aq1j1-MuiButtonBase-root-MuiTableSortLabel-root:hover ': { color: 'black' } }}>
       <TableRow>
-        <TableCell padding='checkbox'>
+        <TableCell padding='checkbox' sx={{ py: 0, px: 1 }}>
           <Checkbox
             type='checkbox'
             color='primary'
@@ -70,8 +70,9 @@ function EnhancedTableHead(props) {
             checked={rowCount > 0 && numSelected === rowCount}
             onChange={onSelectAllClick}
             inputProps={{ 'aria-label': 'select all desserts' }}
-            icon={<CheckBoxOutlineBlankIcon sx={{ fontSize: 24, color: 'black', borderRadius: '4px' }} />}
-            checkedIcon={<CheckBoxIcon sx={{ fontSize: 24, color: 'black', border: '2px solid black', borderRadius: '4px' }} />}
+            icon={<CheckBoxOutlineBlankIcon sx={{ fontSize: 20, color: 'black', borderRadius: '4px' }} />}
+            checkedIcon={<CheckBoxIcon sx={{ fontSize: 20, color: 'black', border: '2px solid black', borderRadius: '4px' }} />}
+            sx={{ padding: '4px' }}
           />
         </TableCell>
         {headCells.map(headCell => (
@@ -118,9 +119,11 @@ function EnhancedTableToolbar(props) {
   const { numSelected, setMultiDeleteModel } = props
   return (
     <Toolbar
+      variant='dense'
       sx={{
         pl: { sm: 2 },
         pr: { xs: 1, sm: 1 },
+        minHeight: '48px !important',
         ...(numSelected > 0 && {
           boxShadow:
             '0px 2px 4px 1px rgba(12, 16, 27, 0.15), 0px 3px 4px 0px rgba(12, 16, 27, 0.1), 0px 1px 3px 2px rgba(12, 16, 27, 0.08)'
@@ -132,8 +135,8 @@ function EnhancedTableToolbar(props) {
           {numSelected} selected
         </Typography>
       ) : (
-        <Typography sx={{ flex: '1 1 100%' }} variant='h5' id='tableTitle' component='div' className='ps-4 addHeadingColor'>
-          categories
+        <Typography sx={{ flex: '1 1 100%', fontSize: '1.1rem' }} variant='h6' id='tableTitle' component='div' className='ps-4 addHeadingColor'>
+          Categories
         </Typography>
       )}
       {numSelected > 0 && (
@@ -169,7 +172,7 @@ export const AdminCategoryTable = () => {
   const [orderBy, setOrderBy] = useState('Categories')
   const [selected, setSelected] = useState([])
   const [page, setPage] = useState(0)
-  const [rowsPerPage, setRowsPerPage] = useState(25)
+  const [rowsPerPage, setRowsPerPage] = useState(10)
   const [category, setCategory] = useState([])
   const [confirmDelet, setConfirmDelet] = useState(false)
   const [multiDeleteModel, setMultiDeleteModel] = useState(false)
@@ -278,9 +281,9 @@ export const AdminCategoryTable = () => {
 
   return (
     <Box sx={{ width: '100%' }} className='enaterpriseCategoryWrap'>
-      <Row className='justify-content-between align-items-center pb-5'>
+      <Row className='justify-content-between align-items-center pb-3'>
         <Col md={12} className='mb-1 text-end'>
-          <Button type='button' className='me-2 px-5 border-0 beforeLoginbtn text-black'>
+          <Button type='button' size='sm' className='me-2 px-4 border-0 beforeLoginbtn text-black'>
             <Link className='text-black text-decoration-none' href='/add-category'>
               Add Category
             </Link>
@@ -289,7 +292,7 @@ export const AdminCategoryTable = () => {
       </Row>
       <Paper sx={{ width: '100%', mb: 2, backgroundColor: 'white' }}>
         <EnhancedTableToolbar numSelected={selected.length} setMultiDeleteModel={setMultiDeleteModel} />
-        <TableContainer sx={{ maxHeight: 600 }}>
+        <TableContainer sx={{ maxHeight: 'calc(100vh - 300px)' }}>
           <Table
             stickyHeader
             size='small'
@@ -312,25 +315,32 @@ export const AdminCategoryTable = () => {
                   const labelId = `enhanced-table-checkbox-${index}`
                   return (
                     <TableRow hover role='checkbox' tabIndex={-1} key={row?._id}>
-                      <TableCell padding='checkbox' className='py-3'>
+                      <TableCell padding='checkbox' sx={{ py: 0, px: 1 }}>
                         <Checkbox
                           checked={isItemSelected}
-                          icon={<CheckBoxOutlineBlankIcon sx={{ fontSize: 24, color: 'black', borderRadius: '4px' }} />}
-                          checkedIcon={<CheckBoxIcon sx={{ fontSize: 24, color: 'black', border: '2px solid black', borderRadius: '4px' }} />}
+                          icon={<CheckBoxOutlineBlankIcon sx={{ fontSize: 20, color: 'black', borderRadius: '4px' }} />}
+                          checkedIcon={<CheckBoxIcon sx={{ fontSize: 20, color: 'black', border: '2px solid black', borderRadius: '4px' }} />}
                           onClick={event => handleClick(event, row?._id)}
                           inputProps={{ 'aria-labelledby': labelId }}
+                          sx={{ padding: '4px' }}
                         />
                       </TableCell>
-                      <TableCell component='th' id={labelId} scope='row' padding='none' className='text-black'>
+                      <TableCell component='th' id={labelId} scope='row' padding='none' className='text-black' sx={{ py: 1, px: 1 }}>
                         {row.name}
                       </TableCell>
-                      <TableCell align='left' className='text-black'>{row.description}</TableCell>
-                      <TableCell align='left' className='text-black'>{row.status.toUpperCase()}</TableCell>
-                      <TableCell align='left' className='text-black'>
-                        <RiDeleteBin6Line className='fs-6' onClick={() => modalDeletOpen(row?._id)} />
-                        <Link href={`/add-category/?id=${row?._id}`}>
-                          <RiEdit2Fill className='mx-3 fs-6' style={{ color: 'black' }} />
-                        </Link>
+                      <TableCell align='left' className='text-black' sx={{ py: 1, px: 1, maxWidth: '300px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                        {row.description}
+                      </TableCell>
+                      <TableCell align='left' className='text-black' sx={{ py: 1, px: 1 }}>
+                        {row.status.toUpperCase()}
+                      </TableCell>
+                      <TableCell align='left' className='text-black' sx={{ py: 1, px: 1 }}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                          <RiDeleteBin6Line className='fs-5 cursor-pointer text-danger' onClick={() => modalDeletOpen(row?._id)} />
+                          <Link href={`/add-category/?id=${row?._id}`}>
+                            <RiEdit2Fill className='fs-5 cursor-pointer' style={{ color: '#7d9b17' }} />
+                          </Link>
+                        </Box>
                       </TableCell>
                     </TableRow>
                   )
