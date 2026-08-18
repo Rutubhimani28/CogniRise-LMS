@@ -12,7 +12,8 @@ import {
   TextField,
   Typography,
   Button,
-  Autocomplete
+  Autocomplete,
+  CircularProgress
 } from '@mui/material'
 import { useDropzone } from 'react-dropzone'
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
@@ -40,6 +41,7 @@ export const CourseCreationForm = () => {
   const [courseData, setCourseData] = useState(null)
   const [courseId, setCourseId] = useState(null)
   const [userStatus, setUserStatus] = useState({})
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     const url_str = window.location.href
@@ -149,6 +151,7 @@ export const CourseCreationForm = () => {
     enableReinitialize: true,
     validationSchema: validationSchema,
     onSubmit: values => {
+      setLoading(true)
       {
         moduleData &&
           moduleData.map(
@@ -190,6 +193,7 @@ export const CourseCreationForm = () => {
             toast.error('Something went wrong')
             console.log(err)
           })
+          .finally(() => setLoading(false))
       } else {
         const formData = new FormData()
         formData.append('title', values.title)
@@ -222,6 +226,7 @@ export const CourseCreationForm = () => {
             toast.error('Something went wrong')
             console.log(err)
           })
+          .finally(() => setLoading(false))
       }
     }
   })
@@ -562,20 +567,22 @@ export const CourseCreationForm = () => {
 
                   <div className='d-md-flex'>
                     <Button
+                      disabled={loading}
                       onClick={() => {
                         formik.handleSubmit(), setUserStatus({ status: 'draft' })
                       }}
                       className='me-2 px-4 d-flex align-items-center beforeLoginbtn'
                     >
-                      Draft
+                      {loading && userStatus?.status === 'draft' ? <CircularProgress size={24} color="inherit" /> : 'Draft'}
                     </Button>
                     <Button
+                      disabled={loading}
                       onClick={() => {
                         formik.handleSubmit(), setUserStatus({ status: 'pending' })
                       }}
                       className='me-2 px-4 mt-md-2 d-flex align-items-center beforeLoginbtn'
                     >
-                      publish
+                      {loading && userStatus?.status === 'pending' ? <CircularProgress size={24} color="inherit" /> : 'Publish'}
                     </Button>
                   </div>
                 </div>

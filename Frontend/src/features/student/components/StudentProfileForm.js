@@ -19,7 +19,8 @@ import {
   DialogContent,
   DialogActions,
   DialogContentText,
-  InputAdornment
+  InputAdornment,
+  CircularProgress
 } from '@mui/material'
 import { useFormik } from 'formik'
 import { toast } from 'react-hot-toast'
@@ -45,6 +46,7 @@ export const StudentProfileForm = () => {
   const [logoutDialog, setLogoutDialog] = useState(false)
   const [emaildata, setEmaildata] = useState('')
   const [showloginButton, setShowloginButton] = useState(true)
+  const [loading, setLoading] = useState(false)
 
   // Fetch Categories
   useEffect(() => {
@@ -248,6 +250,7 @@ export const StudentProfileForm = () => {
     },
     enableReinitialize: true,
     onSubmit: async (values) => {
+      setLoading(true)
       const payload = {
         _id: getData._id,
         profile: {
@@ -271,6 +274,8 @@ export const StudentProfileForm = () => {
         if (res?.status === 200) toast.success('Profile updated successfully')
       } catch (err) {
         toast.error('Failed to update profile')
+      } finally {
+        setLoading(false)
       }
     }
   })
@@ -375,8 +380,8 @@ export const StudentProfileForm = () => {
 
               {/* Submit Button */}
               <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'flex-end', mt: 4 }}>
-                <Button variant='contained' color='primary' type='submit' size='large' sx={{ px: 5, fontWeight: 700 }}>
-                  Save Profile
+                <Button variant='contained' color='primary' type='submit' size='large' disabled={loading} sx={{ px: 5, fontWeight: 700 }}>
+                  {loading ? <CircularProgress size={24} color="inherit" /> : 'Save Profile'}
                 </Button>
               </Grid>
             </Grid>

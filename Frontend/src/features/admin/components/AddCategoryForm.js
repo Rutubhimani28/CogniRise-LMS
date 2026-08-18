@@ -5,7 +5,7 @@ import * as yup from 'yup'
 import { useFormik } from 'formik'
 import { useRouter } from 'next/router'
 import Requests from 'src/configs/axiosRequest'
-import { Button } from '@mui/material'
+import { Button, CircularProgress } from '@mui/material'
 import toast from 'react-hot-toast'
 
 export const AddCategoryForm = () => {
@@ -13,6 +13,7 @@ export const AddCategoryForm = () => {
   const requestApiData = new Requests()
   const [categoryData, setCategoryData] = useState(null)
   const [categoryId, setCategoryId] = useState(null)
+  const [loading, setLoading] = useState(false)
   const user = JSON.parse(window.localStorage.getItem('userData'))
 
   useEffect(() => {
@@ -49,6 +50,7 @@ export const AddCategoryForm = () => {
     enableReinitialize: true,
     validationSchema: validationSchema,
     onSubmit: values => {
+      setLoading(true)
       if (categoryId) {
         const payload = {
           _id: categoryId,
@@ -69,6 +71,7 @@ export const AddCategoryForm = () => {
             toast.error('Something went wrong')
             console.log(err)
           })
+          .finally(() => setLoading(false))
       } else {
         const payload = {
           name: values.title,
@@ -88,6 +91,7 @@ export const AddCategoryForm = () => {
             toast.error('Something went wrong')
             console.log(err)
           })
+          .finally(() => setLoading(false))
       }
     }
   })
@@ -123,8 +127,8 @@ export const AddCategoryForm = () => {
         </Box>
         <Box>
           <div className={`d-flex justify-content-lg-between justify-content-sm-end pt-5`}>
-            <Button type='submit' className='me-2 px-4 d-flex align-items-center beforeLoginbtn'>
-              Submit
+            <Button type='submit' disabled={loading} className='me-2 px-4 d-flex align-items-center beforeLoginbtn'>
+              {loading ? <CircularProgress size={24} color="inherit" /> : 'Submit'}
             </Button>
           </div>
         </Box>
