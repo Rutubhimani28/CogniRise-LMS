@@ -32,11 +32,13 @@ import { useRouter } from 'next/router'
 import { useGoogleLogin } from '@react-oauth/google'
 import axios from 'axios'
 import Requests from 'src/configs/axiosRequest'
+import { useAuth } from 'src/hooks/useAuth'
 
 export const StudentProfileForm = () => {
+  const { user, setUser } = useAuth()
   const requestApiData = new Requests()
   const router = useRouter()
-  
+
   const [allCategory, setAllCategory] = useState([])
   const [getData, setGetData] = useState(null)
   const [files, setFiles] = useState([])
@@ -203,7 +205,6 @@ export const StudentProfileForm = () => {
     accept: { 'image/*': ['.png', '.jpg', '.jpeg'] },
     onDrop: acceptedFiles => {
       setFiles(acceptedFiles.map(file => Object.assign(file)))
-      handleUpload(acceptedFiles[0])
     }
   })
 
@@ -212,7 +213,7 @@ export const StudentProfileForm = () => {
       const formData = new FormData()
       formData.append('profile', file)
       formData.append('_id', getData._id)
-      
+
       if (getData.profile) {
         Object.keys(getData.profile).forEach(key => {
           if (key !== 'profileImg') formData.append(`profile[${key}]`, getData.profile[key] || '')
@@ -225,9 +226,40 @@ export const StudentProfileForm = () => {
         setFiles([])
         userApi()
         setUploadImgOpen(false)
+
+        const updatedUser = { ...user, profileImg: res.data.profile?.profileImg }
+        if (updatedUser.profile) updatedUser.profile.profileImg = res.data.profile?.profileImg
+        setUser(updatedUser)
+        window.localStorage.setItem('userData', JSON.stringify(updatedUser))
       }
     } catch (err) {
       toast.error(err.response?.data?.error || 'Something went wrong')
+    }
+  }
+
+  const handleDeleteProfileImg = async () => {
+    try {
+      const payload = {
+        _id: getData._id,
+        profile: {
+          ...getData.profile,
+          profileImg: ''
+        }
+      }
+      const res = await requestApiData.updateUserProfile(payload)
+      if (res?.status === 200) {
+        toast.success('Profile picture deleted successfully')
+        setGetData(res.data)
+        setFiles([])
+        userApi()
+
+        const updatedUser = { ...user, profileImg: '' }
+        if (updatedUser.profile) updatedUser.profile.profileImg = ''
+        setUser(updatedUser)
+        window.localStorage.setItem('userData', JSON.stringify(updatedUser))
+      }
+    } catch (err) {
+      toast.error('Failed to delete profile picture')
     }
   }
 
@@ -285,10 +317,10 @@ export const StudentProfileForm = () => {
           subheader={<Typography variant='body2' color='text.secondary'>Manage your personal information and preferences</Typography>}
         />
         <Divider sx={{ mb: 4 }} />
-        
+
         <CardContent>
           <Box component='form' onSubmit={formik.handleSubmit}>
-            
+
             {/* Avatar Section */}
             <Box sx={{ display: 'flex', alignItems: 'center', mb: 6, gap: 3 }}>
               <Box onClick={() => setUploadImgOpen(true)} sx={{ cursor: 'pointer', position: 'relative' }}>
@@ -297,9 +329,9 @@ export const StudentProfileForm = () => {
                   sx={{ width: 120, height: 120, border: '4px solid #F4F5FA' }}
                 />
                 <Box sx={{
-                  position: 'absolute', bottom: 0, right: 0, 
-                  backgroundColor: '#7d9b17', color: 'white', 
-                  borderRadius: '50%', p: 1, 
+                  position: 'absolute', bottom: 0, right: 0,
+                  backgroundColor: '#7d9b17', color: 'white',
+                  borderRadius: '50%', p: 1,
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   border: '2px solid white'
                 }}>
@@ -309,6 +341,11 @@ export const StudentProfileForm = () => {
               <Box>
                 <Typography variant='h6' sx={{ fontWeight: 600, color: '#2F2B3D' }}>Profile Picture</Typography>
                 <Typography variant='body2' color='text.secondary' sx={{ mb: 1 }}>JPG or PNG. Max size 5MB.</Typography>
+                {getData?.profile?.profileImg && (
+                  <Button variant='outlined' color='error' size='small' onClick={handleDeleteProfileImg} sx={{ mt: 1, borderRadius: '8px', textTransform: 'none', fontWeight: 600 }}>
+                    Delete Picture
+                  </Button>
+                )}
               </Box>
             </Box>
 
@@ -319,7 +356,7 @@ export const StudentProfileForm = () => {
               <Grid item xs={12} sm={6}>
                 <TextField fullWidth label='Email' name='email' value={formik.values.email} disabled />
               </Grid>
-              
+
               <Grid item xs={12} sm={6}>
                 <TextField fullWidth label='University / School' name='university' value={formik.values.university} onChange={formik.handleChange} />
               </Grid>
@@ -328,7 +365,7 @@ export const StudentProfileForm = () => {
               </Grid>
 
               <Grid item xs={12} sm={6}>
-                <TextField fullWidth label='Profile Slug' name='profileSlug' value={formik.values.profileSlug} onChange={formik.handleChange} 
+                <TextField fullWidth label='Profile Slug' name='profileSlug' value={formik.values.profileSlug} onChange={formik.handleChange}
                   helperText={`Profile Link: https://collegedao.io/person/${formik.values.profileSlug}`} />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -361,9 +398,9 @@ export const StudentProfileForm = () => {
                 <Typography variant='subtitle1' sx={{ fontWeight: 600, mt: 2, mb: 1 }}>Social Links</Typography>
                 <Divider sx={{ mb: 2 }} />
               </Grid>
-              
+
               <Grid item xs={12} sm={6}>
-                <TextField fullWidth label='LinkedIn URL' name='linkedin' value={formik.values.linkedin} onChange={formik.handleChange} 
+                <TextField fullWidth label='LinkedIn URL' name='linkedin' value={formik.values.linkedin} onChange={formik.handleChange}
                   InputProps={{ startAdornment: <InputAdornment position="start"><FaLinkedin color="#0077B5" /></InputAdornment> }} />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -385,18 +422,38 @@ export const StudentProfileForm = () => {
       </Card>
 
       {/* Upload Dialog */}
-      <Dialog open={uploadImgOpen} onClose={() => setUploadImgOpen(false)} maxWidth="sm" fullWidth>
-        <DialogTitle>Upload Profile Picture</DialogTitle>
+      <Dialog open={uploadImgOpen} onClose={() => { setUploadImgOpen(false); setFiles([]); }} maxWidth="sm" fullWidth>
+        <DialogTitle sx={{ textAlign: 'center', fontWeight: 700, color: '#7d9b17' }}>Upload Profile Photo</DialogTitle>
         <DialogContent>
-          <Box {...getRootProps()} sx={{ border: '2px dashed #7d9b17', borderRadius: 2, p: 4, textAlign: 'center', cursor: 'pointer', mt: 1 }}>
+          <Box {...getRootProps()} sx={{ border: '2px dashed #7d9b17', borderRadius: 4, p: 4, textAlign: 'center', cursor: 'pointer', mt: 1, minHeight: '250px', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
             <input {...getInputProps()} />
-            <RiUpload2Fill size={40} color="#7d9b17" />
-            <Typography sx={{ mt: 2, fontWeight: 600 }}>Click or drag file to this area to upload</Typography>
-            <Typography variant="body2" color="text.secondary">Support for a single image upload (Max 5MB)</Typography>
+            {files.length > 0 ? (
+              <img src={URL.createObjectURL(files[0])} alt="Preview" style={{ maxHeight: '200px', maxWidth: '100%', objectFit: 'contain', borderRadius: '8px' }} />
+            ) : (
+              <>
+                <RiUpload2Fill size={50} color="#7d9b17" />
+                <Typography sx={{ mt: 2, fontWeight: 600, color: '#333' }}>Click or drag file to this area to upload</Typography>
+                <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>Supported: JPG, PNG • Max: 5 MB</Typography>
+              </>
+            )}
           </Box>
         </DialogContent>
-        <DialogActions sx={{ p: 3 }}>
-          <Button onClick={() => setUploadImgOpen(false)}>Cancel</Button>
+        <DialogActions sx={{ p: 3, justifyContent: 'center', gap: 2 }}>
+          <Button
+            variant="outlined"
+            onClick={() => { setUploadImgOpen(false); setFiles([]); }}
+            sx={{ borderColor: '#7d9b17', color: '#7d9b17', borderRadius: '8px', px: 4, fontWeight: 600, '&:hover': { borderColor: '#657d12', backgroundColor: 'rgba(125, 155, 23, 0.08)' } }}
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="contained"
+            onClick={() => handleUpload(files[0])}
+            disabled={files.length === 0}
+            sx={{ backgroundColor: '#7d9b17', color: 'white', borderRadius: '8px', px: 4, fontWeight: 600, '&:hover': { backgroundColor: '#657d12' } }}
+          >
+            Save Photo
+          </Button>
         </DialogActions>
       </Dialog>
     </Box>

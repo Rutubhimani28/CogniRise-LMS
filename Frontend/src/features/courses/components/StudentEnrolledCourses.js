@@ -270,16 +270,17 @@ export const StudentEnrolledCourses = () => {
 
   return (
     <div>
-      <div className='d-flex justify-content-between'>
-        <h5 className='text-black'>My Courses</h5>
-        <div>
-          <Nav className='justify-content-end' tabs>
+      <div className='d-flex justify-content-between align-items-center mb-4'>
+        <h5 className='text-black m-0'>My Courses</h5>
+        <div className='d-flex align-items-center gap-4'>
+          <Nav className='justify-content-end' tabs style={{ borderBottom: 'none' }}>
             <NavItem>
               <NavLink
                 active={active === '1'}
                 onClick={() => {
                   toggle('1')
                 }}
+                style={{ cursor: 'pointer', border: 'none', borderBottom: active === '1' ? '2px solid #7d9b17' : 'none', color: active === '1' ? '#7d9b17' : '#555', fontWeight: 600, backgroundColor: 'transparent' }}
               >
                 In Progress
               </NavLink>
@@ -290,6 +291,7 @@ export const StudentEnrolledCourses = () => {
                 onClick={() => {
                   toggle('2')
                 }}
+                style={{ cursor: 'pointer', border: 'none', borderBottom: active === '2' ? '2px solid #7d9b17' : 'none', color: active === '2' ? '#7d9b17' : '#555', fontWeight: 600, backgroundColor: 'transparent' }}
               >
                 Completed
               </NavLink>
@@ -297,12 +299,12 @@ export const StudentEnrolledCourses = () => {
           </Nav>
         </div>
       </div>
-      <TabContent className='py-50 pt-4' activeTab={active}>
+      <TabContent className='py-2' activeTab={active}>
         <TabPane tabId='1'>
           {studentEnrollCourse &&
             studentEnrollCourse.map((item, i) =>
               item.status === 'Ongoing' ? (
-                <div key={i} className='row learnningTimeBox justify-content-between align-items-center py-3 my-3'>
+                <div key={i} className='row learnningTimeBox justify-content-between align-items-center py-3 my-3' style={{ backgroundColor: 'white', borderRadius: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
                   <div className='col-sm-12 col-md-6 col-lg-6 col-xl-3 my-2  d-flex'>
                     <Avatar sx={{ bgcolor: '#7d9b17', mr: 2, width: 45, height: 45, fontWeight: 'bold', fontSize: '1.2rem' }}>
                       {item.course_title?.charAt(0)?.toUpperCase() || 'C'}
@@ -322,7 +324,7 @@ export const StudentEnrolledCourses = () => {
                     </span>
                   </div>
                   <div className='col-sm-12 col-md-6 col-lg-6 col-xl-3'>
-                    {nextTasks[i] !== '' ? (
+                    {nextTasks[i] ? (
                       <div className='text-black'>
                         Next up:
                         <CardText
@@ -332,8 +334,10 @@ export const StudentEnrolledCourses = () => {
                           {nextTasks[i].name}
                         </CardText>
                       </div>
+                    ) : item.totalTask === 0 ? (
+                      <span style={{ fontWeight: 600, color: '#f39c12' }}>No content yet</span>
                     ) : (
-                      ''
+                      <span style={{ fontWeight: 600, color: '#7d9b17' }}>Start Course</span>
                     )}
                   </div>
                   <div className='col-1 ps-auto' style={{ float: 'right' }}>
@@ -467,7 +471,7 @@ export const StudentEnrolledCourses = () => {
           {studentEnrollCourse &&
             studentEnrollCourse.map((item, i) =>
               item.status === 'Completed' ? (
-                <div key={i} className='row learnningTimeBox justify-content-between align-items-center py-3 my-3'>
+                <div key={i} className='row learnningTimeBox justify-content-between align-items-center py-3 my-3' style={{ backgroundColor: 'white', borderRadius: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
                   <div className='col-sm-12 col-md-6 col-lg-6 col-xl-2 my-2  d-flex'>
                     <Avatar sx={{ bgcolor: '#7d9b17', mr: 2, width: 45, height: 45, fontWeight: 'bold', fontSize: '1.2rem' }}>
                       {item.course_title?.charAt(0)?.toUpperCase() || 'C'}

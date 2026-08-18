@@ -11,9 +11,11 @@ import {
   Box,
   DialogContent,
   DialogActions,
-  Typography
+  Typography,
+  IconButton,
+  Button
 } from '@mui/material'
-import { Button } from 'reactstrap'
+import CloseIcon from '@mui/icons-material/Close'
 
 export const StudentDashboard = () => {
   const [lastCourse, setLastCourse] = useState([])
@@ -143,70 +145,89 @@ export const StudentDashboard = () => {
   return (
     <Box className='studentAccountWrap header-root'>
       {/* Top Section */}
-      <Grid container spacing={2}>
+      <Grid container spacing={3}>
         <Grid item xs={12} md={6}>
-          <Box className='learnningTimeBox' alignItems={'center'} sx={{ minHeight: '110px', mr: { md: 1 } }}>
-            <Typography variant='subtitle1' sx={{ fontSize: 20, color: '#7d9b17' }}>
+          <Box className='learnningTimeBox' sx={{ minHeight: '80px', backgroundColor: 'white', p: 2 }}>
+            <Typography variant='subtitle1' sx={{ fontSize: 16, color: '#7d9b17', fontWeight: 600 }}>
               Continue:
             </Typography>
-            <Typography className='fw-bolder text-black courseText fs-5 text-decoration-none'>
+            <Typography className='fw-bolder text-black courseText fs-6 text-decoration-none'>
               {lastCourse?.course_details?.title || 'Not Start Any Course'}
             </Typography>
           </Box>
         </Grid>
 
         <Grid item xs={12} md={6}>
-          <Box className='learnningTimeBox' alignItems={'center'} sx={{ ml: { md: 1 } }}>
-            <Typography variant='subtitle1' sx={{ fontSize: 20, color: '#7d9b17' }}>
+          <Box className='learnningTimeBox' sx={{ minHeight: '80px', backgroundColor: 'white', p: 2 }}>
+            <Typography variant='subtitle1' sx={{ fontSize: 16, color: '#7d9b17', fontWeight: 600 }}>
               Progress:
             </Typography>
-            <Typography className='fw-bolder text-black hourseText '>
+            <Typography className='fw-bolder text-black hourseText fs-6'>
               {lastCourse?.completeTaskDuration?.toFixed(2) || 0} hrs this week.
             </Typography>
           </Box>
         </Grid>
       </Grid>
 
-      <Box sx={{ my: 4, mx: 2 }}>
-        <Grid container>
-          <Grid item xs={12}>
-            <MyCourses studentCourse={studentCourse} />
-          </Grid>
-        </Grid>
+      <Box sx={{ my: 3 }}>
+        <MyCourses studentCourse={studentCourse} />
       </Box>
 
       {allCourse.length > 0 && (
-        <Box className='learnningTimeBox blackbox'>
+        <Box className='learnningTimeBox' sx={{ backgroundColor: 'white', p: 2 }}>
           <Carousel>
             {allCourse.map((item, i) => (
               <Carousel.Item key={i}>
-                <Grid container spacing={3} className='p-2 px-5'>
+                <Grid container spacing={3} className='p-2 px-4'>
                   <Grid item xs={12} md={5}>
-                    <Typography className='fw-bolder fs-1' sx={{ textTransform: 'capitalize', color: '#7d9b17' }}>
+                    <Typography className='fw-bolder fs-4' sx={{ textTransform: 'capitalize', color: '#7d9b17', mb: 1 }}>
                       {item?.title}
                     </Typography>
-                    <Typography sx={{ fontSize: 20, minHeight: 180 }} className='informationText text'>
+                    <Typography sx={{ fontSize: 15, minHeight: 100 }} className='informationText text'>
                       {item?.description}
                     </Typography>
                   </Grid>
 
                   <Grid item xs={12} md={7} className='sliderImage'>
-                    <img src={imgConst.bitcoin} alt='Course' height='100%' width='100%' />
+                    <img src={imgConst.bitcoin} alt='Course' height='200px' width='100%' style={{ objectFit: 'cover', borderRadius: '12px' }} />
                   </Grid>
 
                   <Grid item xs={12}>
-                    <Box display='flex' gap={2}>
+                    <Box display='flex' gap={2} mt={2}>
                       <Button
-                        className='enrollBtn'
+                        variant='contained'
                         onClick={() =>
                           item.preRequisites.length === 0
                             ? (setHandlEnrollModel(true), setEnrollCourse(item))
                             : functioncheck(item)
                         }
+                        sx={{
+                          backgroundColor: '#7d9b17',
+                          color: 'white',
+                          borderRadius: '70px',
+                          px: 4,
+                          py: 1,
+                          fontWeight: 700,
+                          textTransform: 'none',
+                          '&:hover': { backgroundColor: '#657d12' }
+                        }}
                       >
                         Enroll
                       </Button>
-                      <Button className='skipBtn' onClick={() => skipCourse(item._id)} sx={{ mr: 'auto' }}>
+                      <Button
+                        variant='outlined'
+                        onClick={() => skipCourse(item._id)}
+                        sx={{
+                          borderColor: '#7d9b17',
+                          color: '#7d9b17',
+                          borderRadius: '70px',
+                          px: 4,
+                          py: 1,
+                          fontWeight: 600,
+                          textTransform: 'none',
+                          '&:hover': { backgroundColor: 'rgba(125, 155, 23, 0.08)', borderColor: '#7d9b17' }
+                        }}
+                      >
                         Skip
                       </Button>
                     </Box>
@@ -221,48 +242,58 @@ export const StudentDashboard = () => {
       <Dialog
         open={handlEnrollModel}
         onClose={() => setHandlEnrollModel(false)}
-        fullWidth
-        maxWidth='sm' // Changed to 'sm' for better mobile responsiveness
         PaperProps={{
           sx: {
-            height: { xs: 'auto', md: '30%' }, // Auto height on small devices, 30% on medium and above
-            borderRadius: 3,
-            p: { xs: 2, sm: 3 } // Responsive padding
+            width: '100%',
+            maxWidth: '450px',
+            borderRadius: '16px',
+            p: 2
           }
         }}
       >
-        <DialogTitle
-          className='addHeadingColor'
-          sx={{ fontSize: { xs: '1.2rem', sm: '1.5rem' }, textAlign: 'center' }} // Responsive font size
-        >
-          Confirm Enrollment
+        <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', pb: 1 }}>
+          <Typography variant='h5' sx={{ fontWeight: 700, color: '#7d9b17' }}>
+            Confirm Enrollment
+          </Typography>
+          <IconButton onClick={() => setHandlEnrollModel(false)} size='small'>
+            <CloseIcon />
+          </IconButton>
         </DialogTitle>
-
-        <DialogContent>
-          <Box textAlign='center' mt={2}>
-            <Typography
-              className='text-black'
-              sx={{ fontSize: { xs: '0.9rem', sm: '1rem' } }} // Responsive text size
-            >
-              {`Are you sure you want to enroll in ${enrollCourse?.title} course?`}
-            </Typography>
-          </Box>
+        <DialogContent sx={{ pb: 3 }}>
+          <Typography variant='body1' sx={{ color: '#333', fontSize: '1.1rem', mt: 1 }}>
+            Are you sure you want to enroll in the <strong>{enrollCourse?.title}</strong> course?
+          </Typography>
         </DialogContent>
-
-        <DialogActions sx={{ justifyContent: 'center', mb: 2, flexWrap: 'wrap' }}>
+        <DialogActions sx={{ px: 3, pb: 2, gap: 2, justifyContent: 'center' }}>
           <Button
+            variant='outlined'
             onClick={() => setHandlEnrollModel(false)}
-            className='px-5 me-2 beforeLoginbtn'
-            sx={{ minWidth: { xs: '100px', sm: '150px' }, mb: { xs: 1, sm: 0 } }}
+            sx={{
+              borderColor: '#7d9b17',
+              color: '#7d9b17',
+              borderRadius: '8px',
+              px: 4,
+              py: 1,
+              fontWeight: 600,
+              '&:hover': { borderColor: '#657d12', backgroundColor: 'rgba(125, 155, 23, 0.08)' }
+            }}
           >
             Cancel
           </Button>
           <Button
+            variant='contained'
             onClick={() => enrollCourseStudent(enrollCourse)}
-            className='px-5 beforeLoginbtn'
-            sx={{ minWidth: { xs: '100px', sm: '150px' }, mt: { xs: 4, sm: 0 } }}
+            sx={{
+              backgroundColor: '#7d9b17',
+              color: 'white',
+              borderRadius: '8px',
+              px: 4,
+              py: 1,
+              fontWeight: 600,
+              '&:hover': { backgroundColor: '#657d12' }
+            }}
           >
-            Yes
+            Yes, Enroll
           </Button>
         </DialogActions>
       </Dialog>
