@@ -27,7 +27,7 @@ export const AppLayout = ({ children }) => {
     { label: 'Create Course', href: '/course-creation', subject: 'enterprise' },
     { label: 'Profile', href: '/enterprise-profile', subject: 'enterprise' },
     // Student Links
-    { label: 'All Courses', href: '/my-all-courses', subject: 'student' },
+    { label: 'All Courses', href: '/Course-listing', subject: 'student' },
     { label: 'Student Profile', href: '/student-profile', subject: 'student' },
     { label: 'Settings', href: '/student-setting', subject: 'student' },
   ]
@@ -61,7 +61,7 @@ export const AppLayout = ({ children }) => {
               <Typography
                 variant='h6'
                 component={Link}
-                href={user?.role === 'admin' ? '/admin-enterprises' : user?.role === 'enterprise' ? '/enterprise' : '/my-all-courses'}
+                href={user?.role === 'admin' ? '/admin-enterprises' : user?.role === 'enterprise' ? '/enterprise' : '/student'}
                 sx={{
                   textDecoration: 'none',
                   color: '#7d9b17',
@@ -103,6 +103,7 @@ export const AppLayout = ({ children }) => {
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
               {user ? (
                 <>
+
                   <IconButton
                     onClick={handleMenuClick}
                     size="small"
@@ -113,6 +114,7 @@ export const AppLayout = ({ children }) => {
                   >
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                       <Avatar
+                        src={user?.profile?.profileImg || user?.profileImg ? (user?.profile?.profileImg || user?.profileImg) + '?' + new Date().getTime() : ''}
                         sx={{
                           width: 36,
                           height: 36,
@@ -121,7 +123,7 @@ export const AppLayout = ({ children }) => {
                           fontWeight: 700
                         }}
                       >
-                        {(user.name || user.email || 'U')[0].toUpperCase()}
+                        {!user?.profile?.profileImg && !user?.profileImg && (user?.name || user?.email || 'U')[0].toUpperCase()}
                       </Avatar>
                       <Typography variant='body2' sx={{ color: '#2F2B3D', fontWeight: 600, display: { xs: 'none', sm: 'block' } }}>
                         {user.name || user.email}
@@ -156,6 +158,7 @@ export const AppLayout = ({ children }) => {
                           zIndex: 0,
                         },
                       },
+
                     }}
                   >
                     <MenuItem sx={{ pointerEvents: 'none', display: 'flex', justifyContent: 'center', pb: 1.5 }}>
@@ -189,15 +192,15 @@ export const AppLayout = ({ children }) => {
                   </Button>
                 </>
               )}
-            </Box>
-          </Toolbar>
-        </Container>
-      </AppBar>
+            </Box >
+          </Toolbar >
+        </Container >
+      </AppBar >
 
       <Box component='main' sx={{ flexGrow: 1, py: 2, overflowY: user?.role === 'admin' ? 'auto' : 'visible' }}>
         <Container maxWidth='xl'>{children}</Container>
       </Box>
-    </Box>
+    </Box >
   )
 }
 

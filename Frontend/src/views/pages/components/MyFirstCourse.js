@@ -7,14 +7,10 @@ export default function MyFirstCourse() {
   const router = useRouter()
 
   return (
-    <Box>
-      <div className='learnningTimeBox blockchainBox row justify-content-between me-0 '>
-        <div className='d-flex justify-content-center my-5'>
-          <Button variant='text' className='addFirstCourse' onClick={() => router.push('/Course-listing')}>
-            <FaPlus size={30} className='addHeadingColor' /> <span className='px-2 addHeadingColor'> Add my first course</span>
-          </Button>
-        </div>
-      </div>
+    <Box className='learnningTimeBox' sx={{ backgroundColor: 'white', display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '120px' }}>
+      <Button variant='outlined' onClick={() => router.push('/Course-listing')} sx={{ borderColor: '#7d9b17', color: '#7d9b17', borderRadius: '8px', py: 1, px: 3, '&:hover': { backgroundColor: 'rgba(125, 155, 23, 0.08)', borderColor: '#7d9b17' } }}>
+        <FaPlus size={20} className='me-2' /> Add my first course
+      </Button>
     </Box>
   )
 }

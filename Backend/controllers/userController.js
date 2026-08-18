@@ -8,6 +8,7 @@ export const getAllUsers = async (query) => {
 
 export const getOneUser = async (id) => {
   let user = await User.findById(id);
+  if (!user) return null;
   let res = user.toObject();
   delete res.password;
   return res;
