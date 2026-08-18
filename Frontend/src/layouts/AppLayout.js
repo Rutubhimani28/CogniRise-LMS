@@ -3,41 +3,36 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { AppBar, Toolbar, Typography, Button, Container, Box, Avatar, Chip, Menu, MenuItem, IconButton, Divider } from '@mui/material'
 import { useAuth } from 'src/hooks/useAuth'
+import { AbilityContext } from 'src/layouts/components/acl/Can'
+import { useContext } from 'react'
 
 export const AppLayout = ({ children }) => {
   const { user, logout } = useAuth()
   const router = useRouter()
+  const ability = useContext(AbilityContext)
   const [anchorEl, setAnchorEl] = useState(null)
   const open = Boolean(anchorEl)
 
   const handleMenuClick = (event) => setAnchorEl(event.currentTarget)
   const handleMenuClose = () => setAnchorEl(null)
 
-  const getNavLinks = () => {
-    if (!user) return []
-    if (user.role === 'admin') {
-      return [
-        { label: 'Enterprises', href: '/admin-enterprises' },
-        { label: 'Courses', href: '/admin-courses' },
-        { label: 'Categories', href: '/admin-category' }
-      ]
-    }
-    if (user.role === 'enterprise') {
-      return [
-        { label: 'Dashboard', href: '/enterprise' },
-        { label: 'My Courses', href: '/enterprise/courses' },
-        { label: 'Create Course', href: '/course-creation' },
-        { label: 'Profile', href: '/enterprise-profile' }
-      ]
-    }
-    return [
-      { label: 'All Courses', href: '/my-all-courses' },
-      { label: 'Student Profile', href: '/student-profile' },
-      { label: 'Settings', href: '/student-setting' }
-    ]
-  }
+  const allNavLinks = [
+    // Admin Links
+    { label: 'Enterprises', href: '/admin-enterprises', subject: 'admin' },
+    { label: 'Courses', href: '/admin-courses', subject: 'admin' },
+    { label: 'Categories', href: '/admin-category', subject: 'admin' },
+    // Enterprise Links
+    { label: 'Dashboard', href: '/enterprise', subject: 'enterprise' },
+    { label: 'My Courses', href: '/enterprise-courses', subject: 'enterprise' },
+    { label: 'Create Course', href: '/course-creation', subject: 'enterprise' },
+    { label: 'Profile', href: '/enterprise-profile', subject: 'enterprise' },
+    // Student Links
+    { label: 'All Courses', href: '/my-all-courses', subject: 'student' },
+    { label: 'Student Profile', href: '/student-profile', subject: 'student' },
+    { label: 'Settings', href: '/student-setting', subject: 'student' },
+  ]
 
-  const navLinks = getNavLinks()
+  const navLinks = user && ability ? allNavLinks.filter(link => ability.can('manage', link.subject)) : []
 
   return (
     <Box
