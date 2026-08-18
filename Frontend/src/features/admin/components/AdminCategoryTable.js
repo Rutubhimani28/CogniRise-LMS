@@ -1,5 +1,6 @@
 import DeleteIcon from '@mui/icons-material/Delete'
 import Box from '@mui/material/Box'
+import CircularProgress from '@mui/material/CircularProgress'
 import Checkbox from '@mui/material/Checkbox'
 import IconButton from '@mui/material/IconButton'
 import Modal from '@mui/material/Modal'
@@ -177,6 +178,7 @@ export const AdminCategoryTable = () => {
   const [confirmDelet, setConfirmDelet] = useState(false)
   const [multiDeleteModel, setMultiDeleteModel] = useState(false)
   const [categoryId, setCategoryId] = useState(null)
+  const [loading, setLoading] = useState(true)
 
   const createdBy = JSON.parse(localStorage.getItem('userData'))
 
@@ -201,12 +203,14 @@ export const AdminCategoryTable = () => {
   }, [])
 
   const getCategoryData = param => {
+    setLoading(true)
     requestApiData
       .getCategories(param)
       .then(res => {
         if (res?.status === 200) setCategory(res?.data)
       })
       .catch(err => console.log('Get Enterprise categories', err))
+      .finally(() => setLoading(false))
   }
 
   const deleteCategory = id => {
@@ -292,7 +296,7 @@ export const AdminCategoryTable = () => {
       </Row>
       <Paper sx={{ width: '100%', mb: 2, backgroundColor: 'white' }}>
         <EnhancedTableToolbar numSelected={selected.length} setMultiDeleteModel={setMultiDeleteModel} />
-        <TableContainer sx={{ maxHeight: 'calc(100vh - 300px)' }}>
+        <TableContainer sx={{ maxHeight: 'calc(100vh - 300px)', minHeight: '400px' }}>
           <Table
             stickyHeader
             size='small'
@@ -308,7 +312,13 @@ export const AdminCategoryTable = () => {
               rowCount={category.length}
             />
             <TableBody>
-              {stableSort(category, getComparator(order, orderBy))
+              {loading ? (
+                <TableRow>
+                  <TableCell colSpan={6} align="center" sx={{ height: '300px', borderBottom: 'none !important' }}>
+                    <CircularProgress sx={{ color: '#7d9b17' }} />
+                  </TableCell>
+                </TableRow>
+              ) : stableSort(category, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
                   const isItemSelected = isSelected(row?._id)

@@ -1,7 +1,7 @@
 import { Fragment, useState, useEffect } from 'react'
 import Requests from 'src/configs/axiosRequest'
 import { Row, Col } from 'reactstrap'
-import { Box, Grid, Typography } from '@mui/material'
+import { Box, Grid, Typography, CircularProgress } from '@mui/material'
 import { useRouter } from 'next/router'
 import imgConst from 'src/configs/imgConst'
 import { FaTwitter } from 'react-icons/fa'
@@ -11,7 +11,8 @@ import { VscGlobe } from 'react-icons/vsc'
 export const ViewStudentProfile = () => {
   const requestApiData = new Requests()
   const router = useRouter()
-  const [getData, setGetData] = useState([])
+  const [getData, setGetData] = useState(null)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     if (!router.isReady) return
@@ -20,12 +21,23 @@ export const ViewStudentProfile = () => {
       'profile.profileSlug': router?.query?.profileSlug
     }
 
+    setLoading(true)
     requestApiData.getUser(params).then(res => {
       if (res?.status === 200) {
         setGetData(res.data[0])
       }
+    }).finally(() => {
+      setLoading(false)
     })
   }, [router.isReady])
+
+  if (loading) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh' }}>
+        <CircularProgress sx={{ color: '#7d9b17' }} />
+      </Box>
+    )
+  }
 
   return (
     <Fragment>

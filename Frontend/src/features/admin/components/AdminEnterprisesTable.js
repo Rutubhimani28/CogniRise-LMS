@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import Box from '@mui/material/Box'
+import CircularProgress from '@mui/material/CircularProgress'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
@@ -140,6 +141,7 @@ export const AdminEnterprisesTable = () => {
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(10)
   const [enterprises, setEnterprises] = useState([])
+  const [loading, setLoading] = useState(true)
   const [confirmApprove, setConfirmApprove] = useState(false)
   const [enterpriseId, setEnterpriseId] = useState(null)
 
@@ -158,12 +160,14 @@ export const AdminEnterprisesTable = () => {
   }, [])
 
   const getUserData = () => {
+    setLoading(true)
     requestApiData
       .getUser({ role: 'enterprise' })
       .then(res => {
         if (res?.status === 200) setEnterprises(res?.data)
       })
       .catch(err => console.log('Get all enterprise', err))
+      .finally(() => setLoading(false))
   }
 
   const approveEnterprise = id => {
@@ -207,7 +211,7 @@ export const AdminEnterprisesTable = () => {
     <Box sx={{ width: '100%' }} className='enaterpriseCourseWrap'>
       <Paper sx={{ width: '100%', mb: 2, backgroundColor: 'white' }}>
         <EnhancedTableToolbar numSelected={selected.length} />
-        <TableContainer sx={{ maxHeight: 'calc(100vh - 300px)' }}>
+        <TableContainer sx={{ maxHeight: 'calc(100vh - 300px)', minHeight: '400px' }}>
           <Table
             stickyHeader
             size='small'
@@ -223,7 +227,13 @@ export const AdminEnterprisesTable = () => {
               rowCount={enterprises.length}
             />
             <TableBody>
-              {stableSort(enterprises, getComparator(order, orderBy))
+              {loading ? (
+                <TableRow>
+                  <TableCell colSpan={6} align="center" sx={{ height: '300px', borderBottom: 'none !important' }}>
+                    <CircularProgress sx={{ color: '#7d9b17' }} />
+                  </TableCell>
+                </TableRow>
+              ) : stableSort(enterprises, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
                   const isItemSelected = isSelected(row.profile.name)

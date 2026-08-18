@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { alpha } from '@mui/material/styles'
 import Box from '@mui/material/Box'
+import CircularProgress from '@mui/material/CircularProgress'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
@@ -155,6 +156,9 @@ export const AdminCoursesTable = () => {
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(10)
   const [course, setCourse] = useState([])
+  const [categories, setCategories] = useState([])
+  const [usersMap, setUsersMap] = useState({})
+  const [loading, setLoading] = useState(true)
   const [confirmApprove, setConfirmApprove] = useState(false)
   const [courseId, setCourseId] = useState({})
 
@@ -169,20 +173,56 @@ export const AdminCoursesTable = () => {
   }
 
   useEffect(() => {
-    getCourseData()
+    setLoading(true)
+    Promise.all([
+      getCourseData(),
+      requestApiData.getCategories().then(res => {
+        if (res?.status === 200) {
+          setCategories(res?.data)
+        }
+      }).catch(err => {
+        console.log('Get all categories', err)
+      })
+    ]).finally(() => {
+      setLoading(false)
+    })
   }, [])
 
   const getCourseData = () => {
-    requestApiData
+    return requestApiData
       .courseRequest()
       .then(res => {
         if (res?.status === 200) {
-          setCourse(res?.data.filter(item => item.status != 'draft'))
+          const fetchedCourses = res?.data.filter(item => item.status != 'draft')
+          setCourse(fetchedCourses)
+
+          const uniqueIds = [...new Set(fetchedCourses.map(c => c.createdBy).filter(Boolean))]
+          const nameMap = {}
+          Promise.all(
+            uniqueIds.map(id =>
+              requestApiData.getUserById(id).then(r => {
+                if (r?.status === 200) {
+                  nameMap[id] = r.data?.profile?.name || r.data?.name || r.data?.email || id
+                }
+              }).catch(() => {})
+            )
+          ).then(() => setUsersMap(prev => ({ ...prev, ...nameMap })))
         }
       })
       .catch(err => {
         console.log('Get all courses', err)
       })
+  }
+
+  const getCategoryName = (categoryId) => {
+    const found = categories.find(cat => cat._id === categoryId)
+    return found ? found.name : categoryId
+  }
+
+  const getCreatorName = (createdBy, createdName) => {
+    if (usersMap[createdBy]) return usersMap[createdBy]
+    if (createdName) return createdName
+    return ''
   }
 
   const approveCourse = data => {
@@ -234,7 +274,7 @@ export const AdminCoursesTable = () => {
     <Box sx={{ width: '100%' }} className='enaterpriseCourseWrap'>
       <Paper sx={{ width: '100%', mb: 2, backgroundColor: 'white' }}>
         <EnhancedTableToolbar numSelected={selected.length} />
-        <TableContainer sx={{ maxHeight: 'calc(100vh - 300px)' }}>
+        <TableContainer sx={{ maxHeight: 'calc(100vh - 300px)', minHeight: '400px' }}>
           <Table
             stickyHeader
             size='small'
@@ -254,7 +294,13 @@ export const AdminCoursesTable = () => {
               rowCount={course.length}
             />
             <TableBody>
-              {stableSort(course, getComparator(order, orderBy))
+              {loading ? (
+                <TableRow>
+                  <TableCell colSpan={6} align="center" sx={{ height: '300px', borderBottom: 'none !important' }}>
+                    <CircularProgress sx={{ color: '#7d9b17' }} />
+                  </TableCell>
+                </TableRow>
+              ) : stableSort(course, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
                   const isItemSelected = isSelected(row.title)
@@ -274,10 +320,10 @@ export const AdminCoursesTable = () => {
                         {row.title}
                       </TableCell>
                       <TableCell align='left' className='text-black ' sx={{ py: 0.5, px: 1 }}>
-                        {row.category}
+                        {getCategoryName(row.category)}
                       </TableCell>
                       <TableCell align='left' className='text-black ' sx={{ py: 0.5, px: 1 }}>
-                        {row.createdName}
+                        {getCreatorName(row.createdBy, row.createdName)}
                       </TableCell>
                       <TableCell align='left' className='text-black ' sx={{ py: 0.5, px: 1 }}>
                         {moment(row.createdAt).format('MM/DD/YYYY')}
