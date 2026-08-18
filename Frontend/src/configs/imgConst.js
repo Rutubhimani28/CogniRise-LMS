@@ -59,7 +59,7 @@ const imgConst = {
   graduate: '/images/instuctor/graduate.png',
   graph2: '/images/instuctor/graph2.png',
   topCourse: '/images/instuctor/topCourse.png',
-  icon: '/images/instuctor/icon.png',
+  icon: '/images/instuctor/Icon.png',
   Graph: '/images/instuctor/Graph.png',
   video: '/images/studentcourse/course-video.png',
   videoIcon: '/images/studentcourse/video_icon.png',
