@@ -3,6 +3,7 @@ import { Fragment, useState, useEffect } from 'react'
 
 // ** Reactstrap Imports
 import { Row, Col, Card, Label, Button, CardBody, CardTitle, CardHeader } from 'reactstrap'
+import { CircularProgress } from '@mui/material'
 
 import { Form, Field } from 'react-final-form'
 import arrayMutators from 'final-form-arrays'
@@ -366,8 +367,8 @@ export const UploadCourseForm = () => {
                 </Label>
               </Col>
               <Col sm='12' className='mb-1 mt-3'>
-                <Button type='submit' className='me-2 px-5' color='primary' disabled={submitting || pristine}>
-                  Save
+                <Button type='submit' className='me-2 px-5' color='primary' disabled={submitting || pristine} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  {submitting ? <CircularProgress size={20} color="inherit" /> : null} Save
                 </Button>
                 <Button type='button' className='me-2 px-5 text-end' color='primary' onClick={form.reset} disabled={submitting || pristine}>
                   Reset
