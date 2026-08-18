@@ -22,14 +22,14 @@ export default function Enrolled() {
 
   return (
     <div
-      className='CurrentCourseBox learnningTimeBox d-flex align-items-center justify-content-between'
+      className='learnningTimeBox d-flex align-items-center justify-content-between'
       style={{ height: '95%' }}
     >
       <div>
-        <h6 className='text-white'>Enrolled</h6>
-        <h6 style={{ fontWeight: '700', fontSize: '24px', marginBottom: '0', color: 'white' }}>
-          {totalEnrollment?.data}
-        </h6>
+        <h6 style={{ fontSize: '14px', color: '#7d9b17', fontWeight: 'bold' }}>Enrolled</h6>
+        <h2 style={{ color: 'black', fontWeight: 'bold' }} className='fw-bolder fs-4'>
+          {totalEnrollment?.data ? totalEnrollment?.data : 0}
+        </h2>
       </div>
       <div>
         <img

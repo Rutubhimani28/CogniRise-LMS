@@ -3,7 +3,7 @@ import Requests from 'src/configs/axiosRequest'
 import {
   Box, Grid, Typography, Button, Card, CardContent, Avatar,
   TextField, MenuItem, Select, FormControl, InputLabel, Divider,
-  InputAdornment, IconButton
+  InputAdornment, IconButton, CircularProgress
 } from '@mui/material'
 import { useFormik } from 'formik'
 import { toast } from 'react-hot-toast'
@@ -34,6 +34,8 @@ export const EnterpriseProfileForm = () => {
   const [files, setFiles] = useState([])
   const [selectedFile, setSelectedFile] = useState(null)
   const [uploadImg, setUploadImg] = useState(false)
+  const [loadingProfile, setLoadingProfile] = useState(false)
+  const [loadingPhoto, setLoadingPhoto] = useState(false)
 
   const handleUploadImgOpen = () => setUploadImg(true)
   const handleUploadImgClose = () => setUploadImg(false)
@@ -66,7 +68,7 @@ export const EnterpriseProfileForm = () => {
 
   const uploadFile = async file => {
     try {
-      setUploadImg(false)
+      setLoadingPhoto(true)
       const formData = new FormData()
       formData.append('profile', file)
       formData.append('_id', getData._id)
@@ -81,9 +83,12 @@ export const EnterpriseProfileForm = () => {
         setGetData(res.data)
         setFiles([])
         userApi()
+        setUploadImg(false)
       }
     } catch (err) {
       toast.error(err.response?.data?.error || 'Something went wrong')
+    } finally {
+      setLoadingPhoto(false)
     }
   }
 
@@ -103,6 +108,7 @@ export const EnterpriseProfileForm = () => {
     },
     enableReinitialize: true,
     onSubmit: values => {
+      setLoadingProfile(true)
       const payload = {
         _id: getData._id,
         email: getData.email,
@@ -123,6 +129,7 @@ export const EnterpriseProfileForm = () => {
       requestApiData.updateUserProfile(payload)
         .then(res => { if (res?.status === 200) toast.success('Profile updated successfully') })
         .catch(() => toast.error('Something went wrong'))
+        .finally(() => setLoadingProfile(false))
     }
   })
 
@@ -306,14 +313,14 @@ export const EnterpriseProfileForm = () => {
           {/* Save Button */}
           <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
             <Button
-              type='submit' variant='contained' size='large'
+              type='submit' variant='contained' size='large' disabled={loadingProfile}
               sx={{
                 px: 6, py: 1.5, bgcolor: '#7d9b17', borderRadius: 2,
                 fontWeight: 600, textTransform: 'none', fontSize: '1rem',
                 '&:hover': { bgcolor: '#5a7212' }
               }}
             >
-              Save Changes
+              {loadingProfile ? <CircularProgress size={24} color="inherit" /> : 'Save Changes'}
             </Button>
           </Box>
 
@@ -353,11 +360,11 @@ export const EnterpriseProfileForm = () => {
           </Typography>
 
           <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2, pt: 3 }}>
-            <Button variant='outlined' onClick={handleUploadImgClose} sx={{ borderColor: '#7d9b17', color: '#7d9b17', textTransform: 'none' }}>
+            <Button variant='outlined' onClick={handleUploadImgClose} disabled={loadingPhoto} sx={{ borderColor: '#7d9b17', color: '#7d9b17', textTransform: 'none' }}>
               Cancel
             </Button>
-            <Button variant='contained' onClick={() => uploadFile(selectedFile)} sx={{ bgcolor: '#7d9b17', textTransform: 'none', '&:hover': { bgcolor: '#5a7212' } }}>
-              Save Photo
+            <Button variant='contained' onClick={() => uploadFile(selectedFile)} disabled={loadingPhoto} sx={{ bgcolor: '#7d9b17', textTransform: 'none', '&:hover': { bgcolor: '#5a7212' } }}>
+              {loadingPhoto ? <CircularProgress size={24} color="inherit" /> : 'Save Photo'}
             </Button>
           </Box>
         </Box>

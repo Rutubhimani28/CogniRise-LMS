@@ -23,6 +23,9 @@ router.get("/", passport.authenticate('jwt', { session: false }), async (req, re
 router.get("/:id", passport.authenticate('jwt', { session: false }), async (req, res) => {
   try {
     const user = await getOneUser(req.params.id);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
     res.send(user);
   } catch (error) {
     console.log(error);

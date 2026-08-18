@@ -59,6 +59,14 @@ export const StudentProfileForm = () => {
     if (!userData?.id) return
     requestApiData.getUserById(userData.id).then(res => {
       if (res?.status === 200) setGetData(res.data)
+    }).catch(err => {
+      console.error('Failed to fetch user data:', err)
+      if (err.response?.status === 404) {
+        // Handle user not found (e.g., clear localStorage and redirect to login)
+        window.localStorage.removeItem('userData')
+        window.localStorage.removeItem('accessToken')
+        window.location.href = '/login'
+      }
     })
   }
 
@@ -109,7 +117,7 @@ export const StudentProfileForm = () => {
           if (res?.status === 200) {
             fetchWalletUpdate(res.data, accounts[0])
           }
-        })
+        }).catch(err => console.error(err))
       })
     } else {
       setWalletAddress('')

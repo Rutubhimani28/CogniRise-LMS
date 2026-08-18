@@ -1,38 +1,38 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { AppBar, Toolbar, Typography, Button, Container, Box, Avatar, Chip } from '@mui/material'
+import { AppBar, Toolbar, Typography, Button, Container, Box, Avatar, Chip, Menu, MenuItem, IconButton, Divider } from '@mui/material'
 import { useAuth } from 'src/hooks/useAuth'
+import { AbilityContext } from 'src/layouts/components/acl/Can'
+import { useContext } from 'react'
 
 export const AppLayout = ({ children }) => {
   const { user, logout } = useAuth()
   const router = useRouter()
+  const ability = useContext(AbilityContext)
+  const [anchorEl, setAnchorEl] = useState(null)
+  const open = Boolean(anchorEl)
 
-  const getNavLinks = () => {
-    if (!user) return []
-    if (user.role === 'admin') {
-      return [
-        { label: 'Enterprises', href: '/admin-enterprises' },
-        { label: 'Courses', href: '/admin-courses' },
-        { label: 'Categories', href: '/admin-category' }
-      ]
-    }
-    if (user.role === 'enterprise') {
-      return [
-        { label: 'Dashboard', href: '/enterprise' },
-        { label: 'My Courses', href: '/enterprise/courses' },
-        { label: 'Create Course', href: '/course-creation' },
-        { label: 'Profile', href: '/enterprise-profile' }
-      ]
-    }
-    return [
-      { label: 'All Courses', href: '/Course-listing' },
-      { label: 'Student Profile', href: '/student-profile' },
-      { label: 'Settings', href: '/student-setting' }
-    ]
-  }
+  const handleMenuClick = (event) => setAnchorEl(event.currentTarget)
+  const handleMenuClose = () => setAnchorEl(null)
 
-  const navLinks = getNavLinks()
+  const allNavLinks = [
+    // Admin Links
+    { label: 'Enterprises', href: '/admin-enterprises', subject: 'admin' },
+    { label: 'Courses', href: '/admin-courses', subject: 'admin' },
+    { label: 'Categories', href: '/admin-category', subject: 'admin' },
+    // Enterprise Links
+    { label: 'Dashboard', href: '/enterprise', subject: 'enterprise' },
+    { label: 'My Courses', href: '/enterprise-courses', subject: 'enterprise' },
+    { label: 'Create Course', href: '/course-creation', subject: 'enterprise' },
+    { label: 'Profile', href: '/enterprise-profile', subject: 'enterprise' },
+    // Student Links
+    { label: 'All Courses', href: '/Course-listing', subject: 'student' },
+    { label: 'Student Profile', href: '/student-profile', subject: 'student' },
+    { label: 'Settings', href: '/student-setting', subject: 'student' },
+  ]
+
+  const navLinks = user && ability ? allNavLinks.filter(link => ability.can('manage', link.subject)) : []
 
   return (
     <Box
@@ -103,52 +103,84 @@ export const AppLayout = ({ children }) => {
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
               {user ? (
                 <>
-                  <Chip
-                    label={user.role?.toUpperCase() || 'USER'}
-                    color='primary'
-                    size='small'
-                    sx={{
-                      fontWeight: 700,
-                      fontSize: '0.7rem',
-                      height: 24,
-                      backgroundColor: 'rgba(125, 155, 23, 0.12)',
-                      color: '#7d9b17',
-                      border: '1px solid rgba(125, 155, 23, 0.3)'
-                    }}
-                  />
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <Avatar
-                      src={user?.profile?.profileImg || user?.profileImg ? (user?.profile?.profileImg || user?.profileImg) + '?' + new Date().getTime() : ''}
-                      sx={{
-                        width: 36,
-                        height: 36,
-                        bgcolor: '#7d9b17',
-                        fontSize: '0.9rem',
-                        fontWeight: 700
-                      }}
-                    >
-                      {!user?.profile?.profileImg && !user?.profileImg && (user?.name || user?.email || 'U')[0].toUpperCase()}
-                    </Avatar>
-                    <Typography variant='body2' sx={{ color: '#2F2B3D', fontWeight: 600, display: { xs: 'none', sm: 'block' } }}>
-                      {user.name || user.email}
-                    </Typography>
-                  </Box>
-                  <Button
-                    variant='outlined'
-                    color='primary'
-                    size='small'
-                    onClick={logout}
-                    sx={{
-                      borderColor: 'rgba(125, 155, 23, 0.5)',
-                      color: '#7d9b17',
-                      '&:hover': {
-                        borderColor: '#7d9b17',
-                        backgroundColor: 'rgba(125, 155, 23, 0.08)'
-                      }
+
+                  <IconButton
+                    onClick={handleMenuClick}
+                    size="small"
+                    sx={{ ml: 1, padding: 0.5, borderRadius: '8px' }}
+                    aria-controls={open ? 'account-menu' : undefined}
+                    aria-haspopup="true"
+                    aria-expanded={open ? 'true' : undefined}
+                  >
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <Avatar
+                        src={user?.profile?.profileImg || user?.profileImg ? (user?.profile?.profileImg || user?.profileImg) + '?' + new Date().getTime() : ''}
+                        sx={{
+                          width: 36,
+                          height: 36,
+                          bgcolor: '#7d9b17',
+                          fontSize: '0.9rem',
+                          fontWeight: 700
+                        }}
+                      >
+                        {!user?.profile?.profileImg && !user?.profileImg && (user?.name || user?.email || 'U')[0].toUpperCase()}
+                      </Avatar>
+                      <Typography variant='body2' sx={{ color: '#2F2B3D', fontWeight: 600, display: { xs: 'none', sm: 'block' } }}>
+                        {user.name || user.email}
+                      </Typography>
+                    </Box>
+                  </IconButton>
+                  <Menu
+                    anchorEl={anchorEl}
+                    id="account-menu"
+                    open={open}
+                    onClose={handleMenuClose}
+                    onClick={handleMenuClose}
+                    transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+                    anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+                    PaperProps={{
+                      elevation: 0,
+                      sx: {
+                        overflow: 'visible',
+                        filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.15))',
+                        mt: 1.5,
+                        minWidth: 150,
+                        '&:before': {
+                          content: '""',
+                          display: 'block',
+                          position: 'absolute',
+                          top: 0,
+                          right: 14,
+                          width: 10,
+                          height: 10,
+                          bgcolor: 'background.paper',
+                          transform: 'translateY(-50%) rotate(45deg)',
+                          zIndex: 0,
+                        },
+                      },
+
                     }}
                   >
-                    Logout
-                  </Button>
+                    <MenuItem sx={{ pointerEvents: 'none', display: 'flex', justifyContent: 'center', pb: 1.5 }}>
+                      <Chip
+                        label={user.role?.toUpperCase() || 'USER'}
+                        color='primary'
+                        size='small'
+                        sx={{
+                          fontWeight: 700,
+                          fontSize: '0.7rem',
+                          height: 24,
+                          backgroundColor: 'rgba(125, 155, 23, 0.12)',
+                          color: '#7d9b17',
+                          border: '1px solid rgba(125, 155, 23, 0.3)'
+                        }}
+                      />
+                    </MenuItem>
+                    <Divider />
+                    <MenuItem onClick={logout} sx={{ color: '#d32f2f', fontWeight: 600, justifyContent: 'center' }}>
+                      Logout
+                    </MenuItem>
+                  </Menu>
                 </>
               ) : (
                 <>
@@ -160,10 +192,10 @@ export const AppLayout = ({ children }) => {
                   </Button>
                 </>
               )}
-            </Box>
-          </Toolbar>
-        </Container>
-      </AppBar>
+            </Box >
+          </Toolbar >
+        </Container >
+      </AppBar >
 
       <Box component='main' sx={{ flexGrow: 1, py: 2, overflowY: user?.role === 'admin' ? 'auto' : 'visible' }}>
         <Container maxWidth='xl'>{children}</Container>
