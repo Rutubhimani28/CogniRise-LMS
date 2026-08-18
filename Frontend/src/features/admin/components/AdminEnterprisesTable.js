@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import Box from '@mui/material/Box'
 import CircularProgress from '@mui/material/CircularProgress'
+import TextField from '@mui/material/TextField'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
@@ -96,6 +97,10 @@ EnhancedTableHead.propTypes = {
 
 function EnhancedTableToolbar(props) {
   const { numSelected } = props
+  if (numSelected === 0) {
+    return null
+  }
+
   return (
     <Toolbar
       variant='dense'
@@ -108,8 +113,8 @@ function EnhancedTableToolbar(props) {
         })
       }}
     >
-      <Typography sx={{ flex: '1 1 100%', fontSize: '1.1rem' }} variant='h6' id='tableTitle' component='div' className='ps-4 addHeadingColor'>
-        Enterprise Applications
+      <Typography sx={{ flex: '1 1 100%' }} color='inherit' variant='subtitle1' component='div'>
+        {numSelected} selected
       </Typography>
     </Toolbar>
   )
@@ -142,6 +147,7 @@ export const AdminEnterprisesTable = () => {
   const [rowsPerPage, setRowsPerPage] = useState(10)
   const [enterprises, setEnterprises] = useState([])
   const [loading, setLoading] = useState(true)
+  const [searchQuery, setSearchQuery] = useState('')
   const [confirmApprove, setConfirmApprove] = useState(false)
   const [enterpriseId, setEnterpriseId] = useState(null)
 
@@ -205,12 +211,37 @@ export const AdminEnterprisesTable = () => {
   }
 
   const isSelected = title => selected.indexOf(title) !== -1
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - enterprises.length) : 0
+
+  const filteredEnterprises = enterprises.filter((row) =>
+    row?.profile?.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    row?.status?.toLowerCase().includes(searchQuery.toLowerCase())
+  )
+
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - filteredEnterprises.length) : 0
 
   return (
     <Box sx={{ width: '100%' }} className='enaterpriseCourseWrap'>
+      <Row className='justify-content-between align-items-center pb-3'>
+        <Col md={6} className='mb-1'>
+          <Typography sx={{ fontSize: '1.3rem', color: '#7d9b17' }} variant='h6' className='addHeadingColor'>
+            Enterprise Applications
+          </Typography>
+        </Col>
+        <Col md={6} className='text-end'>
+          <TextField
+            variant="outlined"
+            size="small"
+            placeholder="Search enterprises..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            sx={{ backgroundColor: 'white', borderRadius: 1, minWidth: '300px' }}
+          />
+        </Col>
+      </Row>
       <Paper sx={{ width: '100%', mb: 2, backgroundColor: 'white' }}>
-        <EnhancedTableToolbar numSelected={selected.length} />
+        <EnhancedTableToolbar 
+          numSelected={selected.length} 
+        />
         <TableContainer sx={{ maxHeight: 'calc(100vh - 300px)', minHeight: '400px' }}>
           <Table
             stickyHeader
@@ -233,7 +264,7 @@ export const AdminEnterprisesTable = () => {
                     <CircularProgress sx={{ color: '#7d9b17' }} />
                   </TableCell>
                 </TableRow>
-              ) : stableSort(enterprises, getComparator(order, orderBy))
+              ) : stableSort(filteredEnterprises, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
                   const isItemSelected = isSelected(row.profile.name)
@@ -271,7 +302,7 @@ export const AdminEnterprisesTable = () => {
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component='div'
-          count={enterprises.length}
+          count={filteredEnterprises.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}

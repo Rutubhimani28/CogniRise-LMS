@@ -6,6 +6,7 @@ import IconButton from '@mui/material/IconButton'
 import Modal from '@mui/material/Modal'
 import Paper from '@mui/material/Paper'
 import Table from '@mui/material/Table'
+import TextField from '@mui/material/TextField'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank'
@@ -118,6 +119,10 @@ EnhancedTableHead.propTypes = {
 
 function EnhancedTableToolbar(props) {
   const { numSelected, setMultiDeleteModel } = props
+  if (numSelected === 0) {
+    return null
+  }
+  
   return (
     <Toolbar
       variant='dense'
@@ -131,22 +136,14 @@ function EnhancedTableToolbar(props) {
         })
       }}
     >
-      {numSelected > 0 ? (
-        <Typography sx={{ flex: '1 1 100%' }} color='black' variant='subtitle1' component='div'>
-          {numSelected} selected
-        </Typography>
-      ) : (
-        <Typography sx={{ flex: '1 1 100%', fontSize: '1.1rem' }} variant='h6' id='tableTitle' component='div' className='ps-4 addHeadingColor'>
-          Categories
-        </Typography>
-      )}
-      {numSelected > 0 && (
-        <Tooltip title='Delete'>
-          <IconButton onClick={() => setMultiDeleteModel(true)}>
-            <DeleteIcon className='text-black' />
-          </IconButton>
-        </Tooltip>
-      )}
+      <Typography sx={{ flex: '1 1 100%' }} color='black' variant='subtitle1' component='div'>
+        {numSelected} selected
+      </Typography>
+      <Tooltip title='Delete'>
+        <IconButton onClick={() => setMultiDeleteModel(true)}>
+          <DeleteIcon className='text-black' />
+        </IconButton>
+      </Tooltip>
     </Toolbar>
   )
 }
@@ -179,6 +176,7 @@ export const AdminCategoryTable = () => {
   const [multiDeleteModel, setMultiDeleteModel] = useState(false)
   const [categoryId, setCategoryId] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [searchQuery, setSearchQuery] = useState('')
 
   const createdBy = JSON.parse(localStorage.getItem('userData'))
 
@@ -281,21 +279,45 @@ export const AdminCategoryTable = () => {
   }
 
   const isSelected = title => selected.indexOf(title) !== -1
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - category.length) : 0
+
+  const filteredCategory = category.filter((row) =>
+    row?.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    row?.description?.toLowerCase().includes(searchQuery.toLowerCase())
+  )
+
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - filteredCategory.length) : 0
 
   return (
     <Box sx={{ width: '100%' }} className='enaterpriseCategoryWrap'>
       <Row className='justify-content-between align-items-center pb-3'>
-        <Col md={12} className='mb-1 text-end'>
-          <Button type='button' size='sm' className='me-2 px-4 border-0 beforeLoginbtn text-black'>
-            <Link className='text-black text-decoration-none' href='/add-category'>
-              Add Category
-            </Link>
-          </Button>
+        <Col md={6} className='mb-1'>
+          <Typography sx={{ fontSize: '1.3rem' }} variant='h6' className='addHeadingColor'>
+            Categories
+          </Typography>
+        </Col>
+        <Col md={6} className='mb-1'>
+          <Box display="flex" justifyContent="flex-end" alignItems="center" gap={2}>
+            <TextField
+              variant="outlined"
+              size="small"
+              placeholder="Search categories..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              sx={{ backgroundColor: 'white', borderRadius: 1, minWidth: '300px' }}
+            />
+            <Button type='button' size='sm' className='px-4 border-0 beforeLoginbtn text-black' style={{ height: '40px' }}>
+              <Link className='text-black text-decoration-none' href='/add-category'>
+                Add Category
+              </Link>
+            </Button>
+          </Box>
         </Col>
       </Row>
       <Paper sx={{ width: '100%', mb: 2, backgroundColor: 'white' }}>
-        <EnhancedTableToolbar numSelected={selected.length} setMultiDeleteModel={setMultiDeleteModel} />
+        <EnhancedTableToolbar 
+          numSelected={selected.length} 
+          setMultiDeleteModel={setMultiDeleteModel} 
+        />
         <TableContainer sx={{ maxHeight: 'calc(100vh - 300px)', minHeight: '400px' }}>
           <Table
             stickyHeader
@@ -311,14 +333,14 @@ export const AdminCategoryTable = () => {
               onRequestSort={handleRequestSort}
               rowCount={category.length}
             />
-            <TableBody>
+              <TableBody>
               {loading ? (
                 <TableRow>
                   <TableCell colSpan={6} align="center" sx={{ height: '300px', borderBottom: 'none !important' }}>
                     <CircularProgress sx={{ color: '#7d9b17' }} />
                   </TableCell>
                 </TableRow>
-              ) : stableSort(category, getComparator(order, orderBy))
+              ) : stableSort(filteredCategory, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
                   const isItemSelected = isSelected(row?._id)
@@ -366,7 +388,7 @@ export const AdminCategoryTable = () => {
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component='div'
-          count={category.length}
+          count={filteredCategory.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}

@@ -2,6 +2,8 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import { Chip, Dialog, DialogActions, DialogContent, DialogTitle, Button } from '@mui/material'
 import Box from '@mui/material/Box'
 import Checkbox from '@mui/material/Checkbox'
+import CircularProgress from '@mui/material/CircularProgress'
+import TextField from '@mui/material/TextField'
 import IconButton from '@mui/material/IconButton'
 import Modal from '@mui/material/Modal'
 import Paper from '@mui/material/Paper'
@@ -154,13 +156,9 @@ function EnhancedTableToolbar(props) {
           })
         }}
       >
-        {numSelected > 0 ? (
+        {numSelected > 0 && (
           <Typography sx={{ flex: '1 1 100%' }} color='black' variant='subtitle1' component='div'>
             {numSelected} selected
-          </Typography>
-        ) : (
-          <Typography sx={{ flex: '1 1 100%', color: '#7d9b17' }} variant='h5' id='tableTitle' component='div' className='ps-4'>
-            Courses
           </Typography>
         )}
         {filterList?.length > 0 &&
@@ -234,6 +232,8 @@ export const EnterpriseCoursesTable = () => {
   const [courseId, setCourseId] = useState(null)
   const [filterList, setFilterList] = useState([])
   const [isChange, setIsChange] = useState(false)
+  const [loading, setLoading] = useState(true)
+  const [searchQuery, setSearchQuery] = useState('')
 
   const createdBy = JSON.parse(localStorage.getItem('userData'))
 
@@ -245,6 +245,7 @@ export const EnterpriseCoursesTable = () => {
   }, [isChange, selected])
 
   const getCourseData = param => {
+    setLoading(true)
     requestApiData
       .courseRequest(param)
       .then(res => {
@@ -254,6 +255,7 @@ export const EnterpriseCoursesTable = () => {
         }
       })
       .catch(err => console.log('Get Enterprise Courses', err))
+      .finally(() => setLoading(false))
   }
 
   const deleteCourse = id => {
@@ -298,7 +300,14 @@ export const EnterpriseCoursesTable = () => {
   const handleTagDelete = tag => { setFilterList([]); setCourse(allCourse) }
 
   const isSelected = title => selected.indexOf(title) !== -1
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - course.length) : 0
+
+  const filteredCourse = course.filter((row) =>
+    row?.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    row?.category?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    row?.status?.toLowerCase().includes(searchQuery.toLowerCase())
+  )
+
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - filteredCourse.length) : 0
 
   useEffect(() => {
     if (action === 'drafts') {
@@ -309,25 +318,42 @@ export const EnterpriseCoursesTable = () => {
 
   return (
     <Box sx={{ width: '100%' }} className='enaterpriseCourseWrap'>
-      <Row className='justify-content-between align-items-center pb-5'>
-        <Col md={12} className='mb-1 text-end'>
-          <Button type='button' className='me-2 px-5 border-0 addCourse'>
-            <Link className='text-black text-decoration-none' href='/course-creation'>
-              Add Course
-            </Link>
-          </Button>
+      <Row className='justify-content-between align-items-center pb-3'>
+        <Col md={6} className='mb-1'>
+          <Typography sx={{ fontSize: '1.3rem', color: '#7d9b17' }} variant='h6' className='addHeadingColor'>
+            Courses
+          </Typography>
+        </Col>
+        <Col md={6} className='mb-1'>
+          <Box display="flex" justifyContent="flex-end" alignItems="center" gap={2}>
+            <TextField
+              variant="outlined"
+              size="small"
+              placeholder="Search courses..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              sx={{ backgroundColor: 'white', borderRadius: 1, minWidth: '300px' }}
+            />
+            <Button type='button' className='px-4 border-0 addCourse' style={{ height: '40px' }}>
+              <Link className='text-black text-decoration-none' href='/course-creation'>
+                Add Course
+              </Link>
+            </Button>
+          </Box>
         </Col>
       </Row>
       <Paper sx={{ width: '100%', mb: 2, backgroundColor: 'white' }}>
-        <EnhancedTableToolbar
-          numSelected={selected.length}
-          filterList={filterList}
-          onTagDelete={handleTagDelete}
-          setIsChange={setIsChange}
-          selected={selected}
-          setSelected={setSelected}
-        />
-        <TableContainer>
+        {(selected.length > 0 || filterList.length > 0) && (
+          <EnhancedTableToolbar
+            numSelected={selected.length}
+            filterList={filterList}
+            onTagDelete={handleTagDelete}
+            setIsChange={setIsChange}
+            selected={selected}
+            setSelected={setSelected}
+          />
+        )}
+        <TableContainer sx={{ maxHeight: 'calc(100vh - 300px)', minHeight: '400px' }}>
           <Table
             size='small'
             sx={{ minWidth: 750, borderCollapse: 'collapse', '& th , td': { borderBottom: '1px solid #a19d9dbf', padding: '15px' } }}
@@ -342,7 +368,13 @@ export const EnterpriseCoursesTable = () => {
               rowCount={course.length}
             />
             <TableBody>
-              {stableSort(course, getComparator(order, orderBy))
+              {loading ? (
+                <TableRow>
+                  <TableCell colSpan={6} align="center" sx={{ height: '300px', borderBottom: 'none !important' }}>
+                    <CircularProgress sx={{ color: '#7d9b17' }} />
+                  </TableCell>
+                </TableRow>
+              ) : stableSort(filteredCourse, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
                   const isItemSelected = isSelected(row?._id)
@@ -380,7 +412,7 @@ export const EnterpriseCoursesTable = () => {
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component='div'
-          count={course.length}
+          count={filteredCourse.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}

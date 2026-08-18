@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { alpha } from '@mui/material/styles'
 import Box from '@mui/material/Box'
 import CircularProgress from '@mui/material/CircularProgress'
+import TextField from '@mui/material/TextField'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
@@ -21,6 +22,7 @@ import { Button } from '@mui/material'
 import Modal from '@mui/material/Modal'
 import toast from 'react-hot-toast'
 import moment from 'moment'
+import { Row, Col } from 'reactstrap'
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) return -1
@@ -105,6 +107,10 @@ EnhancedTableHead.propTypes = {
 
 function EnhancedTableToolbar(props) {
   const { numSelected } = props
+  if (numSelected === 0) {
+    return null
+  }
+
   return (
     <Toolbar
       variant='dense'
@@ -117,14 +123,8 @@ function EnhancedTableToolbar(props) {
         })
       }}
     >
-      <Typography
-        sx={{ flex: '1 1 100%', color: '#7d9b17', fontSize: '1.1rem' }}
-        variant='h6'
-        id='tableTitle'
-        component='div'
-        className='ps-4 '
-      >
-        Course Approvals
+      <Typography sx={{ flex: '1 1 100%' }} color='inherit' variant='subtitle1' component='div'>
+        {numSelected} selected
       </Typography>
     </Toolbar>
   )
@@ -159,6 +159,7 @@ export const AdminCoursesTable = () => {
   const [categories, setCategories] = useState([])
   const [usersMap, setUsersMap] = useState({})
   const [loading, setLoading] = useState(true)
+  const [searchQuery, setSearchQuery] = useState('')
   const [confirmApprove, setConfirmApprove] = useState(false)
   const [courseId, setCourseId] = useState({})
 
@@ -268,12 +269,38 @@ export const AdminCoursesTable = () => {
   }
 
   const isSelected = title => selected.indexOf(title) !== -1
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - course.length) : 0
+
+  const filteredCourse = course.filter((row) =>
+    row?.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    getCategoryName(row.category)?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    getCreatorName(row.createdBy, row.createdName)?.toLowerCase().includes(searchQuery.toLowerCase())
+  )
+
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - filteredCourse.length) : 0
 
   return (
     <Box sx={{ width: '100%' }} className='enaterpriseCourseWrap'>
+      <Row className='justify-content-between align-items-center pb-3'>
+        <Col md={6} className='mb-1'>
+          <Typography sx={{ fontSize: '1.3rem', color: '#7d9b17' }} variant='h6' className='addHeadingColor'>
+            Course Approvals
+          </Typography>
+        </Col>
+        <Col md={6} className='text-end'>
+          <TextField
+            variant="outlined"
+            size="small"
+            placeholder="Search courses..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            sx={{ backgroundColor: 'white', borderRadius: 1, minWidth: '300px' }}
+          />
+        </Col>
+      </Row>
       <Paper sx={{ width: '100%', mb: 2, backgroundColor: 'white' }}>
-        <EnhancedTableToolbar numSelected={selected.length} />
+        <EnhancedTableToolbar 
+          numSelected={selected.length} 
+        />
         <TableContainer sx={{ maxHeight: 'calc(100vh - 300px)', minHeight: '400px' }}>
           <Table
             stickyHeader
@@ -300,7 +327,7 @@ export const AdminCoursesTable = () => {
                     <CircularProgress sx={{ color: '#7d9b17' }} />
                   </TableCell>
                 </TableRow>
-              ) : stableSort(course, getComparator(order, orderBy))
+              ) : stableSort(filteredCourse, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
                   const isItemSelected = isSelected(row.title)
@@ -363,7 +390,7 @@ export const AdminCoursesTable = () => {
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component='div'
-          count={course.length}
+          count={filteredCourse.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}
