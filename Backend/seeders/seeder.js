@@ -39,7 +39,7 @@ const seedData = async () => {
 
     // 2. Create 10 Enterprise Users
     const enterprisesData = [
-      { name: "Chainlink Labs", email: "chainlink@collegedao.io", slug: "chainlink-labs", type: "Oracle Network" },
+      { name: "Chainlink Labs", email: "enterprise@collegedao.io", slug: "chainlink-labs", type: "Oracle Network" },
       { name: "Ethereum Foundation", email: "ethereum@collegedao.io", slug: "ethereum-foundation", type: "Layer 1 Ecosystem" },
       { name: "Polygon Ecosystem", email: "polygon@collegedao.io", slug: "polygon-ecosystem", type: "Layer 2 Scaling" },
       { name: "Solana Foundation", email: "solana@collegedao.io", slug: "solana-foundation", type: "High-Speed L1" },
@@ -71,7 +71,7 @@ const seedData = async () => {
 
     // 3. Create 10 Student Users
     const studentsData = [
-      { name: "Alex Johnson", email: "alex@collegedao.io", school: "UC Berkeley", year: "Senior" },
+      { name: "Alex Johnson", email: "student@collegedao.io", school: "UC Berkeley", year: "Senior" },
       { name: "Sophia Chen", email: "sophia@collegedao.io", school: "MIT", year: "Junior" },
       { name: "Liam Miller", email: "liam@collegedao.io", school: "Stanford University", year: "Graduate" },
       { name: "Emma Davis", email: "emma@collegedao.io", school: "Harvard University", year: "Sophomore" },
