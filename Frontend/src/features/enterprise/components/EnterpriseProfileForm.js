@@ -33,14 +33,25 @@ export const EnterpriseProfileForm = () => {
   const [allCategory, setAllCategory] = useState([])
   const [getData, setGetData] = useState([])
   const [files, setFiles] = useState([])
+  const [tempFiles, setTempFiles] = useState([])
   const [selectedFile, setSelectedFile] = useState(null)
   const [uploadImg, setUploadImg] = useState(false)
   const [loadingProfile, setLoadingProfile] = useState(false)
   const [loadingPhoto, setLoadingPhoto] = useState(false)
   const { user: authUser, setUser: setAuthUser } = useAuth()
 
-  const handleUploadImgOpen = () => setUploadImg(true)
-  const handleUploadImgClose = () => setUploadImg(false)
+  const handleUploadImgOpen = () => {
+    setTempFiles(files)
+    setUploadImg(true)
+  }
+  const handleUploadImgClose = () => {
+    setTempFiles([])
+    setUploadImg(false)
+  }
+  const handleSavePhoto = () => {
+    setFiles(tempFiles)
+    setUploadImg(false)
+  }
 
   useEffect(() => {
     requestApiData.getCategories().then(res => { setAllCategory(res.data) }).catch(err => console.log(err))
@@ -59,12 +70,12 @@ export const EnterpriseProfileForm = () => {
     multiple: false,
     accept: { 'image/*': ['.png', '.jpg', '.jpeg'] },
     onDrop: acceptedFiles => {
-      setFiles(acceptedFiles.map(file => Object.assign(file)))
+      setTempFiles(acceptedFiles.map(file => Object.assign(file)))
       setSelectedFile(acceptedFiles[0])
     }
   })
 
-  const img = files.map(file => (
+  const img = tempFiles.map(file => (
     <img key={file.name} alt={file.name} src={URL.createObjectURL(file)} width='100px' height='100px' />
   ))
 
@@ -326,14 +337,14 @@ export const EnterpriseProfileForm = () => {
             {...getRootProps({ className: 'dropzone' })}
             sx={{
               border: '2px dashed #7d9b17', borderRadius: 2, p: 4,
-              minHeight: files.length ? 250 : 150,
+              minHeight: tempFiles.length ? 250 : 150,
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               flexDirection: 'column', textAlign: 'center', cursor: 'pointer',
               '&:hover': { bgcolor: 'rgba(79, 70, 229,0.04)' }
             }}
           >
             <input {...getInputProps()} />
-            {files.length ? img : (
+            {tempFiles.length ? img : (
               <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 1 }}>
                 <RiUpload2Fill size={40} color='#7d9b17' />
                 <Typography variant='body1' color='text.secondary'>
@@ -351,7 +362,7 @@ export const EnterpriseProfileForm = () => {
             <Button variant='outlined' onClick={handleUploadImgClose} disabled={loadingPhoto} sx={{ borderColor: '#7d9b17', color: '#7d9b17', textTransform: 'none' }}>
               Cancel
             </Button>
-            <Button variant='contained' onClick={() => setUploadImg(false)} disabled={loadingPhoto || files.length === 0} sx={{ bgcolor: '#7d9b17', textTransform: 'none', '&:hover': { bgcolor: '#6b8514' } }}>
+            <Button variant='contained' onClick={handleSavePhoto} disabled={loadingPhoto || tempFiles.length === 0} sx={{ bgcolor: '#7d9b17', textTransform: 'none', '&:hover': { bgcolor: '#6b8514' } }}>
               {loadingPhoto ? <CircularProgress size={24} color="inherit" /> : 'Save Photo'}
             </Button>
           </Box>
