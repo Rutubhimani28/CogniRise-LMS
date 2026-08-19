@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Label } from 'reactstrap'
+import { Label } from 'reactstrap'
 import { DragDropContext as DragAndDrop } from 'react-beautiful-dnd'
 import Drag from 'src/@core/components/drag-and-drop/Drag'
 import Drop from 'src/@core/components/drag-and-drop/Drop'
 import Reorder from 'src/@core/components/drag-and-drop/helpers'
 import { RiArrowDropDownLine, RiDeleteBin6Line, RiEditFill } from 'react-icons/ri'
 import Modal from '@mui/material/Modal'
-import { FormControl, MenuItem, Select, Typography, Box, TextField } from '@mui/material'
+import { FormControl, MenuItem, Select, Typography, Box, TextField, Button, IconButton, Tooltip, Radio } from '@mui/material'
 import { useDropzone } from 'react-dropzone'
 import QuestionModal from './QuestionModal'
 import OptionModal from './OptionModal'
@@ -230,9 +230,8 @@ export default function QuizModal({ quizClose, quizSave, quizData }) {
           name='name'
           value={quizName}
           onChange={e => setQuizName(e.target.value)}
-          InputLabelProps={{ shrink: true }}
           placeholder='Enter Quiz Title'
-          sx={{ mb: 3 }}
+          sx={{ mb: 3, '& .MuiOutlinedInput-root': { borderRadius: '8px', '&:hover fieldset': { borderColor: '#7d9b17' }, '&.Mui-focused fieldset': { borderColor: '#7d9b17', borderWidth: '2px' } } }}
         />
         <Box
           {...getRootProps({ className: 'dropzone' })}
@@ -255,31 +254,25 @@ export default function QuizModal({ quizClose, quizSave, quizData }) {
                 <Drag className='draggable-question' key={question.id} id={question.id} index={qIndex}>
                   <div className='question-container'>
                     <div className='item d-flex justify-content-between align-items-center'>
-                      <Label className='form-label fs-5 mb-0' for='title'>
+                      <Label className='form-label fs-6 mb-0' for='title'>
                         {question.name}
                       </Label>
                       <div>
-                        <Button
-                          type='button'
-                          className='px-2 text-black me-2 fs-6 border border-dark bg-transparent'
-                          onClick={() => handleQuestionOpen(qIndex)}
-                        >
-                          <RiEditFill />
-                        </Button>
-                        <Button
-                          type='button'
-                          className='px-2 text-black me-2 fs-6 border border-dark bg-transparent'
-                          onClick={() => deleteQuestion(qIndex)}
-                        >
-                          <RiDeleteBin6Line />
-                        </Button>
-                        <Button
-                          type='button'
-                          className='px-2 text-black fs-5 border border-dark bg-transparent'
-                          onClick={() => setQuestionToggle(qIndex)}
-                        >
-                          <RiArrowDropDownLine />
-                        </Button>
+                        <Tooltip title="Edit Question" placement="top" arrow>
+                          <IconButton onClick={() => handleQuestionOpen(qIndex)} sx={{ color: '#7d9b17', bgcolor: 'rgba(125, 155, 23, 0.1)', '&:hover': { bgcolor: 'rgba(125, 155, 23, 0.2)' }, mr: 1, borderRadius: 1 }}>
+                            <RiEditFill size={20} />
+                          </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Delete Question" placement="top" arrow>
+                          <IconButton onClick={() => deleteQuestion(qIndex)} sx={{ color: '#d32f2f', bgcolor: 'rgba(211, 47, 47, 0.1)', '&:hover': { bgcolor: 'rgba(211, 47, 47, 0.2)' }, mr: 1, borderRadius: 1 }}>
+                            <RiDeleteBin6Line size={20} />
+                          </IconButton>
+                        </Tooltip>
+                        <Tooltip title={questionToggle === qIndex ? "Collapse Options" : "Expand Options"} placement="top" arrow>
+                          <IconButton onClick={() => setQuestionToggle(questionToggle === qIndex ? null : qIndex)} sx={{ color: '#3A5BCD', bgcolor: 'rgba(58, 91, 205, 0.1)', '&:hover': { bgcolor: 'rgba(58, 91, 205, 0.2)' }, borderRadius: 1 }}>
+                            <RiArrowDropDownLine size={24} style={{ transform: questionToggle === qIndex ? 'rotate(180deg)' : 'none', transition: 'transform 0.3s' }} />
+                          </IconButton>
+                        </Tooltip>
                       </div>
                     </div>
 
@@ -289,16 +282,14 @@ export default function QuizModal({ quizClose, quizSave, quizData }) {
                           <Label className='form-label pt-3 pe-4 fs-6'>Format</Label>
                           <FormControl sx={{ m: 1, minWidth: 250 }} className='que-Select'>
                             <Select
-                              className='custom-select-border'
+                              size='small'
                               value={question.format}
                               onChange={e => handleQuestionFormat(e.target.value, qIndex)}
-                              style={{ padding: '1px', backgroundColor: 'white' }}
-                              inputProps={{ 'aria-label': 'Without label' }}
                               sx={{
                                 color: 'black',
-                                '& .MuiSelect-icon': {
-                                  color: 'black'
-                                }
+                                borderRadius: '8px',
+                                '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: '#7d9b17' },
+                                '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: '#7d9b17', borderWidth: '2px' }
                               }}
                             >
                               <MenuItem value='MCQ' className='text-black'>
@@ -327,14 +318,12 @@ export default function QuizModal({ quizClose, quizSave, quizData }) {
                                           size='small'
                                           value={item.name}
                                           onChange={e => onChangeOptionVal(qIndex, index, e.target.value)}
-                                          sx={{ mr: 2 }}
+                                          sx={{ mr: 2, '& .MuiOutlinedInput-root': { borderRadius: '8px', '&:hover fieldset': { borderColor: '#7d9b17' }, '&.Mui-focused fieldset': { borderColor: '#7d9b17', borderWidth: '2px' } } }}
                                         />
-                                        <input
-                                          type='radio'
-                                          name={`question_${qIndex}_answer`}
+                                        <Radio
                                           checked={question.ans === item.name}
                                           onChange={() => saveAnswerVal(qIndex, index, true)}
-                                          style={{ width: '20px', height: '20px', cursor: 'pointer' }}
+                                          sx={{ color: '#7d9b17', '&.Mui-checked': { color: '#7d9b17' } }}
                                         />
                                       </div>
                                     </div>
@@ -344,12 +333,12 @@ export default function QuizModal({ quizClose, quizSave, quizData }) {
                             </div>
                             <div className='mb-4 mt-2 ms-5 ps-1'>
                               <Button
-                                type='button'
-                                className='me-2 px-3 beforeLoginbtn ms-4'
-                                color='primary'
+                                variant='outlined'
                                 onClick={() => handleOptionOpen(qIndex)}
+                                sx={{ ml: 4, color: '#7d9b17', borderColor: '#7d9b17', '&:hover': { borderColor: '#6b8514', backgroundColor: 'rgba(125, 155, 23, 0.04)' }, textTransform: 'none' }}
+                                startIcon={<HiPlus />}
                               >
-                                <HiPlus /> Add option
+                                Add option
                               </Button>
                             </div>
                           </div>
@@ -362,26 +351,19 @@ export default function QuizModal({ quizClose, quizSave, quizData }) {
             </Drop>
           </DragAndDrop>
           <Button
-            type='button'
-            className='text-start d-flex align-items-center bg-dark beforeLoginbtn'
+            variant='outlined'
             onClick={() => setQuestionModal(true)}
+            sx={{ color: '#7d9b17', borderColor: '#7d9b17', '&:hover': { borderColor: '#6b8514', backgroundColor: 'rgba(125, 155, 23, 0.04)' }, textTransform: 'none', mt: 2 }}
+            startIcon={<HiPlus />}
           >
-            <HiPlus /> Add question
+            Add question
           </Button>
 
           <div className='d-flex justify-content-end pt-4'>
-            <Button
-              type='submit'
-              className='me-2 px-4 d-flex align-items-center beforeLoginbtn'
-              onClick={quizClose}
-            >
+            <Button variant='outlined' onClick={quizClose} sx={{ mr: 2, color: '#7d9b17', borderColor: '#7d9b17', '&:hover': { borderColor: '#6b8514', backgroundColor: 'rgba(125, 155, 23, 0.04)' }, textTransform: 'none' }}>
               Cancel
             </Button>
-            <Button
-              type='submit'
-              className='me-2 px-4 d-flex align-items-center beforeLoginbtn'
-              onClick={handleQuizSubmit}
-            >
+            <Button variant='contained' onClick={handleQuizSubmit} sx={{ bgcolor: '#7d9b17', '&:hover': { bgcolor: '#6b8514' }, textTransform: 'none' }}>
               Save
             </Button>
           </div>

@@ -28,30 +28,34 @@ export default function LessoinDraft() {
         <h2
           className='fs-2 fw-bold pb-2'
           style={{
-            // color: '#3A5BCD'
-            // color:"#64748b"
-            color: " #7d9b17"
+            color: 'black'
           }}
         >
           Lesson Drafts
         </h2>
         <div>
-          {allCourse?.slice(0, 3).map((item, i) => (
-            <div key={i} className='my-3 ps-3 pt-1' style={{ borderLeft: '4px solid  #3A5BCD' }}>
-              <h6 style={{ color: 'black' }}>{item.title}</h6>
-              <CardText style={{ fontSize: '12px', color: 'black' }}>
-                {item?.modules?.[item?.modules?.length - 1]?.items?.[
-                  item?.modules?.[item?.modules?.length - 1]?.items?.length - 1
-                ]?.id ? `${item?.modules?.[item?.modules?.length - 1]?.items?.[
-                  item?.modules?.[item?.modules?.length - 1]?.items?.length - 1
-                ]?.id
-                } : ${item?.modules?.[item?.modules?.length - 1]?.items?.[
-                  item?.modules?.[item?.modules?.length - 1]?.items?.length - 1
-                ]?.name
-                }` : 'No items yet'}
-              </CardText>
+          {allCourse?.length === 0 ? (
+            <div className='my-3 ps-3 pt-1 d-flex justify-content-center align-items-center' style={{ height: '150px' }}>
+              <CardText style={{ fontSize: '16px', color: 'black', fontWeight: '500' }}>No drafts yet</CardText>
             </div>
-          ))}
+          ) : (
+            allCourse?.slice(0, 3).map((item, i) => (
+              <div key={i} className='my-3 ps-3 py-1 d-flex flex-column justify-content-center' style={{ borderLeft: '4px solid #7d9b17', minHeight: '40px' }}>
+                <h6 style={{ color: 'black', margin: 0, paddingBottom: '4px' }}>{item.title || 'Untitled Draft'}</h6>
+                <CardText style={{ fontSize: '12px', color: 'black', margin: 0 }}>
+                  {item?.modules?.[item?.modules?.length - 1]?.items?.[
+                    item?.modules?.[item?.modules?.length - 1]?.items?.length - 1
+                  ]?.id ? `${item?.modules?.[item?.modules?.length - 1]?.items?.[
+                    item?.modules?.[item?.modules?.length - 1]?.items?.length - 1
+                  ]?.id
+                  } : ${item?.modules?.[item?.modules?.length - 1]?.items?.[
+                    item?.modules?.[item?.modules?.length - 1]?.items?.length - 1
+                  ]?.name
+                  }` : 'No items yet'}
+                </CardText>
+              </div>
+            ))
+          )}
         </div>
       </div>
       <h6 className='text-end' style={{ color: 'black', cursor: 'pointer' }}>
@@ -63,11 +67,11 @@ export default function LessoinDraft() {
             pathname: '/enterprise-courses',
             query: { from: 'drafts' } // or any custom state
           }}
-          style={{ textDecoration: 'none', color: '#3A5BCD' }}
+          style={{ textDecoration: 'none', color: '#7d9b17' }}
         >
           View Drafts
         </Link>
-        <HiArrowNarrowRight className='ms-1' style={{ color: '#3A5BCD' }} />
+        <HiArrowNarrowRight className='ms-1' style={{ color: '#7d9b17' }} />
       </h6>
     </div>
   )

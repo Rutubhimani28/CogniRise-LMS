@@ -3,7 +3,7 @@ import Requests from 'src/configs/axiosRequest'
 import {
   Box, Grid, Typography, Button, Card, CardContent, Avatar,
   TextField, MenuItem, Select, FormControl, InputLabel, Divider,
-  InputAdornment, IconButton, CircularProgress
+  InputAdornment, IconButton, CircularProgress, Tooltip
 } from '@mui/material'
 import { useFormik } from 'formik'
 import { toast } from 'react-hot-toast'
@@ -190,199 +190,130 @@ export const EnterpriseProfileForm = () => {
 
   const avatarLetter = getData?.profile?.name?.charAt(0)?.toUpperCase() || getData?.email?.charAt(0)?.toUpperCase() || 'E'
 
-  return (
-    <Fragment>
-      <Box sx={{ maxWidth: 900, mx: 'auto', p: { xs: 2, md: 4 } }}>
-        <form onSubmit={formik.handleSubmit}>
-
-          {/* Header Card - Profile Picture + Basic Info */}
-          <Card elevation={0} sx={{ borderRadius: 3, border: '1px solid #e8e8e8', mb: 3 }}>
-            <CardContent sx={{ p: { xs: 3, md: 4 } }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 3, flexWrap: 'wrap' }}>
-                {/* Avatar */}
-                <Box sx={{ position: 'relative' }}>
-                  {getData?.profile?.profileImg ? (
-                    <Avatar
-                      src={getData.profile.profileImg + '?' + new Date().getTime()}
-                      sx={{ width: 100, height: 100, border: '3px solid #7d9b17' }}
-                    />
-                  ) : files.length > 0 ? (
-                    <Avatar
-                      src={URL.createObjectURL(files[0])}
-                      sx={{ width: 100, height: 100, border: '3px solid #7d9b17' }}
-                    />
-                  ) : (
-                    <Avatar sx={{ width: 100, height: 100, bgcolor: '#7d9b17', fontSize: '2.5rem', fontWeight: 700 }}>
-                      {avatarLetter}
-                    </Avatar>
-                  )}
-                  <IconButton
-                    onClick={handleUploadImgOpen}
-                    size='small'
-                    sx={{
-                      position: 'absolute', bottom: 0, right: 0,
-                      bgcolor: '#7d9b17', color: 'white', width: 28, height: 28,
-                      '&:hover': { bgcolor: '#4338ca' }
-                    }}
-                  >
-                    <MdEdit size={14} />
-                  </IconButton>
-                </Box>
-
-                {/* Company Info */}
-                <Box sx={{ flex: 1 }}>
-                  <Typography variant='h5' sx={{ fontWeight: 700, color: '#2F2B3D' }}>
-                    {getData?.profile?.name || 'Company Name'}
-                  </Typography>
-                  <Typography variant='body2' sx={{ color: '#7d9b17', mt: 0.5 }}>
-                    {getData?.email}
-                  </Typography>
-                  <Typography variant='body2' sx={{ color: '#6c757d', mt: 0.5 }}>
-                    {getData?.profile?.employeeSize && `${getData.profile.employeeSize} Employees`}
-                    {getData?.profile?.companyType && ` • ${getData.profile.companyType}`}
-                  </Typography>
-                </Box>
-              </Box>
-            </CardContent>
-          </Card>
-
-          {/* Company Details Card */}
-          <Card elevation={0} sx={{ borderRadius: 3, border: '1px solid #e8e8e8', mb: 3 }}>
-            <CardContent sx={{ p: { xs: 3, md: 4 } }}>
-              <Typography variant='subtitle1' sx={{ fontWeight: 600, mb: 1, color: '#2F2B3D' }}>
-                Company Details
-              </Typography>
-              <Divider sx={{ mb: 3 }} />
-
-              <Grid container spacing={3}>
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    fullWidth label='Company Name' name='name'
-                    value={formik.values.name} onChange={formik.handleChange}
-                    InputProps={{ startAdornment: <InputAdornment position='start'><FaBuilding color='#7d9b17' /></InputAdornment> }}
-                  />
-                </Grid>
-
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    fullWidth label='Company Email' name='email'
-                    value={formik.values.email} onChange={formik.handleChange} disabled
-                  />
-                </Grid>
-
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    fullWidth label='Company Slug' name='companySlug'
-                    value={formik.values.companySlug} onChange={formik.handleChange}
-                    helperText={formik.values.companySlug ? `URL: /company/${formik.values.companySlug}` : ''}
-                  />
-                </Grid>
-
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    fullWidth label='Founding Date' name='foundingDate' type='date'
-                    value={formik.values.foundingDate} onChange={formik.handleChange}
-                    InputLabelProps={{ shrink: true }}
-                  />
-                </Grid>
-
-                <Grid item xs={12} sm={6}>
-                  <FormControl fullWidth>
-                    <InputLabel>Employee Size</InputLabel>
-                    <Select name='employeeSize' value={formik.values.employeeSize} onChange={formik.handleChange} label='Employee Size'>
-                      <MenuItem value='1-10'>1–10</MenuItem>
-                      <MenuItem value='11-50'>11–50</MenuItem>
-                      <MenuItem value='51-1000'>51–1000</MenuItem>
-                      <MenuItem value='1000+'>1000+</MenuItem>
-                    </Select>
-                  </FormControl>
-                </Grid>
-
-                <Grid item xs={12} sm={6}>
-                  <FormControl fullWidth>
-                    <InputLabel>Industry Vertical</InputLabel>
-                    <Select name='industryVerticale' value={formik.values.industryVerticale} onChange={formik.handleChange} label='Industry Vertical'>
-                      {allCategory && allCategory.map((item, index) => (
-                        <MenuItem key={index} value={item.name}>{item.name}</MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </Grid>
-
-                <Grid item xs={12} sm={6}>
-                  <FormControl fullWidth>
-                    <InputLabel>Company Type</InputLabel>
-                    <Select name='companyType' value={formik.values.companyType} onChange={formik.handleChange} label='Company Type'>
-                      <MenuItem value='Profit'>Profit</MenuItem>
-                      <MenuItem value='Non-Profit'>Non-Profit</MenuItem>
-                      <MenuItem value='Blockchain Ecosystem'>Blockchain Ecosystem</MenuItem>
-                      <MenuItem value='DAO'>DAO</MenuItem>
-                    </Select>
-                  </FormControl>
-                </Grid>
-
-                <Grid item xs={12}>
-                  <TextField
-                    fullWidth label='Company Description' name='description' multiline rows={4}
-                    value={formik.values.description} onChange={formik.handleChange}
-                  />
-                </Grid>
-              </Grid>
-            </CardContent>
-          </Card>
-
-          {/* Social Links Card */}
-          <Card elevation={0} sx={{ borderRadius: 3, border: '1px solid #e8e8e8', mb: 3 }}>
-            <CardContent sx={{ p: { xs: 3, md: 4 } }}>
-              <Typography variant='subtitle1' sx={{ fontWeight: 600, mb: 1, color: '#2F2B3D' }}>
-                Social Links
-              </Typography>
-              <Divider sx={{ mb: 3 }} />
-
-              <Grid container spacing={3}>
-                <Grid item xs={12} sm={4}>
-                  <TextField
-                    fullWidth label='Twitter' name='twitter'
-                    value={formik.values.twitter} onChange={formik.handleChange}
-                    InputProps={{ startAdornment: <InputAdornment position='start'><FaTwitter color='#1DA1F2' /></InputAdornment> }}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={4}>
-                  <TextField
-                    fullWidth label='LinkedIn' name='linkedin'
-                    value={formik.values.linkedin} onChange={formik.handleChange}
-                    InputProps={{ startAdornment: <InputAdornment position='start'><FaLinkedin color='#0A66C2' /></InputAdornment> }}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={4}>
-                  <TextField
-                    fullWidth label='Website' name='website'
-                    value={formik.values.website} onChange={formik.handleChange}
-                    InputProps={{ startAdornment: <InputAdornment position='start'><FaGlobe color='#7d9b17' /></InputAdornment> }}
-                  />
-                </Grid>
-              </Grid>
-            </CardContent>
-          </Card>
-
-          {/* Save Button */}
-          <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-            <Button
-              type='submit' variant='contained' size='large' disabled={loadingProfile}
-              sx={{
-                px: 6, py: 1.5, bgcolor: '#7d9b17', borderRadius: 2,
-                fontWeight: 600, textTransform: 'none', fontSize: '1rem',
-                minWidth: '180px', position: 'relative',
-                '&:hover': { bgcolor: '#4338ca' }
-              }}
-            >
-              {loadingProfile && <CircularProgress size={24} color="inherit" sx={{ position: 'absolute', top: '50%', left: '50%', marginTop: '-12px', marginLeft: '-12px' }} />}
-              <span style={{ opacity: loadingProfile ? 0 : 1 }}>Save Changes</span>
-            </Button>
-          </Box>
-
-        </form>
+  if (!getData || getData.length === 0) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh' }}>
+        <CircularProgress sx={{ color: '#7d9b17' }} size={60} thickness={4} />
       </Box>
+    )
+  }
+
+  return (
+    <Box sx={{ width: '100%', mt: 0 }}>
+      <Card elevation={0} sx={{ border: '1px solid rgba(47, 43, 61, 0.12)', borderRadius: 2 }}>
+        <CardContent sx={{ py: 2, px: { xs: 2, md: 4 } }}>
+          <Box component='form' onSubmit={formik.handleSubmit}>
+
+            <Grid container spacing={4}>
+              {/* Column 1: Profile Picture & Socials */}
+              <Grid item xs={12} md={4}>
+                <Box sx={{ mb: 3 }}>
+                  <Typography variant='h5' sx={{ fontWeight: 700, color: '#2F2B3D' }}>Enterprise Profile</Typography>
+                  <Typography variant='body2' color='text.secondary'>Manage your company information and preferences</Typography>
+                </Box>
+
+                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mb: 3 }}>
+                  <Box onClick={handleUploadImgOpen} sx={{ cursor: 'pointer', position: 'relative', mb: 2 }}>
+                    {files.length > 0 ? (
+                      <Avatar src={URL.createObjectURL(files[0])} sx={{ width: 120, height: 120, border: '3px solid #7d9b17' }} />
+                    ) : getData?.profile?.profileImg ? (
+                      <Avatar src={getData.profile.profileImg + '?' + new Date().getTime()} sx={{ width: 120, height: 120, border: '3px solid #7d9b17' }} />
+                    ) : (
+                      <Avatar sx={{ width: 120, height: 120, bgcolor: '#7d9b17', fontSize: '3rem', fontWeight: 700 }}>{avatarLetter}</Avatar>
+                    )}
+                    <Box sx={{ position: 'absolute', bottom: 0, right: 0, bgcolor: '#7d9b17', color: 'white', borderRadius: '50%', p: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', border: '2px solid white' }}>
+                      <MdEdit size={16} />
+                    </Box>
+                  </Box>
+                  <Typography variant='h6' sx={{ fontWeight: 700, color: '#2F2B3D' }}>{getData?.profile?.name || 'Company Name'}</Typography>
+                  <Typography variant='body2' sx={{ color: '#7d9b17' }}>{getData?.email}</Typography>
+                </Box>
+
+                <Divider sx={{ my: 3 }} />
+
+                <Typography variant='subtitle2' sx={{ fontWeight: 600, mb: 2, color: '#2F2B3D', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Social Links</Typography>
+                <Grid container spacing={2}>
+                  <Grid item xs={12}>
+                    <TextField fullWidth label='Twitter' name='twitter' value={formik.values.twitter} onChange={formik.handleChange} InputProps={{ startAdornment: <InputAdornment position='start'><FaTwitter color='#1DA1F2' /></InputAdornment> }} />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField fullWidth label='LinkedIn' name='linkedin' value={formik.values.linkedin} onChange={formik.handleChange} InputProps={{ startAdornment: <InputAdornment position='start'><FaLinkedin color='#0A66C2' /></InputAdornment> }} />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField fullWidth label='Website' name='website' value={formik.values.website} onChange={formik.handleChange} InputProps={{ startAdornment: <InputAdornment position='start'><FaGlobe color='#7d9b17' /></InputAdornment> }} />
+                  </Grid>
+                </Grid>
+              </Grid>
+
+              {/* Column 2: Company Details */}
+              <Grid item xs={12} md={8}>
+                <Typography variant='subtitle1' sx={{ fontWeight: 600, mb: 2, color: '#2F2B3D' }}>Company Details</Typography>
+                <Grid container spacing={3}>
+                  <Grid item xs={12} sm={6}>
+                    <TextField fullWidth label='Company Name' name='name' value={formik.values.name} onChange={formik.handleChange} InputProps={{ startAdornment: <InputAdornment position='start'><FaBuilding color='#7d9b17' /></InputAdornment> }} />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField fullWidth label='Company Email' name='email' value={formik.values.email} onChange={formik.handleChange} disabled />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField fullWidth label='Company Slug' name='companySlug' value={formik.values.companySlug} onChange={formik.handleChange} helperText={formik.values.companySlug ? `URL: /company/${formik.values.companySlug}` : ''} />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField fullWidth label='Founding Date' name='foundingDate' type='date' value={formik.values.foundingDate} onChange={formik.handleChange} InputLabelProps={{ shrink: true }} />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <FormControl fullWidth>
+                      <InputLabel>Employee Size</InputLabel>
+                      <Select name='employeeSize' value={formik.values.employeeSize} onChange={formik.handleChange} label='Employee Size'>
+                        <MenuItem value='1-10'>1–10</MenuItem>
+                        <MenuItem value='11-50'>11–50</MenuItem>
+                        <MenuItem value='51-1000'>51–1000</MenuItem>
+                        <MenuItem value='1000+'>1000+</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <FormControl fullWidth>
+                      <InputLabel>Industry Vertical</InputLabel>
+                      <Select name='industryVerticale' value={formik.values.industryVerticale} onChange={formik.handleChange} label='Industry Vertical'>
+                        {allCategory && allCategory.map((item, index) => (
+                          <MenuItem key={index} value={item.name}>{item.name}</MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <FormControl fullWidth>
+                      <InputLabel>Company Type</InputLabel>
+                      <Select name='companyType' value={formik.values.companyType} onChange={formik.handleChange} label='Company Type'>
+                        <MenuItem value='Profit'>Profit</MenuItem>
+                        <MenuItem value='Non-Profit'>Non-Profit</MenuItem>
+                        <MenuItem value='Blockchain Ecosystem'>Blockchain Ecosystem</MenuItem>
+                        <MenuItem value='DAO'>DAO</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField fullWidth label='Company Description' name='description' multiline rows={4} value={formik.values.description} onChange={formik.handleChange} />
+                  </Grid>
+                </Grid>
+
+                <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 4 }}>
+                  <Tooltip title={(!formik.dirty && files.length === 0) ? "Make changes to enable saving" : ""} placement="top" arrow>
+                    <span>
+                      <Button type='submit' variant='contained' size='large' disabled={loadingProfile || (!formik.dirty && files.length === 0)} sx={{ px: 6, py: 1.5, bgcolor: '#7d9b17', borderRadius: 2, fontWeight: 600, textTransform: 'none', fontSize: '1rem', minWidth: '180px', position: 'relative', '&:hover': { bgcolor: '#6b8514' } }}>
+                        {loadingProfile && <CircularProgress size={24} color="inherit" sx={{ position: 'absolute', top: '50%', left: '50%', marginTop: '-12px', marginLeft: '-12px' }} />}
+                        <span style={{ opacity: loadingProfile ? 0 : 1 }}>Save Changes</span>
+                      </Button>
+                    </span>
+                  </Tooltip>
+                </Box>
+              </Grid>
+            </Grid>
+
+          </Box>
+        </CardContent>
+      </Card>
 
       {/* Upload Image Modal */}
       <Modal open={uploadImg} onClose={handleUploadImgClose}>
@@ -420,13 +351,13 @@ export const EnterpriseProfileForm = () => {
             <Button variant='outlined' onClick={handleUploadImgClose} disabled={loadingPhoto} sx={{ borderColor: '#7d9b17', color: '#7d9b17', textTransform: 'none' }}>
               Cancel
             </Button>
-            <Button variant='contained' onClick={() => setUploadImg(false)} disabled={loadingPhoto} sx={{ bgcolor: '#7d9b17', textTransform: 'none', '&:hover': { bgcolor: '#4338ca' } }}>
+            <Button variant='contained' onClick={() => setUploadImg(false)} disabled={loadingPhoto || files.length === 0} sx={{ bgcolor: '#7d9b17', textTransform: 'none', '&:hover': { bgcolor: '#6b8514' } }}>
               {loadingPhoto ? <CircularProgress size={24} color="inherit" /> : 'Save Photo'}
             </Button>
           </Box>
         </Box>
       </Modal>
-    </Fragment>
+    </Box>
   )
 }
 

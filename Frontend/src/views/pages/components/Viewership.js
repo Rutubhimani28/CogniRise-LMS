@@ -441,14 +441,14 @@ export default function Viewership(props) {
           <TabPane tabId='2'>
             <h2
               style={{
-                color: '#FFFFFF',
+                color: '#7d9b17',
                 fontWeight: '500',
                 fontSize: '34px',
                 paddingBottom: '18px',
                 paddingLeft: '15px'
               }}
             >
-              {monthAddUsers}
+              {monthAddUsers ? monthAddUsers : 0}
             </h2>
             <Card>
               <CardBody className='p-0'>
@@ -473,14 +473,14 @@ export default function Viewership(props) {
           <TabPane tabId='3'>
             <h2
               style={{
-                color: '#FFFFFF',
+                color: '#7d9b17',
                 fontWeight: '500',
                 fontSize: '34px',
                 paddingBottom: '18px',
                 paddingLeft: '15px'
               }}
             >
-              {manthCompletedgraduation}
+              {manthCompletedgraduation ? manthCompletedgraduation : 0}
             </h2>
             <Card>
               <CardBody className='p-0'>

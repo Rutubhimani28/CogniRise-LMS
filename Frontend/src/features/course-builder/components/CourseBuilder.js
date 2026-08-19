@@ -6,7 +6,7 @@ import Drop from 'src/@core/components/drag-and-drop/Drop'
 import Reorder from 'src/@core/components/drag-and-drop/helpers'
 import { RiArrowDropDownLine, RiDeleteBin6Line, RiEditFill } from 'react-icons/ri'
 import Modal from '@mui/material/Modal'
-import { Box, Button } from '@mui/material'
+import { Box, Button, IconButton, Tooltip } from '@mui/material'
 
 import LessonModal from './LessonModal'
 import { HiPlus } from 'react-icons/hi'
@@ -270,20 +270,26 @@ export const CourseBuilder = Props => {
                 >
                   <div className='module-container'>
                     <div className='item d-flex justify-content-between align-items-center'>
-                      <Label className='form-label fs-5 mb-0' for='title'>
-                        {module.name}
+                      <Label className='form-label fs-6 mb-0' for='title'>
+                        Module: {module.name}
                       </Label>
 
                       <div>
-                        <Button type='button' className='px-2 text-black mx-1 fs-5 border border-dark bg-transparent'>
-                          <RiEditFill onClick={() => handleModuleOpen(mIndex)} />
-                        </Button>
-                        <Button type='button' className='px-2 text-black bg-dark  mx-1 fs-5 border border-dark bg-transparent'>
-                          <RiDeleteBin6Line onClick={() => deleteModule(mIndex)} />
-                        </Button>
-                        <Button type='button' className='px-2  mx-1 text-black bg-dark fs-5 border border-dark bg-transparent'>
-                          <RiArrowDropDownLine onClick={() => setModuleToggle(mIndex)} />
-                        </Button>
+                        <Tooltip title="Edit Module" placement="top" arrow>
+                          <IconButton onClick={() => handleModuleOpen(mIndex)} sx={{ color: '#7d9b17', bgcolor: 'rgba(125, 155, 23, 0.1)', '&:hover': { bgcolor: 'rgba(125, 155, 23, 0.2)' }, mr: 1, borderRadius: 1 }}>
+                            <RiEditFill size={20} />
+                          </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Delete Module" placement="top" arrow>
+                          <IconButton onClick={() => deleteModule(mIndex)} sx={{ color: '#d32f2f', bgcolor: 'rgba(211, 47, 47, 0.1)', '&:hover': { bgcolor: 'rgba(211, 47, 47, 0.2)' }, mr: 1, borderRadius: 1 }}>
+                            <RiDeleteBin6Line size={20} />
+                          </IconButton>
+                        </Tooltip>
+                        <Tooltip title={moduleToggle === mIndex ? "Collapse Items" : "Expand Items"} placement="top" arrow>
+                          <IconButton onClick={() => setModuleToggle(moduleToggle === mIndex ? null : mIndex)} sx={{ color: '#3A5BCD', bgcolor: 'rgba(58, 91, 205, 0.1)', '&:hover': { bgcolor: 'rgba(58, 91, 205, 0.2)' }, borderRadius: 1 }}>
+                            <RiArrowDropDownLine size={24} style={{ transform: moduleToggle === mIndex ? 'rotate(180deg)' : 'none', transition: 'transform 0.3s' }} />
+                          </IconButton>
+                        </Tooltip>
                       </div>
                     </div>
 
@@ -298,28 +304,30 @@ export const CourseBuilder = Props => {
                             <React.Fragment key={item.id}>
                               <Drag className='draggable' id={item.id} index={index}>
                                 <div className='item2 d-flex justify-content-between align-items-center'>
-                                  <Label className='form-label fs-5 mb-0' for='title'>
-                                    {item.name}
+                                  <Label className='form-label fs-6 mb-0' for='title'>
+                                    {item?.id?.split('_')[0] === 'lesson' ? 'Lesson: ' : 'Quiz: '} {item.name}
                                   </Label>
                                   <div>
-                                    <Button
-                                      type='button'
-                                      className='mx-2 text-black border border-dark bg-transparent fs-5'
-                                      onClick={() =>
-                                        item?.id.split('_', 1) == 'lesson'
-                                          ? handleLessonOpen(mIndex, index)
-                                          : handleQuizOpen(mIndex, index)
-                                      }
-                                    >
-                                      <RiEditFill />
-                                    </Button>
-                                    <Button
-                                      type='button'
-                                      className='mx-2 text-black border border-dark bg-transparent fs-5'
-                                      onClick={() => deleteModuleItem(mIndex, index)}
-                                    >
-                                      <RiDeleteBin6Line />
-                                    </Button>
+                                    <Tooltip title={`Edit ${item?.id?.split('_')[0] === 'lesson' ? 'Lesson' : 'Quiz'}`} placement="top" arrow>
+                                      <IconButton
+                                        onClick={() =>
+                                          item?.id.split('_', 1) == 'lesson'
+                                            ? handleLessonOpen(mIndex, index)
+                                            : handleQuizOpen(mIndex, index)
+                                        }
+                                        sx={{ color: '#7d9b17', bgcolor: 'rgba(125, 155, 23, 0.1)', '&:hover': { bgcolor: 'rgba(125, 155, 23, 0.2)' }, mr: 1, borderRadius: 1 }}
+                                      >
+                                        <RiEditFill size={20} />
+                                      </IconButton>
+                                    </Tooltip>
+                                    <Tooltip title={`Delete ${item?.id?.split('_')[0] === 'lesson' ? 'Lesson' : 'Quiz'}`} placement="top" arrow>
+                                      <IconButton
+                                        onClick={() => deleteModuleItem(mIndex, index)}
+                                        sx={{ color: '#d32f2f', bgcolor: 'rgba(211, 47, 47, 0.1)', '&:hover': { bgcolor: 'rgba(211, 47, 47, 0.2)' }, borderRadius: 1 }}
+                                      >
+                                        <RiDeleteBin6Line size={20} />
+                                      </IconButton>
+                                    </Tooltip>
                                   </div>
                                 </div>
                               </Drag>
@@ -331,20 +339,20 @@ export const CourseBuilder = Props => {
                           style={{ backgroundColor: 'white', borderRadius: '10px', maxWidth: '80%' }}
                         >
                           <Button
-                            type='button'
-                            className='me-2 px-2 border-0 beforeLoginbtn'
-                            color='primary'
+                            variant='outlined'
                             onClick={() => handleLessonOpen(mIndex)}
+                            sx={{ mr: 2, color: '#7d9b17', borderColor: '#7d9b17', '&:hover': { borderColor: '#6b8514', backgroundColor: 'rgba(125, 155, 23, 0.04)' }, textTransform: 'none' }}
+                            startIcon={<HiPlus />}
                           >
-                            <HiPlus /> Add Lesson
+                            Add Lesson
                           </Button>
                           <Button
-                            type='button'
-                            className='me-2 px-2  border-0 beforeLoginbtn'
-                            color='primary'
+                            variant='outlined'
                             onClick={() => handleQuizOpen(mIndex)}
+                            sx={{ mr: 2, color: '#7d9b17', borderColor: '#7d9b17', '&:hover': { borderColor: '#6b8514', backgroundColor: 'rgba(125, 155, 23, 0.04)' }, textTransform: 'none' }}
+                            startIcon={<HiPlus />}
                           >
-                            <HiPlus /> Add Quiz
+                            Add Quiz
                           </Button>
                         </div>
                       </Drop>

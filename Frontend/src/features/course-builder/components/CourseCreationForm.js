@@ -14,7 +14,8 @@ import {
   Button,
   Autocomplete,
   CircularProgress,
-  Card
+  Card,
+  Tooltip
 } from '@mui/material'
 import { useDropzone } from 'react-dropzone'
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
@@ -43,6 +44,7 @@ export const CourseCreationForm = () => {
   const [courseId, setCourseId] = useState(null)
   const [userStatus, setUserStatus] = useState({})
   const [loading, setLoading] = useState(false)
+  const [isFetching, setIsFetching] = useState(false)
 
   useEffect(() => {
     const url_str = window.location.href
@@ -53,6 +55,7 @@ export const CourseCreationForm = () => {
     if (updateId) {
       setCourseId(updateId)
 
+      setIsFetching(true)
       requestApiData
         .oneCourseRequest(updateId)
         .then(res => {
@@ -66,6 +69,7 @@ export const CourseCreationForm = () => {
         .catch(err => {
           console.log('oneCourseRequest in upload course', err)
         })
+        .finally(() => setIsFetching(false))
     }
   }, [])
 
@@ -136,7 +140,14 @@ export const CourseCreationForm = () => {
   }
 
   const user = JSON.parse(window.localStorage.getItem('userData'))
-  const validationSchema = yup.object({})
+  const validationSchema = yup.object({
+    title: yup.string().required('Title is required'),
+    slug: yup.string().required('Course Slug is required'),
+    description: yup.string().required('Description is required'),
+    category: yup.string().required('Category is required'),
+    courseLength: yup.string().required('Course Length is required'),
+    level: yup.string().required('Course Level is required')
+  })
 
   let numItems = 0
 
@@ -252,6 +263,14 @@ export const CourseCreationForm = () => {
     }
   }
 
+  if (isFetching) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh' }}>
+        <CircularProgress sx={{ color: '#7d9b17' }} size={60} thickness={4} />
+      </Box>
+    )
+  }
+
   return (
     <div className='course-creation'>
       <form>
@@ -315,9 +334,13 @@ export const CourseCreationForm = () => {
                   name='title'
                   value={formik.values.title}
                   onChange={formik.handleChange}
-                  InputLabelProps={{ shrink: true }}
+                  onBlur={formik.handleBlur}
+                  required
+                  InputLabelProps={{ sx: { '& .MuiFormLabel-asterisk': { color: 'red' } } }}
+                  error={formik.touched.title && Boolean(formik.errors.title)}
+                  helperText={formik.touched.title && formik.errors.title}
                   placeholder='Enter Title'
-                  sx={{ mb: 3 }}
+                  sx={{ mb: 3, '& .MuiOutlinedInput-root': { borderRadius: '8px', '&:hover fieldset': { borderColor: '#7d9b17' }, '&.Mui-focused fieldset': { borderColor: '#7d9b17', borderWidth: '2px' } } }}
                 />
 
                 <TextField
@@ -326,9 +349,13 @@ export const CourseCreationForm = () => {
                   name='slug'
                   value={formik.values.slug}
                   onChange={formik.handleChange}
-                  InputLabelProps={{ shrink: true }}
+                  onBlur={formik.handleBlur}
+                  required
+                  InputLabelProps={{ sx: { '& .MuiFormLabel-asterisk': { color: 'red' } } }}
+                  error={formik.touched.slug && Boolean(formik.errors.slug)}
+                  helperText={formik.touched.slug && formik.errors.slug}
                   placeholder='Enter Course Slug'
-                  sx={{ mb: 1 }}
+                  sx={{ mb: 1, '& .MuiOutlinedInput-root': { borderRadius: '8px', '&:hover fieldset': { borderColor: '#7d9b17' }, '&.Mui-focused fieldset': { borderColor: '#7d9b17', borderWidth: '2px' } } }}
                 />
                 <span className='text-black pb-4 d-block'>Course Link: https://collegedao.io/courses/{formik.values.slug}</span>
 
@@ -340,9 +367,13 @@ export const CourseCreationForm = () => {
                   rows={4}
                   value={formik.values.description}
                   onChange={formik.handleChange}
-                  InputLabelProps={{ shrink: true }}
+                  onBlur={formik.handleBlur}
+                  required
+                  InputLabelProps={{ sx: { '& .MuiFormLabel-asterisk': { color: 'red' } } }}
+                  error={formik.touched.description && Boolean(formik.errors.description)}
+                  helperText={formik.touched.description && formik.errors.description}
                   placeholder='Enter Description'
-                  sx={{ mb: 3 }}
+                  sx={{ mb: 3, '& .MuiOutlinedInput-root': { borderRadius: '8px', '&:hover fieldset': { borderColor: '#7d9b17' }, '&.Mui-focused fieldset': { borderColor: '#7d9b17', borderWidth: '2px' } } }}
                 />
                 <TextField
                   select
@@ -351,7 +382,12 @@ export const CourseCreationForm = () => {
                   name='category'
                   value={formik.values.category}
                   onChange={formik.handleChange}
-                  sx={{ mb: 3 }}
+                  onBlur={formik.handleBlur}
+                  required
+                  InputLabelProps={{ sx: { '& .MuiFormLabel-asterisk': { color: 'red' } } }}
+                  error={formik.touched.category && Boolean(formik.errors.category)}
+                  helperText={formik.touched.category && formik.errors.category}
+                  sx={{ mb: 3, '& .MuiOutlinedInput-root': { borderRadius: '8px', '&:hover fieldset': { borderColor: '#7d9b17' }, '&.Mui-focused fieldset': { borderColor: '#7d9b17', borderWidth: '2px' } } }}
                 >
                   {allCategory &&
                     allCategory.map((item, index) => (
@@ -374,7 +410,7 @@ export const CourseCreationForm = () => {
                       {...params}
                       label="Tags"
                       placeholder="Add tag and press Enter"
-                      sx={{ mb: 3 }}
+                      sx={{ mb: 3, '& .MuiOutlinedInput-root': { borderRadius: '8px', '&:hover fieldset': { borderColor: '#7d9b17' }, '&.Mui-focused fieldset': { borderColor: '#7d9b17', borderWidth: '2px' } } }}
                     />
                   )}
                 />
@@ -391,7 +427,7 @@ export const CourseCreationForm = () => {
                       {...params}
                       label='Prerequisites'
                       placeholder='Select Course'
-                      sx={{ mb: 3 }}
+                      sx={{ mb: 3, '& .MuiOutlinedInput-root': { borderRadius: '8px', '&:hover fieldset': { borderColor: '#7d9b17' }, '&.Mui-focused fieldset': { borderColor: '#7d9b17', borderWidth: '2px' } } }}
                     />
                   )}
                   sx={{ width: '100%' }}
@@ -402,9 +438,13 @@ export const CourseCreationForm = () => {
                   name='courseLength'
                   value={formik.values.courseLength}
                   onChange={formik.handleChange}
-                  InputLabelProps={{ shrink: true }}
+                  onBlur={formik.handleBlur}
+                  required
+                  InputLabelProps={{ sx: { '& .MuiFormLabel-asterisk': { color: 'red' } } }}
+                  error={formik.touched.courseLength && Boolean(formik.errors.courseLength)}
+                  helperText={formik.touched.courseLength && formik.errors.courseLength}
                   placeholder='Enter Course Length'
-                  sx={{ mb: 3 }}
+                  sx={{ mb: 3, '& .MuiOutlinedInput-root': { borderRadius: '8px', '&:hover fieldset': { borderColor: '#7d9b17' }, '&.Mui-focused fieldset': { borderColor: '#7d9b17', borderWidth: '2px' } } }}
                 />
 
                 <TextField
@@ -414,7 +454,12 @@ export const CourseCreationForm = () => {
                   name='level'
                   value={formik.values.level}
                   onChange={formik.handleChange}
-                  sx={{ mb: 3 }}
+                  onBlur={formik.handleBlur}
+                  required
+                  InputLabelProps={{ sx: { '& .MuiFormLabel-asterisk': { color: 'red' } } }}
+                  error={formik.touched.level && Boolean(formik.errors.level)}
+                  helperText={formik.touched.level && formik.errors.level}
+                  sx={{ mb: 3, '& .MuiOutlinedInput-root': { borderRadius: '8px', '&:hover fieldset': { borderColor: '#7d9b17' }, '&.Mui-focused fieldset': { borderColor: '#7d9b17', borderWidth: '2px' } } }}
                 >
                   <MenuItem value='beginner'>Beginner</MenuItem>
                   <MenuItem value='intermediate'>Intermediate</MenuItem>
@@ -422,24 +467,34 @@ export const CourseCreationForm = () => {
                 </TextField>
 
                 <div className='d-flex justify-content-end pt-4'>
-                  <Button
-                    type='button'
-                    variant='contained'
-                    onClick={() => nextTab()}
-                    sx={{
-                      bgcolor: '#7d9b17',
-                      color: 'white',
-                      fontWeight: 600,
-                      px: 4,
-                      py: 1.5,
-                      borderRadius: 2,
-                      textTransform: 'none',
-                      fontSize: '1rem',
-                      '&:hover': { bgcolor: '#4338ca' }
-                    }}
-                  >
-                    Next Step
-                  </Button>
+                  <Tooltip title={(!formik.values.title || !formik.values.slug || !formik.values.description || !formik.values.category || !formik.values.courseLength || !formik.values.level || Object.keys(formik.errors).length > 0) ? "Please fill all required fields" : ""} arrow placement="top">
+                    <span>
+                      <Button
+                        type='button'
+                        variant='contained'
+                        disabled={!formik.values.title || !formik.values.slug || !formik.values.description || !formik.values.category || !formik.values.courseLength || !formik.values.level || Object.keys(formik.errors).length > 0}
+                        onClick={() => {
+                          formik.handleSubmit();
+                          if (Object.keys(formik.errors).length === 0) {
+                            nextTab();
+                          }
+                        }}
+                        sx={{
+                          bgcolor: '#7d9b17',
+                          color: 'white',
+                          fontWeight: 600,
+                          px: 4,
+                          py: 1.5,
+                          borderRadius: 2,
+                          textTransform: 'none',
+                          fontSize: '1rem',
+                          '&:hover': { bgcolor: '#6b8514' }
+                        }}
+                      >
+                        Next Step
+                      </Button>
+                    </span>
+                  </Tooltip>
                 </div>
               </Card>
             </TabPanel>
@@ -462,7 +517,7 @@ export const CourseCreationForm = () => {
                       borderRadius: 2,
                       textTransform: 'none',
                       fontSize: '1rem',
-                      '&:hover': { borderColor: '#4338ca', bgcolor: 'rgba(79, 70, 229,0.04)' }
+                      '&:hover': { borderColor: '#6b8514', bgcolor: 'rgba(125, 155, 23, 0.04)' }
                     }}
                   >
                     Back
@@ -473,7 +528,15 @@ export const CourseCreationForm = () => {
                       disabled={loading}
                       variant='outlined'
                       onClick={() => {
-                        formik.handleSubmit(), setUserStatus({ status: 'draft' })
+                        formik.validateForm().then(errors => {
+                          if (Object.keys(errors).length > 0) {
+                            toast.error('Please fill all required fields in Course Details')
+                            setTabValue('1')
+                          } else {
+                            setUserStatus({ status: 'draft' })
+                            formik.handleSubmit()
+                          }
+                        })
                       }}
                       sx={{
                         borderColor: '#7d9b17',
@@ -484,7 +547,7 @@ export const CourseCreationForm = () => {
                         borderRadius: 2,
                         textTransform: 'none',
                         fontSize: '1rem',
-                        '&:hover': { borderColor: '#4338ca', bgcolor: 'rgba(79, 70, 229,0.04)' }
+                        '&:hover': { borderColor: '#6b8514', bgcolor: 'rgba(125, 155, 23, 0.04)' }
                       }}
                     >
                       {loading && userStatus?.status === 'draft' ? <CircularProgress size={24} color="inherit" /> : 'Save as Draft'}
@@ -493,7 +556,15 @@ export const CourseCreationForm = () => {
                       disabled={loading}
                       variant='contained'
                       onClick={() => {
-                        formik.handleSubmit(), setUserStatus({ status: 'pending' })
+                        formik.validateForm().then(errors => {
+                          if (Object.keys(errors).length > 0) {
+                            toast.error('Please fill all required fields in Course Details')
+                            setTabValue('1')
+                          } else {
+                            setUserStatus({ status: 'pending' })
+                            formik.handleSubmit()
+                          }
+                        })
                       }}
                       sx={{
                         bgcolor: '#7d9b17',
@@ -504,7 +575,7 @@ export const CourseCreationForm = () => {
                         borderRadius: 2,
                         textTransform: 'none',
                         fontSize: '1rem',
-                        '&:hover': { bgcolor: '#4338ca' }
+                        '&:hover': { bgcolor: '#6b8514' }
                       }}
                     >
                       {loading && userStatus?.status === 'pending' ? <CircularProgress size={24} color="inherit" /> : 'Publish Course'}

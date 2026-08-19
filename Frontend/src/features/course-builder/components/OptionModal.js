@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
-import { Label, Input, Button } from 'reactstrap'
-import { Typography, TextField } from '@mui/material'
+import { Typography, TextField, Button } from '@mui/material'
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
 
 export default function OptionModal({ handleOptionClose, handleOptionSave, data }) {
@@ -23,23 +22,14 @@ export default function OptionModal({ handleOptionClose, handleOptionSave, data 
         name='name'
         value={titleDesc}
         onChange={e => setTitleDesc(e.target.value)}
-        InputLabelProps={{ shrink: true }}
         placeholder='Enter Option Title'
-        sx={{ mb: 3 }}
+        sx={{ mb: 3, '& .MuiOutlinedInput-root': { borderRadius: '8px', '&:hover fieldset': { borderColor: '#7d9b17' }, '&.Mui-focused fieldset': { borderColor: '#7d9b17', borderWidth: '2px' } } }}
       />
       <div className='d-flex justify-content-end pt-4'>
-        <Button
-          type='button'
-          className='me-2 px-4 d-flex align-items-center beforeLoginbtn'
-          onClick={handleOptionClose}
-        >
+        <Button variant='outlined' onClick={handleOptionClose} sx={{ mr: 2, color: '#7d9b17', borderColor: '#7d9b17', '&:hover': { borderColor: '#6b8514', backgroundColor: 'rgba(125, 155, 23, 0.04)' }, textTransform: 'none' }}>
           Cancel
         </Button>
-        <Button
-          type='button'
-          className='me-2 px-4 d-flex align-items-center beforeLoginbtn'
-          onClick={e => handleSubmit(e)}
-        >
+        <Button variant='contained' onClick={e => handleSubmit(e)} sx={{ bgcolor: '#7d9b17', '&:hover': { bgcolor: '#6b8514' }, textTransform: 'none' }}>
           Save
         </Button>
       </div>

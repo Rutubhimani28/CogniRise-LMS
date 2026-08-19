@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Button } from 'reactstrap'
+import Button from '@mui/material/Button'
 import Requests from 'src/configs/axiosRequest'
 import CourseContent from 'src/views/pages/components/CourseContent'
 import LessonContent from 'src/views/pages/components/LessonContent'
@@ -13,6 +13,7 @@ import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
 import CircularProgress from '@mui/material/CircularProgress'
 import Box from '@mui/material/Box'
+import MenuBookIcon from '@mui/icons-material/MenuBook'
 
 export const CourseViewer = () => {
   // api call
@@ -44,9 +45,15 @@ export const CourseViewer = () => {
       .then(res => {
         if (res?.status === 200) {
           setCourseData(res?.data)
-          setModuleData(res?.data?.modules)
+          let parsedModules = res?.data?.modules || []
+          if (typeof parsedModules === 'string') {
+            try { parsedModules = JSON.parse(parsedModules) } catch (e) { }
+          } else if (Array.isArray(parsedModules) && parsedModules.length > 0 && typeof parsedModules[0] === 'string') {
+            try { parsedModules = parsedModules.map(m => JSON.parse(m)) } catch (e) { }
+          }
+          setModuleData(parsedModules)
           setTotalItem(res?.data?.totalItems + 1)
-          setNavigationData(res?.data?.modules[0]?.items[0])
+          setNavigationData(parsedModules[0]?.items?.[0])
         }
       })
       .catch(err => {
@@ -133,28 +140,67 @@ export const CourseViewer = () => {
               data={navigationData?.data}
             />
           ) : (
-            <div style={{ padding: '3rem', textAlign: 'center', backgroundColor: 'white', borderRadius: '8px', boxShadow: '#636363 0px 2px 8px 0px' }}>
-              <Typography variant="h6" className="text-black">No content available for this course yet.</Typography>
-              <Typography variant="body2" className="text-black" sx={{ mt: 2 }}>Please check back later or contact the instructor.</Typography>
-            </div>
+            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '400px', textAlign: 'center' }}>
+              <MenuBookIcon sx={{ fontSize: 60, color: 'rgba(125, 155, 23, 0.4)', mb: 2 }} />
+              <Typography variant="h5" sx={{ color: '#2F2B3D', fontWeight: 600, mb: 1 }}>No content available yet</Typography>
+              <Typography variant="body1" sx={{ color: '#6c757d' }}>This course doesn't have any lessons or quizzes at the moment.<br />Please check back later.</Typography>
+            </Box>
           )}
 
-          <div className='d-flex justify-content-between align-items-center w-100 mt-3'>
-            {itemNo > 1 ? (
-              <Button className='beforeLoginbtn my-1 me-3 px-4' onClick={() => handlePreClick()}>
-                Previous
-              </Button>
-            ) : (
-              <div></div>
-            )}
-            {itemNo + 1 < totalItem ? (
-              <Button className='beforeLoginbtn my-1 px-4' onClick={() => handleNextClick()}>
-                Next
-              </Button>
-            ) : (
-              <div></div>
-            )}
-          </div>
+          {(lessonData || navigationData?.id || navigationData?.data) && (
+            <div className='d-flex justify-content-between align-items-center w-100 mt-4'>
+              {itemNo > 1 ? (
+                <Button
+                  variant='contained'
+                  onClick={() => handlePreClick()}
+                  sx={{
+                    backgroundColor: '#7d9b17',
+                    color: 'white',
+                    borderRadius: '8px',
+                    px: 4,
+                    py: 1,
+                    fontWeight: 600,
+                    fontSize: '1rem',
+                    textTransform: 'none',
+                    boxShadow: '0 4px 14px 0 rgba(125, 155, 23, 0.39)',
+                    '&:hover': {
+                      backgroundColor: '#6b8514',
+                      boxShadow: '0 6px 20px rgba(125, 155, 23, 0.23)'
+                    }
+                  }}
+                >
+                  Previous
+                </Button>
+              ) : (
+                <div></div>
+              )}
+              {itemNo + 1 < totalItem ? (
+                <Button
+                  variant='contained'
+                  onClick={() => handleNextClick()}
+                  sx={{
+                    backgroundColor: '#7d9b17',
+                    color: 'white',
+                    borderRadius: '8px',
+                    px: 4,
+                    py: 1,
+                    fontWeight: 600,
+                    fontSize: '1rem',
+                    textTransform: 'none',
+                    boxShadow: '0 4px 14px 0 rgba(125, 155, 23, 0.39)',
+                    '&:hover': {
+                      backgroundColor: '#6b8514',
+                      boxShadow: '0 6px 20px rgba(125, 155, 23, 0.23)'
+                    }
+                  }}
+                >
+                  Next
+                </Button>
+              ) : (
+                <div></div>
+              )}
+            </div>
+          )}
         </Grid>
       </Grid>
     </div>

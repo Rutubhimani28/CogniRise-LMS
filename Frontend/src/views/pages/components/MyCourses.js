@@ -8,9 +8,11 @@ import MyFirstCourse from './MyFirstCourse'
 import { useRouter } from 'next/router'
 import { useDispatch } from 'react-redux'
 import { useSelector } from 'react-redux'
+import { CircularProgress } from '@mui/material'
 
 export default function MyCourses({ studentCourse }) {
   const [studentEnrollCourse, setStudentEnrollCourse] = useState([])
+  const [loading, setLoading] = useState(true)
 
   const requestApiData = new Requests()
   const router = useRouter()
@@ -40,6 +42,9 @@ export default function MyCourses({ studentCourse }) {
         })
         .catch(err => {
           console.log('Error on Get Student Enroll Course', err)
+        })
+        .finally(() => {
+          setLoading(false)
         })
     }
   }, [user, updateMyCourse, studentCourse, enrollCourse])
@@ -87,7 +92,11 @@ export default function MyCourses({ studentCourse }) {
         </button>
       </div>
 
-      {studentEnrollCourse.length > 0 ? (
+      {loading ? (
+        <div className='d-flex justify-content-center py-5'>
+          <CircularProgress sx={{ color: '#7d9b17' }} />
+        </div>
+      ) : studentEnrollCourse.length > 0 ? (
         <>
           <div className='py-2'>
             {studentEnrollCourse.slice(0, 3).map((item, i) => (

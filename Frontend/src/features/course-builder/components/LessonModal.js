@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react'
-import { Button, Label } from 'reactstrap'
-import { Typography, Box, TextField } from '@mui/material'
+import { Label } from 'reactstrap'
+import { Typography, Box, TextField, Button } from '@mui/material'
 import { useDropzone } from 'react-dropzone'
 import ReactDraftWysiwyg from 'src/@core/components/react-draft-wysiwyg'
 import { EditorState, convertToRaw, convertFromRaw } from 'draft-js'
@@ -125,9 +125,8 @@ export default function LessonModal({ lessonClose, lessonSave, lessonData }) {
         name='name'
         value={lessonName}
         onChange={e => setLessonName(e.target.value)}
-        InputLabelProps={{ shrink: true }}
         placeholder='Enter Lesson Title'
-        sx={{ mb: 3 }}
+        sx={{ mb: 3, '& .MuiOutlinedInput-root': { borderRadius: '8px', '&:hover fieldset': { borderColor: '#7d9b17' }, '&.Mui-focused fieldset': { borderColor: '#7d9b17', borderWidth: '2px' } } }}
       />
 
       <Box
@@ -166,18 +165,10 @@ export default function LessonModal({ lessonClose, lessonSave, lessonData }) {
       </div>
 
       <div className='d-flex justify-content-end pt-4'>
-        <Button
-          type='button'
-          className='me-2 px-4 d-flex align-items-center beforeLoginbtn'
-          onClick={lessonClose}
-        >
+        <Button variant='outlined' onClick={lessonClose} sx={{ mr: 2, color: '#7d9b17', borderColor: '#7d9b17', '&:hover': { borderColor: '#6b8514', backgroundColor: 'rgba(125, 155, 23, 0.04)' }, textTransform: 'none' }}>
           Cancel
         </Button>
-        <Button
-          type='submit'
-          className='me-2 px-4 d-flex align-items-center beforeLoginbtn'
-          onClick={handleSubmit}
-        >
+        <Button variant='contained' onClick={handleSubmit} sx={{ bgcolor: '#7d9b17', '&:hover': { bgcolor: '#6b8514' }, textTransform: 'none' }}>
           Save
         </Button>
       </div>

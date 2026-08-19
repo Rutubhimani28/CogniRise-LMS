@@ -1,4 +1,6 @@
 import DeleteIcon from '@mui/icons-material/Delete'
+import EditIcon from '@mui/icons-material/Edit'
+import VisibilityIcon from '@mui/icons-material/Visibility'
 import { Chip, Dialog, DialogActions, DialogContent, DialogTitle, Button } from '@mui/material'
 import Box from '@mui/material/Box'
 import Checkbox from '@mui/material/Checkbox'
@@ -26,8 +28,7 @@ import { useSearchParams } from 'next/navigation'
 import PropTypes from 'prop-types'
 import { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
-import { RiDeleteBin6Line, RiEdit2Fill } from 'react-icons/ri'
-import { RxEyeOpen } from 'react-icons/rx'
+
 import { Col, Row } from 'reactstrap'
 import Requests from 'src/configs/axiosRequest'
 
@@ -59,8 +60,8 @@ function stableSort(array, comparator) {
 const headCells = [
   { id: 'title', numeric: false, disablePadding: true, label: 'Course' },
   { id: 'category', numeric: true, disablePadding: false, label: 'Categories' },
-  { id: 'status', disablePadding: false, label: 'Status' },
-  { id: 'Action', disablePadding: false, label: 'Action', sort: false }
+  { id: 'status', disablePadding: false, label: 'Status', align: 'left' },
+  { id: 'Action', disablePadding: false, label: 'Action', sort: false, align: 'center' }
 ]
 
 function EnhancedTableHead(props) {
@@ -78,24 +79,31 @@ function EnhancedTableHead(props) {
             checked={rowCount > 0 && numSelected === rowCount}
             onChange={onSelectAllClick}
             inputProps={{ 'aria-label': 'select all desserts' }}
-            icon={<CheckBoxOutlineBlankIcon sx={{ fontSize: 24, color: 'black', borderRadius: '4px' }} />}
-            checkedIcon={<CheckBoxIcon sx={{ fontSize: 24, color: 'black', border: '2px solid black', borderRadius: '4px' }} />}
+            icon={<CheckBoxOutlineBlankIcon sx={{ fontSize: 24, color: 'white', borderRadius: '4px' }} />}
+            checkedIcon={<CheckBoxIcon sx={{ fontSize: 24, color: 'white', border: '2px solid white', borderRadius: '4px' }} />}
           />
         </TableCell>
         {headCells.map(headCell => (
           <TableCell
             key={headCell.id}
-            align='left'
+            align={headCell.align || 'left'}
             padding={headCell.disablePadding ? 'none' : 'normal'}
             sortDirection={orderBy === headCell.id ? order : false}
-            className='text-black ps-1'
+            className='text-white ps-1'
+            sx={{ whiteSpace: 'nowrap', width: (headCell.id === 'status' || headCell.id === 'Action') ? '1%' : '50%', textAlign: headCell.align || 'left' }}
           >
             {headCell.sort !== false ? (
               <TableSortLabel
                 active={orderBy === headCell.id}
                 direction={orderBy === headCell.id ? order : 'asc'}
                 onClick={createSortHandler(headCell.id)}
-                className='text-black ps-1'
+                className='text-white ps-1'
+                sx={{
+                  justifyContent: headCell.align === 'center' ? 'center' : 'flex-start',
+                  width: '100%',
+                  '&.Mui-active': { color: 'white' },
+                  '& .MuiTableSortLabel-icon': { color: 'white !important' }
+                }}
               >
                 {headCell.label}
                 {orderBy === headCell.id ? (
@@ -182,8 +190,8 @@ function EnhancedTableToolbar(props) {
           ))}
         {numSelected > 0 && (
           <Tooltip title='Delete' onClick={handleOpenDialog}>
-            <IconButton>
-              <DeleteIcon className='text-black' />
+            <IconButton sx={{ color: '#d32f2f' }}>
+              <DeleteIcon />
             </IconButton>
           </Tooltip>
         )}
@@ -192,9 +200,9 @@ function EnhancedTableToolbar(props) {
       <Dialog open={open} onClose={handleCloseDialog}>
         <DialogTitle className='addHeadingColor'>Confirm Deletion</DialogTitle>
         <DialogContent className='text-black'>Are you sure you want to delete all selected records?</DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseDialog} className='beforeLoginbtn'>Cancel</Button>
-          <Button onClick={handleConfirmDelete} color='error' className='beforeLoginbtn'>Delete</Button>
+        <DialogActions sx={{ p: 3 }}>
+          <Button variant='outlined' onClick={handleCloseDialog} sx={{ color: '#7d9b17', borderColor: '#7d9b17', '&:hover': { borderColor: '#6b8514', backgroundColor: 'rgba(125, 155, 23, 0.04)' }, textTransform: 'none' }}>Cancel</Button>
+          <Button variant='contained' onClick={handleConfirmDelete} sx={{ bgcolor: '#d32f2f', '&:hover': { bgcolor: '#c62828' }, textTransform: 'none' }}>Delete</Button>
         </DialogActions>
       </Dialog>
     </>
@@ -258,7 +266,6 @@ export const EnterpriseCoursesTable = () => {
   }, [isChange, createdBy])
 
   const getCourseData = param => {
-    setLoading(true)
     requestApiData
       .courseRequest(param)
       .then(res => {
@@ -339,7 +346,7 @@ export const EnterpriseCoursesTable = () => {
     <Box sx={{ width: '100%' }} className='enaterpriseCourseWrap'>
       <Row className='justify-content-between align-items-center pb-3'>
         <Col md={6} className='mb-1'>
-          <Typography sx={{ fontSize: '1.3rem', color: '#7d9b17' }} variant='h6' className='addHeadingColor'>
+          <Typography sx={{ fontSize: '1.3rem', color: 'black !important' }} variant='h6'>
             Courses
           </Typography>
         </Col>
@@ -353,10 +360,26 @@ export const EnterpriseCoursesTable = () => {
               onChange={(e) => setSearchQuery(e.target.value)}
               sx={{ backgroundColor: 'white', borderRadius: 1, minWidth: '300px' }}
             />
-            <Button type='button' className='px-4 border-0 addCourse' style={{ height: '40px' }}>
-              <Link className='text-black text-decoration-none' href='/course-creation'>
-                Add Course
-              </Link>
+            <Button
+              component={Link}
+              href='/course-creation'
+              variant='contained'
+              sx={{
+                backgroundColor: '#7d9b17',
+                color: 'white',
+                borderRadius: '8px',
+                fontWeight: 600,
+                textTransform: 'none',
+                height: '40px',
+                px: 3,
+                boxShadow: '0 4px 14px 0 rgba(125, 155, 23, 0.39)',
+                '&:hover': {
+                  backgroundColor: '#6b8514',
+                  boxShadow: '0 6px 20px rgba(125, 155, 23, 0.23)'
+                }
+              }}
+            >
+              Add Course
             </Button>
           </Box>
         </Col>
@@ -373,79 +396,102 @@ export const EnterpriseCoursesTable = () => {
           />
         )}
         <TableContainer sx={{ maxHeight: 'calc(100vh - 300px)', minHeight: '400px' }}>
-          <Table
-            size='small'
-            sx={{ minWidth: 750, borderCollapse: 'collapse', '& th , td': { borderBottom: '1px solid #a19d9dbf', padding: '15px' } }}
-            aria-labelledby='tableTitle'
-          >
-            <EnhancedTableHead
-              numSelected={selected.length}
-              order={order}
-              orderBy={orderBy}
-              onSelectAllClick={handleSelectAllClick}
-              onRequestSort={handleRequestSort}
-              rowCount={course.length}
-            />
-            <TableBody>
-              {loading ? (
-                <TableRow>
-                  <TableCell colSpan={5} align="center" sx={{ height: '300px', borderBottom: 'none !important' }}>
-                    <CircularProgress sx={{ color: '#7d9b17' }} />
-                  </TableCell>
-                </TableRow>
-              ) : filteredCourse.length === 0 ? (<TableRow><TableCell colSpan={5} align='center' sx={{ height: '300px', borderBottom: 'none !important' }}><Typography variant='h6' color='textSecondary'>No data found</Typography></TableCell></TableRow>) : stableSort(filteredCourse, getComparator(order, orderBy))
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row, index) => {
-                  const isItemSelected = isSelected(row?._id)
-                  const labelId = `enhanced-table-checkbox-${index}`
+          {loading ? (
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '400px' }}>
+              <CircularProgress sx={{ color: '#7d9b17' }} size={60} thickness={4} />
+            </Box>
+          ) : (
+            <Table
+              size='small'
+              sx={{ minWidth: 750, borderCollapse: 'collapse', '& th , td': { borderBottom: '1px solid #a19d9dbf', padding: '15px' } }}
+              aria-labelledby='tableTitle'
+            >
+              <EnhancedTableHead
+                numSelected={selected.length}
+                order={order}
+                orderBy={orderBy}
+                onSelectAllClick={handleSelectAllClick}
+                onRequestSort={handleRequestSort}
+                rowCount={course.length}
+              />
+              <TableBody>
+                {loading ? (
+                  <TableRow>
+                    <TableCell colSpan={5} align="center" sx={{ height: '300px', borderBottom: 'none !important' }}>
+                      <CircularProgress sx={{ color: '#7d9b17' }} />
+                    </TableCell>
+                  </TableRow>
+                ) : filteredCourse.length === 0 ? (<TableRow><TableCell colSpan={5} align='center' sx={{ height: '300px', borderBottom: 'none !important' }}><Typography variant='h6' color='textSecondary'>No data found</Typography></TableCell></TableRow>) : stableSort(filteredCourse, getComparator(order, orderBy))
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((row, index) => {
+                    const isItemSelected = isSelected(row?._id)
+                    const labelId = `enhanced-table-checkbox-${index}`
 
-                  return (
-                    <TableRow hover role='checkbox' tabIndex={-1} key={row?._id} className='customRow'>
-                      <TableCell padding='checkbox'>
-                        <Checkbox
-                          checked={isItemSelected}
-                          icon={<CheckBoxOutlineBlankIcon sx={{ fontSize: 24, color: 'black', borderRadius: '4px' }} />}
-                          checkedIcon={<CheckBoxIcon sx={{ fontSize: 24, color: 'black', border: '2px solid black', borderRadius: '4px' }} />}
-                          onClick={event => handleClick(event, row?._id)}
-                          inputProps={{ 'aria-labelledby': labelId }}
-                        />
-                      </TableCell>
-                      <TableCell component='th' id={labelId} scope='row' padding='none' className='text-black'>{row.title}</TableCell>
-                      <TableCell align='left' className='text-black'>{row.category}</TableCell>
-                      <TableCell align='left' className='text-black'>
-                        {row.status === 'approve' ? 'PUBLISHED' : row.status.toUpperCase()}
-                      </TableCell>
-                      <TableCell align='left' className='text-black'>
-                        <RiDeleteBin6Line className='fs-6' onClick={() => modalDeletOpen(row?._id)} />
-                        <Link href={`/course-creation/?id=${row?._id}`}>
-                          <RiEdit2Fill className='mx-3 fs-6 text-black' style={{ color: '#fff' }} />
-                        </Link>
-                        <Link href={`/courses/${row?.slug}/${row?._id}`}>
-                          <RxEyeOpen className=' fs-6 text-black' style={{ color: '#fff' }} />
-                        </Link>
-                      </TableCell>
-                    </TableRow>
-                  )
-                })}
-              {emptyRows > 0 && <TableRow><TableCell colSpan={5} /></TableRow>}
-            </TableBody>
-          </Table>
+                    return (
+                      <TableRow hover role='checkbox' tabIndex={-1} key={row?._id} className='customRow'>
+                        <TableCell padding='checkbox'>
+                          <Checkbox
+                            checked={isItemSelected}
+                            icon={<CheckBoxOutlineBlankIcon sx={{ fontSize: 24, color: 'black', borderRadius: '4px' }} />}
+                            checkedIcon={<CheckBoxIcon sx={{ fontSize: 24, color: 'black', border: '2px solid black', borderRadius: '4px' }} />}
+                            onClick={event => handleClick(event, row?._id)}
+                            inputProps={{ 'aria-labelledby': labelId }}
+                          />
+                        </TableCell>
+                        <TableCell component='th' id={labelId} scope='row' padding='none' className='text-black' sx={{ maxWidth: '250px', width: '50%', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }} title={row.title}>
+                          {row.title}
+                        </TableCell>
+                        <TableCell align='left' className='text-black' sx={{ maxWidth: '250px', width: '50%', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }} title={row.category}>
+                          {row.category}
+                        </TableCell>
+                        <TableCell align='left' className='text-black' sx={{ whiteSpace: 'nowrap' }}>
+                          {row.status === 'approve' ? 'PUBLISHED' : row.status.toUpperCase()}
+                        </TableCell>
+                        <TableCell align='center' className='text-black' sx={{ whiteSpace: 'nowrap', width: '1%' }}>
+                          <Tooltip title="Delete">
+                            <IconButton onClick={() => modalDeletOpen(row?._id)} size="small" sx={{ color: '#d32f2f' }}>
+                              <DeleteIcon fontSize="small" />
+                            </IconButton>
+                          </Tooltip>
+                          <Link href={`/course-creation/?id=${row?._id}`}>
+                            <Tooltip title="Edit">
+                              <IconButton size="small" sx={{ color: '#7d9b17', mx: 1 }}>
+                                <EditIcon fontSize="small" />
+                              </IconButton>
+                            </Tooltip>
+                          </Link>
+                          <Link href={`/courses/${row?.slug}/${row?._id}`}>
+                            <Tooltip title="View">
+                              <IconButton size="small" sx={{ color: '#3A5BCD' }}>
+                                <VisibilityIcon fontSize="small" />
+                              </IconButton>
+                            </Tooltip>
+                          </Link>
+                        </TableCell>
+                      </TableRow>
+                    )
+                  })}
+                {emptyRows > 0 && <TableRow><TableCell colSpan={5} /></TableRow>}
+              </TableBody>
+            </Table>
+          )}
         </TableContainer>
-        {filteredCourse.length > 0 && (<TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          component='div'
-          count={filteredCourse.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-          className='pagination'
-          sx={{
-            '& .MuiTablePagination-selectLabel, & .MuiTablePagination-displayedRows': { color: 'black' },
-            '& .MuiSelect-select, & .MuiSelect-icon': { color: 'black' },
-            '& .MuiInputBase-root:before, & .MuiInputBase-root:after': { borderColor: 'black' }
-          }}
-        />
+        {filteredCourse.length > 0 && (
+          <TablePagination
+            rowsPerPageOptions={[5, 10, 25]}
+            component='div'
+            count={filteredCourse.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+            className='pagination'
+            sx={{
+              '& .MuiTablePagination-selectLabel, & .MuiTablePagination-displayedRows': { color: 'black' },
+              '& .MuiSelect-select, & .MuiSelect-icon': { color: 'black' },
+              '& .MuiInputBase-root:before, & .MuiInputBase-root:after': { borderColor: 'black' }
+            }}
+          />
         )}
       </Paper>
 
@@ -456,14 +502,15 @@ export const EnterpriseCoursesTable = () => {
           </Typography>
           <Typography className='text-black mt-2'>Are you sure you want to delete this course?</Typography>
           <Box display={'flex'} justifyContent={'flex-end'}>
-            <Button variant='outlined' onClick={() => modalDeletClose()} sx={{ mr: 2, mt: 3, color: '#7d9b17', borderColor: '#7d9b17', '&:hover': { borderColor: '#4338ca' }, textTransform: 'none' }}>Cancel</Button>
+            <Button variant='outlined' onClick={() => modalDeletClose()} sx={{ mr: 2, mt: 3, color: '#7d9b17', borderColor: '#7d9b17', '&:hover': { borderColor: '#6b8514', backgroundColor: 'rgba(125, 155, 23, 0.04)' }, textTransform: 'none' }}>Cancel</Button>
             <Button variant='contained' disabled={isDeleting} onClick={() => deleteCourse(courseId)} sx={{ mt: 3, bgcolor: '#d32f2f', '&:hover': { bgcolor: '#c62828' }, textTransform: 'none' }}>
               {isDeleting ? <CircularProgress size={20} color="inherit" /> : 'Delete'}
             </Button>
           </Box>
         </Box>
       </Modal>
-    </Box>
+    </Box >
   )
 }
 
+export default EnterpriseCoursesTable

@@ -6,7 +6,7 @@ import LiveCourse from 'src/views/pages/components/LiveCourse'
 import Student from 'src/views/pages/components/Student'
 import TopCourse from 'src/views/pages/components/TopCourse'
 import Viewership from 'src/views/pages/components/Viewership'
-import { Grid } from '@mui/material'
+import { Grid, Box, CircularProgress } from '@mui/material'
 
 export const EnterpriseDashboard = () => {
   const [user, setUser] = React.useState(null)
@@ -16,9 +16,18 @@ export const EnterpriseDashboard = () => {
       setUser(JSON.parse(window.localStorage.getItem('userData')))
     }
   }, [])
+
+  if (!user) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh' }}>
+        <CircularProgress sx={{ color: '#7d9b17' }} size={60} thickness={4} />
+      </Box>
+    )
+  }
+
   return (
     <div className='instructorwrap mb-5'>
-      <h6 style={{ color: '#3a5bcd', paddingTop: '14px' }}>Hi {user?.name},</h6>
+      <h6 style={{ color: 'black', paddingTop: '14px' }}>Hi {user?.name},</h6>
 
       <Grid container spacing={3} sx={{ pt: 1 }}>
         <Grid item xs={12} sm={12} md={6} lg={3}>

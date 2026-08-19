@@ -10,6 +10,8 @@ import Icon from 'src/@core/components/icon'
 export default function CourseContent({ data }) {
   const dispatch = useDispatch()
 
+  const validData = data ? data.filter(module => module?.name || (module?.items && module.items.length > 0)) : []
+
   return (
     <div
       style={{
@@ -19,11 +21,9 @@ export default function CourseContent({ data }) {
     >
       <Box
         sx={{
-          px: { xs: 2, sm: 4 },
+          px: { xs: 0, sm: 2 },
           py: 2,
           height: 'auto',
-          backgroundColor: 'white',
-          borderRadius: '8px',
           display: 'flex',
           flexDirection: 'column'
         }}
@@ -33,30 +33,36 @@ export default function CourseContent({ data }) {
             Course content
           </h5>
         </Box>
-        {data &&
-          data.map((module, mindex) => (
+        {validData.length === 0 ? (
+          <Typography sx={{ color: '#6c757d', fontSize: '0.9rem', mt: 2, textAlign: 'center', pb: 2 }}>
+            No modules available
+          </Typography>
+        ) : (
+          validData.map((module, mindex) => (
             <div key={mindex}>
-              <Accordion>
+              <Accordion elevation={0} sx={{ bgcolor: 'transparent', '&:before': { display: 'none' }, '&.Mui-expanded': { m: 0 } }}>
                 <AccordionSummary
                   id={`panel-header-${mindex}`}
                   aria-controls={`panel-content-${mindex}`}
                   expandIcon={<Icon color='black' fontSize='1.25rem' icon='tabler:chevron-down' />}
+                  sx={{ px: 0, minHeight: '48px', '&.Mui-expanded': { minHeight: '48px' } }}
                 >
-                  <Typography className='text-black' sx={{ fontSize: { xs: '0.9rem', sm: '1rem' } }}>
+                  <Typography className='text-black' sx={{ fontSize: { xs: '0.9rem', sm: '1rem' }, fontWeight: 500 }}>
                     {module?.name}
                   </Typography>
                 </AccordionSummary>
-                <AccordionDetails>
+                <AccordionDetails sx={{ px: 0, py: 1 }}>
                   {module?.items &&
                     module.items.map((item, index) => {
                       return (
                         <Typography
-                          className='py-2'
+                          className='py-1'
                           onClick={() => dispatch({ type: 'SELECTED_LESSON', payload: item })}
                           sx={{
-                            color: 'black',
+                            color: '#6c757d',
                             cursor: 'pointer',
-                            fontSize: { xs: '0.85rem', sm: '0.9rem' }
+                            fontSize: { xs: '0.85rem', sm: '0.9rem' },
+                            '&:hover': { color: '#7d9b17' }
                           }}
                           key={index}
                         >
@@ -67,7 +73,8 @@ export default function CourseContent({ data }) {
                 </AccordionDetails>
               </Accordion>
             </div>
-          ))}
+          ))
+        )}
       </Box>
     </div>
   )

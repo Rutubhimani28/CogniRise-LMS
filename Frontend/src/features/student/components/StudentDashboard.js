@@ -13,7 +13,8 @@ import {
   DialogActions,
   Typography,
   IconButton,
-  Button
+  Button,
+  CircularProgress
 } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
 
@@ -140,6 +141,14 @@ export const StudentDashboard = () => {
       let filter = courses.filter(item => data.includes(item._id))
       toast.error(` Oops:Please First enroll ${filter.map(item => item.title)} Course `)
     }
+  }
+
+  if (!student) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh' }}>
+        <CircularProgress sx={{ color: '#7d9b17' }} size={60} thickness={4} />
+      </Box>
+    )
   }
 
   return (
