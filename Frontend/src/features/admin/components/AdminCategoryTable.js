@@ -25,12 +25,14 @@ import PropTypes from 'prop-types'
 import { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import { RiDeleteBin6Line, RiEdit2Fill } from 'react-icons/ri'
-import { Button, Col, Row } from 'reactstrap'
+import { Col, Row } from 'reactstrap'
+import { Button } from '@mui/material'
 import Requests from 'src/configs/axiosRequest'
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) return -1
   if (b[orderBy] > a[orderBy]) return 1
+
   return 0
 }
 
@@ -45,8 +47,10 @@ function stableSort(array, comparator) {
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0])
     if (order !== 0) return order
+
     return a[1] - b[1]
   })
+
   return stabilizedThis.map(el => el[0])
 }
 
@@ -122,7 +126,7 @@ function EnhancedTableToolbar(props) {
   if (numSelected === 0) {
     return null
   }
-  
+
   return (
     <Toolbar
       variant='dense'
@@ -174,11 +178,19 @@ export const AdminCategoryTable = () => {
   const [category, setCategory] = useState([])
   const [confirmDelet, setConfirmDelet] = useState(false)
   const [multiDeleteModel, setMultiDeleteModel] = useState(false)
+  const [isDeleting, setIsDeleting] = useState(false)
+  const [isMultiDeleting, setIsMultiDeleting] = useState(false)
   const [categoryId, setCategoryId] = useState(null)
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
 
-  const createdBy = JSON.parse(localStorage.getItem('userData'))
+  const [createdBy, setCreatedBy] = useState(null)
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setCreatedBy(JSON.parse(window.localStorage.getItem('userData')))
+    }
+  }, [])
 
   const modalDeletOpen = id => {
     setConfirmDelet(true)
@@ -196,9 +208,11 @@ export const AdminCategoryTable = () => {
   }
 
   useEffect(() => {
-    const param = { createdBy: createdBy?.id }
-    getCategoryData(param)
-  }, [])
+    if (createdBy?.id) {
+      const param = { createdBy: createdBy.id }
+      getCategoryData(param)
+    }
+  }, [createdBy])
 
   const getCategoryData = param => {
     setLoading(true)
@@ -212,6 +226,7 @@ export const AdminCategoryTable = () => {
   }
 
   const deleteCategory = id => {
+    setIsDeleting(true)
     requestApiData
       .deleteCategoryRequest(id)
       .then(res => {
@@ -222,12 +237,14 @@ export const AdminCategoryTable = () => {
         }
       })
       .catch(err => {
-        toast.error('Somthing went wrong')
+        toast.error('Something went wrong')
         console.log('Delet Category', err)
       })
+      .finally(() => setIsDeleting(false))
   }
 
   const multiDeleteCategory = () => {
+    setIsMultiDeleting(true)
     requestApiData
       .deleteManyCategoryRequest(selected)
       .then(res => {
@@ -238,9 +255,10 @@ export const AdminCategoryTable = () => {
         }
       })
       .catch(err => {
-        toast.error('Somthing went wrong')
+        toast.error('Something went wrong')
         console.log('Delet Category', err)
       })
+      .finally(() => setIsMultiDeleting(false))
   }
 
   const handleRequestSort = (event, property) => {
@@ -252,6 +270,7 @@ export const AdminCategoryTable = () => {
   const handleSelectAllClick = event => {
     if (event.target.checked) {
       setSelected(category.map(n => n?._id))
+
       return
     }
     setSelected([])
@@ -273,6 +292,7 @@ export const AdminCategoryTable = () => {
   }
 
   const handleChangePage = (event, newPage) => setPage(newPage)
+
   const handleChangeRowsPerPage = event => {
     setRowsPerPage(parseInt(event.target.value, 10))
     setPage(0)
@@ -305,7 +325,7 @@ export const AdminCategoryTable = () => {
               onChange={(e) => setSearchQuery(e.target.value)}
               sx={{ backgroundColor: 'white', borderRadius: 1, minWidth: '300px' }}
             />
-            <Button type='button' size='sm' className='px-4 border-0 beforeLoginbtn text-black' style={{ height: '40px' }}>
+            <Button type='button' size='small' className='px-4 border-0 beforeLoginbtn text-black' style={{ height: '40px' }}>
               <Link className='text-black text-decoration-none' href='/add-category'>
                 Add Category
               </Link>
@@ -314,9 +334,9 @@ export const AdminCategoryTable = () => {
         </Col>
       </Row>
       <Paper sx={{ width: '100%', mb: 2, backgroundColor: 'white' }}>
-        <EnhancedTableToolbar 
-          numSelected={selected.length} 
-          setMultiDeleteModel={setMultiDeleteModel} 
+        <EnhancedTableToolbar
+          numSelected={selected.length}
+          setMultiDeleteModel={setMultiDeleteModel}
         />
         <TableContainer sx={{ maxHeight: 'calc(100vh - 300px)', minHeight: '400px' }}>
           <Table
@@ -333,18 +353,19 @@ export const AdminCategoryTable = () => {
               onRequestSort={handleRequestSort}
               rowCount={category.length}
             />
-              <TableBody>
+            <TableBody>
               {loading ? (
                 <TableRow>
-                  <TableCell colSpan={6} align="center" sx={{ height: '300px', borderBottom: 'none !important' }}>
-                    <CircularProgress sx={{ color: '#7d9b17' }} />
+                  <TableCell colSpan={5} align="center" sx={{ height: '300px', borderBottom: 'none !important' }}>
+                    <CircularProgress sx={{ color: '#4f46e5' }} />
                   </TableCell>
                 </TableRow>
-              ) : stableSort(filteredCategory, getComparator(order, orderBy))
+              ) : filteredCategory.length === 0 ? (<TableRow><TableCell colSpan={5} align='center' sx={{ height: '300px', borderBottom: 'none !important' }}><Typography variant='h6' color='textSecondary'>No data found</Typography></TableCell></TableRow>) : stableSort(filteredCategory, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
                   const isItemSelected = isSelected(row?._id)
                   const labelId = `enhanced-table-checkbox-${index}`
+
                   return (
                     <TableRow hover role='checkbox' tabIndex={-1} key={row?._id}>
                       <TableCell padding='checkbox' sx={{ py: 0, px: 1 }}>
@@ -370,7 +391,7 @@ export const AdminCategoryTable = () => {
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                           <RiDeleteBin6Line className='fs-5 cursor-pointer text-danger' onClick={() => modalDeletOpen(row?._id)} />
                           <Link href={`/add-category/?id=${row?._id}`}>
-                            <RiEdit2Fill className='fs-5 cursor-pointer' style={{ color: '#7d9b17' }} />
+                            <RiEdit2Fill className='fs-5 cursor-pointer' style={{ color: '#4f46e5' }} />
                           </Link>
                         </Box>
                       </TableCell>
@@ -379,13 +400,13 @@ export const AdminCategoryTable = () => {
                 })}
               {emptyRows > 0 && (
                 <TableRow>
-                  <TableCell colSpan={6} />
+                  <TableCell colSpan={5} />
                 </TableRow>
               )}
             </TableBody>
           </Table>
         </TableContainer>
-        <TablePagination
+        {filteredCategory.length > 0 && (<TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component='div'
           count={filteredCategory.length}
@@ -396,6 +417,7 @@ export const AdminCategoryTable = () => {
           className='pagination'
           sx={{ '& .css-14s6usd-MuiSvgIcon-root-MuiSelect-icon': { color: 'black' } }}
         />
+        )}
       </Paper>
 
       {/* Multi Delete Modal */}
@@ -408,11 +430,11 @@ export const AdminCategoryTable = () => {
             Are you sure you want to delete all course records? This action cannot be undone.
           </Typography>
           <Box display={'flex'} justifyContent={'end'}>
-            <Button variant='default' onClick={() => multiDeleteModelClose()} className='me-3 mt-3 beforeLoginbtn border-0'>
+            <Button variant='outlined' onClick={() => multiDeleteModelClose()} sx={{ mr: 2, mt: 3, color: '#4f46e5', borderColor: '#4f46e5', '&:hover': { borderColor: '#4338ca' }, textTransform: 'none' }}>
               Cancel
             </Button>
-            <Button variant='danger' onClick={() => multiDeleteCategory()} className=' mt-3 border-0 beforeLoginbtn'>
-              Delete
+            <Button variant='contained' disabled={isMultiDeleting} onClick={() => multiDeleteCategory()} sx={{ mt: 3, bgcolor: '#d32f2f', '&:hover': { bgcolor: '#c62828' }, textTransform: 'none' }}>
+              {isMultiDeleting ? <CircularProgress size={20} color="inherit" /> : 'Delete'}
             </Button>
           </Box>
         </Box>
@@ -428,11 +450,11 @@ export const AdminCategoryTable = () => {
             Are you sure you want to delete this category?
           </Typography>
           <Box display={'flex'} justifyContent={'end'}>
-            <Button variant='default' onClick={() => modalDeletClose()} className='me-3 mt-3 beforeLoginbtn border-0'>
+            <Button variant='outlined' onClick={() => modalDeletClose()} sx={{ mr: 2, mt: 3, color: '#4f46e5', borderColor: '#4f46e5', '&:hover': { borderColor: '#4338ca' }, textTransform: 'none' }}>
               Cancel
             </Button>
-            <Button variant='danger' onClick={() => deleteCategory(categoryId)} className=' mt-3 border-0 beforeLoginbtn'>
-              Delete
+            <Button variant='contained' disabled={isDeleting} onClick={() => deleteCategory(categoryId)} sx={{ mt: 3, bgcolor: '#d32f2f', '&:hover': { bgcolor: '#c62828' }, textTransform: 'none' }}>
+              {isDeleting ? <CircularProgress size={20} color="inherit" /> : 'Delete'}
             </Button>
           </Box>
         </Box>
@@ -440,3 +462,4 @@ export const AdminCategoryTable = () => {
     </Box>
   )
 }
+

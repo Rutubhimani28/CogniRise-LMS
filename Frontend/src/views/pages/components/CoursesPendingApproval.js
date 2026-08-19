@@ -54,12 +54,14 @@ export default function CoursesPendingApproval() {
   const getCreatorName = (createdBy, createdName) => {
     if (usersMap[createdBy]) return usersMap[createdBy]
     if (createdName) return createdName
-    return ''
+    
+return ''
   }
 
   const getCategoryName = (categoryId) => {
     const found = categories.find(cat => cat._id === categoryId)
-    return found ? found.name : categoryId
+    
+return found ? found.name : categoryId
   }
 
   return (
@@ -67,7 +69,7 @@ export default function CoursesPendingApproval() {
       <div style={{ minHeight: '291.57px' }}>
         <h5
           className='fw-bold pb-1 '
-          style={{ color: '#7d9b17', fontSize: window.innerWidth <= 600 ? '22px' : '30px' }}
+          style={{ color: '#4f46e5', fontSize: window.innerWidth <= 600 ? '22px' : '30px' }}
         >
           Courses Pending Approval
         </h5>
@@ -79,7 +81,7 @@ export default function CoursesPendingApproval() {
                   <img
                     src={imgConst.topCourse}
                     style={{
-                      filter: 'invert(41%) sepia(96%) saturate(600%) hue-rotate(27deg) brightness(93%) contrast(102%)'
+                      filter: 'invert(26%) sepia(90%) saturate(2340%) hue-rotate(233deg) brightness(96%) contrast(93%)'
                     }}
                   />
                 </div>
@@ -116,3 +118,4 @@ export default function CoursesPendingApproval() {
     </div>
   )
 }
+

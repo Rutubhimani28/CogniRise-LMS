@@ -9,8 +9,13 @@ import Viewership from 'src/views/pages/components/Viewership'
 import { Grid } from '@mui/material'
 
 export const EnterpriseDashboard = () => {
-  const user = JSON.parse(window.localStorage.getItem('userData'))
+  const [user, setUser] = React.useState(null)
 
+  React.useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setUser(JSON.parse(window.localStorage.getItem('userData')))
+    }
+  }, [])
   return (
     <div className='instructorwrap mb-5'>
       <h6 style={{ color: '#3a5bcd', paddingTop: '14px' }}>Hi {user?.name},</h6>

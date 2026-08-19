@@ -34,6 +34,7 @@ import Requests from 'src/configs/axiosRequest'
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) return -1
   if (b[orderBy] > a[orderBy]) return 1
+
   return 0
 }
 
@@ -48,8 +49,10 @@ function stableSort(array, comparator) {
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0])
     if (order !== 0) return order
+
     return a[1] - b[1]
   })
+
   return stabilizedThis.map(el => el[0])
 }
 
@@ -127,6 +130,7 @@ function EnhancedTableToolbar(props) {
 
   const handleOpenDialog = () => setOpen(true)
   const handleCloseDialog = () => setOpen(false)
+
   const handleConfirmDelete = () => {
     handleDeleteAllCourses()
     setOpen(false)
@@ -229,20 +233,29 @@ export const EnterpriseCoursesTable = () => {
   const [allCourse, setAllCourse] = useState([])
   const [course, setCourse] = useState([])
   const [confirmDelet, setConfirmDelet] = useState(false)
+  const [isDeleting, setIsDeleting] = useState(false)
   const [courseId, setCourseId] = useState(null)
   const [filterList, setFilterList] = useState([])
   const [isChange, setIsChange] = useState(false)
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
 
-  const createdBy = JSON.parse(localStorage.getItem('userData'))
+  const [createdBy, setCreatedBy] = useState(null)
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setCreatedBy(JSON.parse(window.localStorage.getItem('userData')))
+    }
+  }, [])
 
   const modalDeletOpen = id => { setConfirmDelet(true); setCourseId(id) }
   const modalDeletClose = () => { setConfirmDelet(false); setCourseId(null) }
 
   useEffect(() => {
-    getCourseData({ createdBy: createdBy?.id })
-  }, [isChange, selected])
+    if (createdBy?.id) {
+      getCourseData({ createdBy: createdBy.id })
+    }
+  }, [isChange, createdBy])
 
   const getCourseData = param => {
     setLoading(true)
@@ -259,6 +272,7 @@ export const EnterpriseCoursesTable = () => {
   }
 
   const deleteCourse = id => {
+    setIsDeleting(true)
     requestApiData
       .deleteCourseRequest(id)
       .then(res => {
@@ -269,9 +283,10 @@ export const EnterpriseCoursesTable = () => {
         }
       })
       .catch(err => {
-        toast.error('Somthing went wrong')
+        toast.error('Something went wrong')
         console.log('Delet Course', err)
       })
+      .finally(() => setIsDeleting(false))
   }
 
   const handleRequestSort = (event, property) => {
@@ -281,7 +296,11 @@ export const EnterpriseCoursesTable = () => {
   }
 
   const handleSelectAllClick = event => {
-    if (event.target.checked) { setSelected(course.map(n => n._id)); return }
+    if (event.target.checked) {
+      setSelected(course.map(n => n._id));
+
+      return
+    }
     setSelected([])
   }
 
@@ -320,7 +339,7 @@ export const EnterpriseCoursesTable = () => {
     <Box sx={{ width: '100%' }} className='enaterpriseCourseWrap'>
       <Row className='justify-content-between align-items-center pb-3'>
         <Col md={6} className='mb-1'>
-          <Typography sx={{ fontSize: '1.3rem', color: '#7d9b17' }} variant='h6' className='addHeadingColor'>
+          <Typography sx={{ fontSize: '1.3rem', color: '#4f46e5' }} variant='h6' className='addHeadingColor'>
             Courses
           </Typography>
         </Col>
@@ -370,15 +389,16 @@ export const EnterpriseCoursesTable = () => {
             <TableBody>
               {loading ? (
                 <TableRow>
-                  <TableCell colSpan={6} align="center" sx={{ height: '300px', borderBottom: 'none !important' }}>
-                    <CircularProgress sx={{ color: '#7d9b17' }} />
+                  <TableCell colSpan={5} align="center" sx={{ height: '300px', borderBottom: 'none !important' }}>
+                    <CircularProgress sx={{ color: '#4f46e5' }} />
                   </TableCell>
                 </TableRow>
-              ) : stableSort(filteredCourse, getComparator(order, orderBy))
+              ) : filteredCourse.length === 0 ? (<TableRow><TableCell colSpan={5} align='center' sx={{ height: '300px', borderBottom: 'none !important' }}><Typography variant='h6' color='textSecondary'>No data found</Typography></TableCell></TableRow>) : stableSort(filteredCourse, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
                   const isItemSelected = isSelected(row?._id)
                   const labelId = `enhanced-table-checkbox-${index}`
+
                   return (
                     <TableRow hover role='checkbox' tabIndex={-1} key={row?._id} className='customRow'>
                       <TableCell padding='checkbox'>
@@ -392,7 +412,9 @@ export const EnterpriseCoursesTable = () => {
                       </TableCell>
                       <TableCell component='th' id={labelId} scope='row' padding='none' className='text-black'>{row.title}</TableCell>
                       <TableCell align='left' className='text-black'>{row.category}</TableCell>
-                      <TableCell align='left' className='text-black'>{row.status.toUpperCase()}</TableCell>
+                      <TableCell align='left' className='text-black'>
+                        {row.status === 'approve' ? 'PUBLISHED' : row.status.toUpperCase()}
+                      </TableCell>
                       <TableCell align='left' className='text-black'>
                         <RiDeleteBin6Line className='fs-6' onClick={() => modalDeletOpen(row?._id)} />
                         <Link href={`/course-creation/?id=${row?._id}`}>
@@ -405,11 +427,11 @@ export const EnterpriseCoursesTable = () => {
                     </TableRow>
                   )
                 })}
-              {emptyRows > 0 && <TableRow><TableCell colSpan={6} /></TableRow>}
+              {emptyRows > 0 && <TableRow><TableCell colSpan={5} /></TableRow>}
             </TableBody>
           </Table>
         </TableContainer>
-        <TablePagination
+        {filteredCourse.length > 0 && (<TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component='div'
           count={filteredCourse.length}
@@ -424,6 +446,7 @@ export const EnterpriseCoursesTable = () => {
             '& .MuiInputBase-root:before, & .MuiInputBase-root:after': { borderColor: 'black' }
           }}
         />
+        )}
       </Paper>
 
       <Modal open={confirmDelet} onClose={modalDeletClose} aria-labelledby='modal-modal-title'>
@@ -433,11 +456,14 @@ export const EnterpriseCoursesTable = () => {
           </Typography>
           <Typography className='text-black mt-2'>Are you sure you want to delete this course?</Typography>
           <Box display={'flex'} justifyContent={'flex-end'}>
-            <Button variant='default' onClick={() => modalDeletClose()} className='me-3 mt-3 beforeLoginbtn border-0'>Cancel</Button>
-            <Button variant='danger' onClick={() => deleteCourse(courseId)} className=' mt-3 border-0 beforeLoginbtn'>Delete</Button>
+            <Button variant='outlined' onClick={() => modalDeletClose()} sx={{ mr: 2, mt: 3, color: '#4f46e5', borderColor: '#4f46e5', '&:hover': { borderColor: '#4338ca' }, textTransform: 'none' }}>Cancel</Button>
+            <Button variant='contained' disabled={isDeleting} onClick={() => deleteCourse(courseId)} sx={{ mt: 3, bgcolor: '#d32f2f', '&:hover': { bgcolor: '#c62828' }, textTransform: 'none' }}>
+              {isDeleting ? <CircularProgress size={20} color="inherit" /> : 'Delete'}
+            </Button>
           </Box>
         </Box>
       </Modal>
     </Box>
   )
 }
+

@@ -38,7 +38,7 @@ const Error401 = () => {
     <Box className='content-center'>
       <Box sx={{ p: 5, display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
         <BoxWrapper>
-          <Typography variant='h4' sx={{ mb: 1.5 , color:'#7d9b17'}}>
+          <Typography variant='h4' sx={{ mb: 1.5 , color:'#4f46e5'}}>
             You are not authorized!
           </Typography>
           <Typography sx={{ color: 'black' }}>
@@ -58,3 +58,4 @@ const Error401 = () => {
 Error401.getLayout = page => <BlankLayout>{page}</BlankLayout>
 
 export default Error401
+

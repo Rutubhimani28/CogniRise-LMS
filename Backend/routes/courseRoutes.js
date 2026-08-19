@@ -198,7 +198,7 @@ router.put(
   async (req, res) => {
     try {
       const payload = req.body;
-      
+
       const result = await updateCourse(payload);
       res.send(result);
     } catch (error) {

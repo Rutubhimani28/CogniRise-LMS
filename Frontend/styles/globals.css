@@ -621,7 +621,7 @@ code[class*='language-'] {
 }
 
 .addHeadingColor {
-  color: #7d9b17 !important;
+  color: #4f46e5 !important;
 }
 
 .list-unstyled a {
@@ -923,8 +923,4 @@ a.carousel-control-next {
   -webkit-transform: rotate(35deg);
   -ms-transform: rotate(35deg);
   transform: rotate(35deg);
-}
-
-::-webkit-scrollbar {
-  display: none;
 }

@@ -98,8 +98,10 @@ export const CourseBuilder = Props => {
   }
 
   useEffect(() => {
-    setModules(Props.getData)
-  }, [])
+    if (Props.getData && Props.getData.length > 0 && moduleArr.length === 0) {
+      setModules(Props.getData)
+    }
+  }, [Props.getData])
 
   useEffect(() => {
     Props.setData(moduleArr)
@@ -157,11 +159,11 @@ export const CourseBuilder = Props => {
   const handleModuleSave = moduleTitle => {
     setModuleModal(false)
     if (moduleArr.length > 0 && (moduleIndex == 0 || moduleIndex > 0)) {
-      moduleArr[moduleIndex].name = moduleTitle
+      const updatedModules = [...moduleArr]
+      updatedModules[moduleIndex].name = moduleTitle
+      setModules(updatedModules)
       setModuleIndex(null)
       setModuleData(null)
-
-      return moduleArr
     } else {
       setModules([
         ...moduleArr,
@@ -181,17 +183,16 @@ export const CourseBuilder = Props => {
       defaultCat.map((val, index) => {
         if (index == moduleIndex) {
           if (lessonIndex == 0 || lessonIndex > 0) {
-            const defaultItem = val.items
-            defaultItem[lessonIndex].name = lessonData.name
-            defaultItem[lessonIndex].data = lessonData
+            const defaultItem = [...(val.items || [])]
+            defaultItem[lessonIndex] = { ...defaultItem[lessonIndex], name: lessonData.name, data: lessonData }
             setModuleIndex(null)
             setLessonIndex(null)
             setLessonData(null)
 
             return { ...val, items: defaultItem }
           } else {
-            const defaultItem = val.items
-            defaultItem.push({ id: `lesson_${val.items.length + 1}`, name: lessonData.name, data: lessonData })
+            const defaultItem = [...(val.items || [])]
+            defaultItem.push({ id: `lesson_${defaultItem.length + 1}`, name: lessonData.name, data: lessonData })
             setModuleIndex(null)
             setLessonIndex(null)
             setLessonData(null)
@@ -213,17 +214,16 @@ export const CourseBuilder = Props => {
       defaultCat.map((val, index) => {
         if (index == moduleIndex) {
           if (quizIndex == 0 || quizIndex > 0) {
-            const defaultItem = val.items
-            defaultItem[quizIndex].name = quizData.name
-            defaultItem[quizIndex].data = quizData
+            const defaultItem = [...(val.items || [])]
+            defaultItem[quizIndex] = { ...defaultItem[quizIndex], name: quizData.name, data: quizData }
             setModuleIndex(null)
             setQuizIndex(null)
             setQuizData(null)
 
             return { ...val, items: defaultItem }
           } else {
-            const defaultItem = val.items
-            defaultItem.push({ id: `quiz_${val.items.length + 1}`, name: quizData.name, data: quizData })
+            const defaultItem = [...(val.items || [])]
+            defaultItem.push({ id: `quiz_${defaultItem.length + 1}`, name: quizData.name, data: quizData })
             setModuleIndex(null)
             setQuizIndex(null)
             setQuizData(null)
@@ -293,7 +293,7 @@ export const CourseBuilder = Props => {
                         type='droppable-item'
                         style={{ backgroundColor: 'white', borderRadius: '10px' }}
                       >
-                        {module.items.map((item, index) => {
+                        {(module.items || []).map((item, index) => {
                           return (
                             <React.Fragment key={item.id}>
                               <Drag className='draggable' id={item.id} index={index}>
@@ -357,10 +357,22 @@ export const CourseBuilder = Props => {
         </DragAndDrop>
         <Button
           type='button'
-          className='text-start d-flex align-items-center beforeLoginbtn '
+          variant='contained'
           onClick={() => setModuleModal(true)}
+          sx={{
+            mt: 3,
+            bgcolor: '#4f46e5',
+            color: 'white',
+            fontWeight: 600,
+            px: 4,
+            py: 1.5,
+            borderRadius: 2,
+            textTransform: 'none',
+            fontSize: '1rem',
+            '&:hover': { bgcolor: '#4338ca' }
+          }}
+          startIcon={<HiPlus />}
         >
-          <HiPlus />
           Add Module
         </Button>
       </div>
@@ -420,4 +432,6 @@ export const CourseBuilder = Props => {
     </div>
   )
 }
+
 export default CourseBuilder
+

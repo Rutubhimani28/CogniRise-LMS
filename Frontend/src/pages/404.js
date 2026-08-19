@@ -38,7 +38,7 @@ const Error404 = () => {
     <Box className='content-center'>
       <Box sx={{ p: 5, display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
         <BoxWrapper>
-          <Typography variant='h4' sx={{ mb: 1.5 , color:'#7d9b17'}}>
+          <Typography variant='h4' sx={{ mb: 1.5 , color:'#4f46e5'}}>
             Page Not Found :(
           </Typography>
           <Typography sx={{ mb: 6, color: 'black' }}>
@@ -57,3 +57,4 @@ const Error404 = () => {
 Error404.getLayout = page => <BlankLayout>{page}</BlankLayout>
 
 export default Error404
+

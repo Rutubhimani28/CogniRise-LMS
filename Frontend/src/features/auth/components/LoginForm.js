@@ -10,6 +10,7 @@ import Box from '@mui/material/Box'
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank'
 import CheckBoxIcon from '@mui/icons-material/CheckBox'
 import FormControl from '@mui/material/FormControl'
+import CircularProgress from '@mui/material/CircularProgress'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import OutlinedInput from '@mui/material/OutlinedInput'
 import { styled, useTheme } from '@mui/material/styles'
@@ -59,6 +60,7 @@ const defaultValues = {
 export const LoginForm = () => {
   const [rememberMe, setRememberMe] = useState(true)
   const [showPassword, setShowPassword] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   // ** Hooks
   const auth = useAuth()
@@ -82,8 +84,10 @@ export const LoginForm = () => {
   })
 
   const onSubmit = data => {
+    setIsSubmitting(true)
     const { email, password } = data
     auth.login({ email, password, rememberMe }, () => {
+      setIsSubmitting(false)
       setError('email', {
         type: 'manual',
         message: 'Email or Password is invalid'
@@ -175,7 +179,7 @@ export const LoginForm = () => {
                         inputProps={{
                           className: 'custom-input'
                         }}
-                      
+
                         endAdornment={
                           <InputAdornment position='end'>
                             <IconButton
@@ -231,8 +235,8 @@ export const LoginForm = () => {
                     Forgot Password?
                   </LinkStyled>
                 </Box>
-                <Button fullWidth size='large' type='submit' className='beforeLoginbtn'>
-                  Login
+                <Button fullWidth size='large' type='submit' className='beforeLoginbtn' disabled={isSubmitting}>
+                  {isSubmitting ? <CircularProgress size={24} color='inherit' /> : 'Login'}
                 </Button>
                 <Box
                   sx={{

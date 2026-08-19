@@ -148,7 +148,7 @@ export const StudentDashboard = () => {
       <Grid container spacing={3}>
         <Grid item xs={12} md={6}>
           <Box className='learnningTimeBox' sx={{ minHeight: '80px', backgroundColor: 'white', p: 2 }}>
-            <Typography variant='subtitle1' sx={{ fontSize: 16, color: '#7d9b17', fontWeight: 600 }}>
+            <Typography variant='subtitle1' sx={{ fontSize: 16, color: '#4f46e5', fontWeight: 600 }}>
               Continue:
             </Typography>
             <Typography className='fw-bolder text-black courseText fs-6 text-decoration-none'>
@@ -159,7 +159,7 @@ export const StudentDashboard = () => {
 
         <Grid item xs={12} md={6}>
           <Box className='learnningTimeBox' sx={{ minHeight: '80px', backgroundColor: 'white', p: 2 }}>
-            <Typography variant='subtitle1' sx={{ fontSize: 16, color: '#7d9b17', fontWeight: 600 }}>
+            <Typography variant='subtitle1' sx={{ fontSize: 16, color: '#4f46e5', fontWeight: 600 }}>
               Progress:
             </Typography>
             <Typography className='fw-bolder text-black hourseText fs-6'>
@@ -180,7 +180,7 @@ export const StudentDashboard = () => {
               <Carousel.Item key={i}>
                 <Grid container spacing={3} className='p-2 px-4'>
                   <Grid item xs={12} md={5}>
-                    <Typography className='fw-bolder fs-4' sx={{ textTransform: 'capitalize', color: '#7d9b17', mb: 1 }}>
+                    <Typography className='fw-bolder fs-4' sx={{ textTransform: 'capitalize', color: '#4f46e5', mb: 1 }}>
                       {item?.title}
                     </Typography>
                     <Typography sx={{ fontSize: 15, minHeight: 100 }} className='informationText text'>
@@ -202,14 +202,14 @@ export const StudentDashboard = () => {
                             : functioncheck(item)
                         }
                         sx={{
-                          backgroundColor: '#7d9b17',
+                          backgroundColor: '#4f46e5',
                           color: 'white',
                           borderRadius: '70px',
                           px: 4,
                           py: 1,
                           fontWeight: 700,
                           textTransform: 'none',
-                          '&:hover': { backgroundColor: '#657d12' }
+                          '&:hover': { backgroundColor: '#4338ca' }
                         }}
                       >
                         Enroll
@@ -218,14 +218,14 @@ export const StudentDashboard = () => {
                         variant='outlined'
                         onClick={() => skipCourse(item._id)}
                         sx={{
-                          borderColor: '#7d9b17',
-                          color: '#7d9b17',
+                          borderColor: '#4f46e5',
+                          color: '#4f46e5',
                           borderRadius: '70px',
                           px: 4,
                           py: 1,
                           fontWeight: 600,
                           textTransform: 'none',
-                          '&:hover': { backgroundColor: 'rgba(125, 155, 23, 0.08)', borderColor: '#7d9b17' }
+                          '&:hover': { backgroundColor: 'rgba(79, 70, 229, 0.08)', borderColor: '#4f46e5' }
                         }}
                       >
                         Skip
@@ -252,7 +252,7 @@ export const StudentDashboard = () => {
         }}
       >
         <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', pb: 1 }}>
-          <Typography variant='h5' sx={{ fontWeight: 700, color: '#7d9b17' }}>
+          <Typography variant='h5' sx={{ fontWeight: 700, color: '#4f46e5' }}>
             Confirm Enrollment
           </Typography>
           <IconButton onClick={() => setHandlEnrollModel(false)} size='small'>
@@ -269,13 +269,13 @@ export const StudentDashboard = () => {
             variant='outlined'
             onClick={() => setHandlEnrollModel(false)}
             sx={{
-              borderColor: '#7d9b17',
-              color: '#7d9b17',
+              borderColor: '#4f46e5',
+              color: '#4f46e5',
               borderRadius: '8px',
               px: 4,
               py: 1,
               fontWeight: 600,
-              '&:hover': { borderColor: '#657d12', backgroundColor: 'rgba(125, 155, 23, 0.08)' }
+              '&:hover': { borderColor: '#4338ca', backgroundColor: 'rgba(79, 70, 229, 0.08)' }
             }}
           >
             Cancel
@@ -284,13 +284,13 @@ export const StudentDashboard = () => {
             variant='contained'
             onClick={() => enrollCourseStudent(enrollCourse)}
             sx={{
-              backgroundColor: '#7d9b17',
+              backgroundColor: '#4f46e5',
               color: 'white',
               borderRadius: '8px',
               px: 4,
               py: 1,
               fontWeight: 600,
-              '&:hover': { backgroundColor: '#657d12' }
+              '&:hover': { backgroundColor: '#4338ca' }
             }}
           >
             Yes, Enroll
@@ -300,3 +300,4 @@ export const StudentDashboard = () => {
     </Box>
   )
 }
+

@@ -13,11 +13,7 @@ export default function CourseContent({ data }) {
   return (
     <div
       style={{
-        width: { xs: '100%', md: '30%' },
-        boxShadow: '#636363 0px 2px 8px 0px',
-        padding: '1rem',
-        borderRadius: '8px',
-        backgroundColor: 'white',
+        width: '100%',
         height: 'fit-content'
       }}
     >
@@ -33,7 +29,7 @@ export default function CourseContent({ data }) {
         }}
       >
         <Box flexDirection={'column'}>
-          <h5 className='video-small-heading addHeadingColor' style={{ fontSize: '1rem', color: '#7d9b17' }}>
+          <h5 className='video-small-heading addHeadingColor' style={{ fontSize: '1rem', color: '#4f46e5' }}>
             Course content
           </h5>
         </Box>
@@ -76,3 +72,4 @@ export default function CourseContent({ data }) {
     </div>
   )
 }
+

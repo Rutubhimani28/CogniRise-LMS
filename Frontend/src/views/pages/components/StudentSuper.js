@@ -26,7 +26,7 @@ export default function StudentSuper() {
         <img
           src={imgConst.icon}
           style={{
-           filter: 'invert(41%) sepia(96%) saturate(600%) hue-rotate(27deg) brightness(93%) contrast(102%)'
+           filter: 'invert(26%) sepia(90%) saturate(2340%) hue-rotate(233deg) brightness(96%) contrast(93%)'
           }}
         />
       </div>
@@ -39,7 +39,7 @@ export default function StudentSuper() {
           src={imgConst.Graph_i}
           width='80px'
           style={{
-            filter: 'invert(41%) sepia(96%) saturate(600%) hue-rotate(27deg) brightness(93%) contrast(102%)'
+            filter: 'invert(26%) sepia(90%) saturate(2340%) hue-rotate(233deg) brightness(96%) contrast(93%)'
           }}
         />
       </div>

@@ -22,7 +22,7 @@ export default function EnrolledSuper() {
   return (
     <div className='learnningTimeBox d-flex align-items-center justify-content-between'>
       <div>
-        <h6 className='text-start' style={{ fontSize: '14px', color: '#7d9b17' }}>Enrolled</h6>
+        <h6 className='text-start' style={{ fontSize: '14px', color: '#4f46e5' }}>Enrolled</h6>
         <h4 className='text-black fw-bolder text-start' style={{ marginBottom: '0' }}>
           {allCourse.length}
         </h4>
@@ -31,7 +31,7 @@ export default function EnrolledSuper() {
         <img
           src={imgConst.graph2}
           style={{
-            filter: 'invert(41%) sepia(96%) saturate(600%) hue-rotate(27deg) brightness(93%) contrast(102%)'
+            filter: 'invert(26%) sepia(90%) saturate(2340%) hue-rotate(233deg) brightness(96%) contrast(93%)'
           }}
           alt=''
         />
@@ -39,3 +39,4 @@ export default function EnrolledSuper() {
     </div>
   )
 }
+

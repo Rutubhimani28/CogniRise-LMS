@@ -27,6 +27,7 @@ import { Row, Col } from 'reactstrap'
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) return -1
   if (b[orderBy] > a[orderBy]) return 1
+
   return 0
 }
 
@@ -41,8 +42,10 @@ function stableSort(array, comparator) {
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0])
     if (order !== 0) return order
+
     return a[1] - b[1]
   })
+
   return stabilizedThis.map(el => el[0])
 }
 
@@ -52,7 +55,7 @@ const headCells = [
   { id: 'enterprise', numeric: false, disablePadding: false, label: 'Enterprise' },
   { id: 'createdDate', numeric: true, disablePadding: false, label: 'Created Date' },
   { id: 'approvals', numeric: false, disablePadding: false, label: 'Status' },
-  { id: 'action', disablePadding: false, label: 'Action' }
+  { id: 'action', disablePadding: false, label: 'Action', align: 'center' }
 ]
 
 function EnhancedTableHead(props) {
@@ -72,7 +75,7 @@ function EnhancedTableHead(props) {
         {headCells.map(headCell => (
           <TableCell
             key={headCell.id}
-            align='left'
+            align={headCell.align || 'left'}
             padding={headCell.disablePadding ? 'none' : 'normal'}
             sortDirection={orderBy === headCell.id ? order : false}
             className='text-black ps-1'
@@ -161,6 +164,7 @@ export const AdminCoursesTable = () => {
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
   const [confirmApprove, setConfirmApprove] = useState(false)
+  const [isApproving, setIsApproving] = useState(false)
   const [courseId, setCourseId] = useState({})
 
   const modalApproveOpen = item => {
@@ -205,7 +209,7 @@ export const AdminCoursesTable = () => {
                 if (r?.status === 200) {
                   nameMap[id] = r.data?.profile?.name || r.data?.name || r.data?.email || id
                 }
-              }).catch(() => {})
+              }).catch(() => { })
             )
           ).then(() => setUsersMap(prev => ({ ...prev, ...nameMap })))
         }
@@ -217,16 +221,19 @@ export const AdminCoursesTable = () => {
 
   const getCategoryName = (categoryId) => {
     const found = categories.find(cat => cat._id === categoryId)
+
     return found ? found.name : categoryId
   }
 
   const getCreatorName = (createdBy, createdName) => {
     if (usersMap[createdBy]) return usersMap[createdBy]
     if (createdName) return createdName
+
     return ''
   }
 
   const approveCourse = data => {
+    setIsApproving(true)
     const payload = {
       _id: data.id,
       status: 'approve',
@@ -242,7 +249,10 @@ export const AdminCoursesTable = () => {
         }
       })
       .catch(err => {
-        toast.error('Somthing went wrong')
+        toast.error('Something went wrong')
+      })
+      .finally(() => {
+        setIsApproving(false)
       })
   }
 
@@ -256,6 +266,7 @@ export const AdminCoursesTable = () => {
     if (event.target.checked) {
       const newSelected = course.map(n => n.title)
       setSelected(newSelected)
+
       return
     }
     setSelected([])
@@ -282,7 +293,7 @@ export const AdminCoursesTable = () => {
     <Box sx={{ width: '100%' }} className='enaterpriseCourseWrap'>
       <Row className='justify-content-between align-items-center pb-3'>
         <Col md={6} className='mb-1'>
-          <Typography sx={{ fontSize: '1.3rem', color: '#7d9b17' }} variant='h6' className='addHeadingColor'>
+          <Typography sx={{ fontSize: '1.3rem', color: '#4f46e5' }} variant='h6' className='addHeadingColor'>
             Course Approvals
           </Typography>
         </Col>
@@ -298,8 +309,8 @@ export const AdminCoursesTable = () => {
         </Col>
       </Row>
       <Paper sx={{ width: '100%', mb: 2, backgroundColor: 'white' }}>
-        <EnhancedTableToolbar 
-          numSelected={selected.length} 
+        <EnhancedTableToolbar
+          numSelected={selected.length}
         />
         <TableContainer sx={{ maxHeight: 'calc(100vh - 300px)', minHeight: '400px' }}>
           <Table
@@ -323,11 +334,11 @@ export const AdminCoursesTable = () => {
             <TableBody>
               {loading ? (
                 <TableRow>
-                  <TableCell colSpan={6} align="center" sx={{ height: '300px', borderBottom: 'none !important' }}>
-                    <CircularProgress sx={{ color: '#7d9b17' }} />
+                  <TableCell colSpan={7} align="center" sx={{ height: '300px', borderBottom: 'none !important' }}>
+                    <CircularProgress sx={{ color: '#4f46e5' }} />
                   </TableCell>
                 </TableRow>
-              ) : stableSort(filteredCourse, getComparator(order, orderBy))
+              ) : filteredCourse.length === 0 ? (<TableRow><TableCell colSpan={7} align='center' sx={{ height: '300px', borderBottom: 'none !important' }}><Typography variant='h6' color='textSecondary'>No data found</Typography></TableCell></TableRow>) : stableSort(filteredCourse, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
                   const isItemSelected = isSelected(row.title)
@@ -356,19 +367,20 @@ export const AdminCoursesTable = () => {
                         {moment(row.createdAt).format('MM/DD/YYYY')}
                       </TableCell>
                       <TableCell align='left' className='text-black ' sx={{ py: 0.5, px: 1 }}>
-                        {row.status}
+                        {row.status === 'approve' ? 'Published' : row.status}
                       </TableCell>
-                      <TableCell align='left' sx={{ py: 0.5, px: 1 }}>
+                      <TableCell align='center' sx={{ py: 0.5, px: 1 }}>
                         <Link className='text-light text-decoration-none' href={`/courses/${row?.slug || 'unknown'}/${row?._id}`}>
-                          <Button variant='default' className='m-1 beforeLoginbtn border-0'>
+                          <Button variant='contained' size='small' sx={{ bgcolor: '#4f46e5', '&:hover': { bgcolor: '#4338ca' }, mr: 1, textTransform: 'none' }}>
                             Preview
                           </Button>
                         </Link>
                         {row?.status === 'pending' ? (
                           <Button
-                            variant='default'
+                            variant='contained'
+                            size='small'
                             onClick={() => modalApproveOpen({ id: row?._id, status: row?.approvals })}
-                            className='me-3  beforeLoginbtn border-0'
+                            sx={{ bgcolor: '#1976d2', '&:hover': { bgcolor: '#115293' }, textTransform: 'none' }}
                           >
                             Approve
                           </Button>
@@ -381,13 +393,13 @@ export const AdminCoursesTable = () => {
                 })}
               {emptyRows > 0 && (
                 <TableRow>
-                  <TableCell colSpan={6} />
+                  <TableCell colSpan={7} />
                 </TableRow>
               )}
             </TableBody>
           </Table>
         </TableContainer>
-        <TablePagination
+        {filteredCourse.length > 0 && (<TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component='div'
           count={filteredCourse.length}
@@ -402,6 +414,7 @@ export const AdminCoursesTable = () => {
             }
           }}
         />
+        )}
       </Paper>
 
       <Modal
@@ -411,18 +424,18 @@ export const AdminCoursesTable = () => {
         aria-describedby='modal-modal-description'
       >
         <Box sx={modalStyle}>
-          <Typography id='modal-modal-title' variant='h6' component='h2' color={'#7d9b17'}>
+          <Typography id='modal-modal-title' variant='h6' component='h2' color={'#4f46e5'}>
             Approval Confirmation
           </Typography>
           <Typography id='modal-modal-description' className='text-black mt-2'>
             Are you sure you want to approve this course?
           </Typography>
           <Box display={'flex'} justifyContent='end'>
-            <Button variant='default' onClick={() => modalApproveClose()} className='me-3 mt-3 beforeLoginbtn border-0'>
+            <Button variant='outlined' onClick={() => modalApproveClose()} sx={{ mr: 2, mt: 3, color: '#4f46e5', borderColor: '#4f46e5', '&:hover': { borderColor: '#4338ca' }, textTransform: 'none' }}>
               Cancel
             </Button>
-            <Button variant='default' onClick={() => approveCourse(courseId)} className=' mt-3 border-0 beforeLoginbtn'>
-              Approve
+            <Button variant='contained' disabled={isApproving} onClick={() => approveCourse(courseId)} sx={{ mt: 3, bgcolor: '#1976d2', '&:hover': { bgcolor: '#115293' }, textTransform: 'none' }}>
+              {isApproving ? <CircularProgress size={20} color="inherit" /> : 'Approve'}
             </Button>
           </Box>
         </Box>
@@ -430,3 +443,4 @@ export const AdminCoursesTable = () => {
     </Box>
   )
 }
+

@@ -291,6 +291,7 @@ export const StudentProfileForm = () => {
     enableReinitialize: true,
     onSubmit: async (values) => {
       setLoading(true)
+
       const payload = {
         _id: getData._id,
         profile: {
@@ -343,7 +344,7 @@ export const StudentProfileForm = () => {
                 />
                 <Box sx={{
                   position: 'absolute', bottom: 0, right: 0,
-                  backgroundColor: '#7d9b17', color: 'white',
+                  backgroundColor: '#4f46e5', color: 'white',
                   borderRadius: '50%', p: 1,
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   border: '2px solid white'
@@ -436,15 +437,15 @@ export const StudentProfileForm = () => {
 
       {/* Upload Dialog */}
       <Dialog open={uploadImgOpen} onClose={() => { setUploadImgOpen(false); setFiles([]); }} maxWidth="sm" fullWidth>
-        <DialogTitle sx={{ textAlign: 'center', fontWeight: 700, color: '#7d9b17' }}>Upload Profile Photo</DialogTitle>
+        <DialogTitle sx={{ textAlign: 'center', fontWeight: 700, color: '#4f46e5' }}>Upload Profile Photo</DialogTitle>
         <DialogContent>
-          <Box {...getRootProps()} sx={{ border: '2px dashed #7d9b17', borderRadius: 4, p: 4, textAlign: 'center', cursor: 'pointer', mt: 1, minHeight: '250px', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+          <Box {...getRootProps()} sx={{ border: '2px dashed #4f46e5', borderRadius: 4, p: 4, textAlign: 'center', cursor: 'pointer', mt: 1, minHeight: '250px', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
             <input {...getInputProps()} />
             {files.length > 0 ? (
               <img src={URL.createObjectURL(files[0])} alt="Preview" style={{ maxHeight: '200px', maxWidth: '100%', objectFit: 'contain', borderRadius: '8px' }} />
             ) : (
               <>
-                <RiUpload2Fill size={50} color="#7d9b17" />
+                <RiUpload2Fill size={50} color="#4f46e5" />
                 <Typography sx={{ mt: 2, fontWeight: 600, color: '#333' }}>Click or drag file to this area to upload</Typography>
                 <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>Supported: JPG, PNG • Max: 5 MB</Typography>
               </>
@@ -455,7 +456,7 @@ export const StudentProfileForm = () => {
           <Button
             variant="outlined"
             onClick={() => { setUploadImgOpen(false); setFiles([]); }}
-            sx={{ borderColor: '#7d9b17', color: '#7d9b17', borderRadius: '8px', px: 4, fontWeight: 600, '&:hover': { borderColor: '#657d12', backgroundColor: 'rgba(125, 155, 23, 0.08)' } }}
+            sx={{ borderColor: '#4f46e5', color: '#4f46e5', borderRadius: '8px', px: 4, fontWeight: 600, '&:hover': { borderColor: '#4338ca', backgroundColor: 'rgba(79, 70, 229, 0.08)' } }}
           >
             Cancel
           </Button>
@@ -463,7 +464,7 @@ export const StudentProfileForm = () => {
             variant="contained"
             onClick={() => handleUpload(files[0])}
             disabled={files.length === 0}
-            sx={{ backgroundColor: '#7d9b17', color: 'white', borderRadius: '8px', px: 4, fontWeight: 600, '&:hover': { backgroundColor: '#657d12' } }}
+            sx={{ backgroundColor: '#4f46e5', color: 'white', borderRadius: '8px', px: 4, fontWeight: 600, '&:hover': { backgroundColor: '#4338ca' } }}
           >
             Save Photo
           </Button>
@@ -474,3 +475,4 @@ export const StudentProfileForm = () => {
 }
 
 export default StudentProfileForm
+

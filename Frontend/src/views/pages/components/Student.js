@@ -25,29 +25,22 @@ export default function Student() {
   }, [])
 
   return (
-    <div className='learnningTimeBox d-flex' style={{ height: '95%' }}>
-      <div className='iconBox iconBoxLinear me-2'>
-        <img
-          src={imgConst.icon}
-          style={{
-            width: '40%',
-            filter: 'invert(41%) sepia(96%) saturate(600%) hue-rotate(27deg) brightness(93%) contrast(102%)'
-          }}
-        />
+    <div className='learnningTimeBox d-flex align-items-center justify-content-between' style={{ height: '100%', padding: '20px' }}>
+      <div className='d-flex align-items-center'>
+        <div className='iconBox me-3 d-flex align-items-center justify-content-center' style={{ width: '48px', height: '48px', backgroundColor: 'rgba(79, 70, 229, 0.1)', borderRadius: '12px' }}>
+          <img src={imgConst.icon} style={{ width: '24px', filter: 'invert(26%) sepia(90%) saturate(2340%) hue-rotate(233deg) brightness(96%) contrast(93%)' }} />
+        </div>
+        <div>
+          <h6 style={{ fontSize: '15px', color: '#4f46e5', fontWeight: '600', margin: 0, paddingBottom: '4px' }}>Students</h6>
+          <h2 style={{ color: '#2F2B3D', fontWeight: '700', margin: 0 }} className='fs-3'>
+            {totalStudent?.count ? totalStudent?.count : 0}
+          </h2>
+        </div>
       </div>
       <div>
-        <h6 style={{ color: '#7d9b17', fontWeight: 'bold' }}>Students</h6>
-        <h4 style={{ color: 'black', fontWeight: 'bold' }}>{totalStudent?.count ? totalStudent?.count : 0}</h4>
-      </div>
-      <div>
-        <img
-          src={imgConst.Graph}
-          width='80px'
-          style={{
-            filter: 'invert(41%) sepia(96%) saturate(600%) hue-rotate(27deg) brightness(93%) contrast(102%)'
-          }}
-        />
+        <img src={imgConst.Graph} style={{ width: '80px', filter: 'invert(26%) sepia(90%) saturate(2340%) hue-rotate(233deg) brightness(96%) contrast(93%)' }} />
       </div>
     </div>
   )
 }
+

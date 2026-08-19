@@ -139,7 +139,7 @@ export const addEnrollment = async (enrollment) => {
   const course = await Enrollment.findOne({ studentID: enrollment.studentID, courseID: enrollment.courseID })
 
   if (course) {
-    return { status: 400, message: "Courese All Redy Enroll" };
+    return { status: 400, message: "Course Already Enrolled" };
   }
   if (!course) {
     return await Enrollment.create(enrollment)

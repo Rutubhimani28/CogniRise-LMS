@@ -30,7 +30,7 @@ export default function LessoinDraft() {
           style={{
             // color: '#3A5BCD'
             // color:"#64748b"
-            color:" #7d9b17"
+            color: " #4f46e5"
           }}
         >
           Lesson Drafts
@@ -39,15 +39,17 @@ export default function LessoinDraft() {
           {allCourse?.slice(0, 3).map((item, i) => (
             <div key={i} className='my-3 ps-3 pt-1' style={{ borderLeft: '4px solid  #3A5BCD' }}>
               <h6 style={{ color: 'black' }}>{item.title}</h6>
-              <CardText style={{ fontSize: '12px', color: 'black' }}>{`${
-                item?.modules[item?.modules?.length - 1]?.items[
-                  item?.modules[item?.modules?.length - 1]?.items?.length - 1
+              <CardText style={{ fontSize: '12px', color: 'black' }}>
+                {item?.modules?.[item?.modules?.length - 1]?.items?.[
+                  item?.modules?.[item?.modules?.length - 1]?.items?.length - 1
+                ]?.id ? `${item?.modules?.[item?.modules?.length - 1]?.items?.[
+                  item?.modules?.[item?.modules?.length - 1]?.items?.length - 1
                 ]?.id
-              } : ${
-                item?.modules[item?.modules?.length - 1]?.items[
-                  item?.modules[item?.modules?.length - 1]?.items?.length - 1
+                } : ${item?.modules?.[item?.modules?.length - 1]?.items?.[
+                  item?.modules?.[item?.modules?.length - 1]?.items?.length - 1
                 ]?.name
-              }`}</CardText>
+                }` : 'No items yet'}
+              </CardText>
             </div>
           ))}
         </div>
@@ -70,3 +72,4 @@ export default function LessoinDraft() {
     </div>
   )
 }
+

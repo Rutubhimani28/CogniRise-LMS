@@ -16,25 +16,33 @@ export default function MyCourses({ studentCourse }) {
   const router = useRouter()
   const dispatch = useDispatch()
   const [enrollCourse, setEnrollCourse] = useState({})
-  const user = JSON.parse(window.localStorage.getItem('userData'))
+  const [user, setUser] = useState(null)
   const updateMyCourse = useSelector(state => state?.course?.updateMyCourse)
 
   useEffect(() => {
-    const params = {
-      studentID: user?.id
+    if (typeof window !== 'undefined') {
+      setUser(JSON.parse(window.localStorage.getItem('userData')))
     }
+  }, [])
 
-    requestApiData
-      .getEnrollCourse(params)
-      .then(res => {
-        if (res?.status === 200) {
-          setStudentEnrollCourse(res?.data)
-        }
-      })
-      .catch(err => {
-        console.log('Error on Get Student Enroll Course', err)
-      })
-  }, [updateMyCourse, studentCourse, enrollCourse])
+  useEffect(() => {
+    if (user?.id) {
+      const params = {
+        studentID: user.id
+      }
+
+      requestApiData
+        .getEnrollCourse(params)
+        .then(res => {
+          if (res?.status === 200) {
+            setStudentEnrollCourse(res?.data)
+          }
+        })
+        .catch(err => {
+          console.log('Error on Get Student Enroll Course', err)
+        })
+    }
+  }, [user, updateMyCourse, studentCourse, enrollCourse])
 
   const nextLesson = (courseSlug, courseId, nextTask) => {
     dispatch({ type: 'SELECTED_LESSON', payload: nextTask })
@@ -73,7 +81,7 @@ export default function MyCourses({ studentCourse }) {
         <h5 className='text-black m-0' style={{ fontWeight: 700 }}>My Courses</h5>
         <button
           onClick={() => router.push('/Course-listing')}
-          style={{ backgroundColor: '#7d9b17', color: 'white', border: 'none', borderRadius: '8px', padding: '8px 20px', fontWeight: 600, cursor: 'pointer' }}
+          style={{ backgroundColor: '#4f46e5', color: 'white', border: 'none', borderRadius: '8px', padding: '8px 20px', fontWeight: 600, cursor: 'pointer' }}
         >
           Explore Courses
         </button>
@@ -107,7 +115,7 @@ export default function MyCourses({ studentCourse }) {
                       <span style={{ fontSize: '12px', color: '#777' }}>Next up:</span>
                       <CardText
                         className='cursor-pointer m-0'
-                        style={{ fontWeight: 600, color: '#7d9b17' }}
+                        style={{ fontWeight: 600, color: '#4f46e5' }}
                         onClick={() =>
                           nextLesson(
                             item?.course_slug,
@@ -125,14 +133,14 @@ export default function MyCourses({ studentCourse }) {
                   ) : item.completeTask?.length === item.totalTask ? (
                     <span style={{ fontWeight: 600, color: '#28a745' }}>Completed</span>
                   ) : (
-                    <span style={{ fontWeight: 600, color: '#7d9b17' }}>Start Course</span>
+                    <span style={{ fontWeight: 600, color: '#4f46e5' }}>Start Course</span>
                   )}
                 </div>
               </div>
             ))}
           </div>
           <div className='text-end mt-3'>
-            <Link href='/my-all-courses' style={{ textDecoration: 'none', color: '#7d9b17', fontWeight: 600 }}>
+            <Link href='/my-all-courses' style={{ textDecoration: 'none', color: '#4f46e5', fontWeight: 600 }}>
               View all
               <HiArrowNarrowRight className='ms-1' />
             </Link>
@@ -146,3 +154,4 @@ export default function MyCourses({ studentCourse }) {
     </div>
   )
 }
+

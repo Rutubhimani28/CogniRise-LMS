@@ -6,7 +6,7 @@ import Drop from 'src/@core/components/drag-and-drop/Drop'
 import Reorder from 'src/@core/components/drag-and-drop/helpers'
 import { RiArrowDropDownLine, RiDeleteBin6Line, RiEditFill } from 'react-icons/ri'
 import Modal from '@mui/material/Modal'
-import { FormControl, MenuItem, Select, Typography, Box, Input } from '@mui/material'
+import { FormControl, MenuItem, Select, Typography, Box, TextField } from '@mui/material'
 import { useDropzone } from 'react-dropzone'
 import QuestionModal from './QuestionModal'
 import OptionModal from './OptionModal'
@@ -185,7 +185,7 @@ export default function QuizModal({ quizClose, quizSave, quizData }) {
     setOptionModal(false)
     const updatedQuestions = [...questionArr]
 
-    if (optionIndex >= 0) {
+    if (optionIndex !== null && optionIndex >= 0) {
       updatedQuestions[questionIndex].options[optionIndex].name = optionTitle
     } else {
       updatedQuestions[questionIndex].options.push({
@@ -224,16 +224,15 @@ export default function QuizModal({ quizClose, quizSave, quizData }) {
         <Typography id='modal-modal-title' className='fs-3 pb-3 addHeadingColor'>
           Edit Quiz: Let's Get Started
         </Typography>
-        <Label className='form-label text-black' for='firstName'>
-          Title
-        </Label>
-        <Input
-          className='profile-input-box px-2'
+        <TextField
+          fullWidth
+          label='Title'
           name='name'
-          type='text'
-          sx={{ color: 'black' }}
           value={quizName}
           onChange={e => setQuizName(e.target.value)}
+          InputLabelProps={{ shrink: true }}
+          placeholder='Enter Quiz Title'
+          sx={{ mb: 3 }}
         />
         <Box
           {...getRootProps({ className: 'dropzone' })}
@@ -323,20 +322,20 @@ export default function QuizModal({ quizClose, quizSave, quizData }) {
                                   {question.options.map((item, index) => (
                                     <div className='d-flex justify-content-between align-items-center' key={index}>
                                       <div className='d-flex align-items-center justify-content-between'>
-                                        <Input
-                                          className='profile-input-box text-black px-2'
-                                          style={{ minWidth: 250 }}
-                                          type='text'
+                                        <TextField
+                                          fullWidth
+                                          size='small'
                                           value={item.name}
                                           onChange={e => onChangeOptionVal(qIndex, index, e.target.value)}
+                                          sx={{ mr: 2 }}
                                         />
-                                        <label className='customCheckbox'>
-                                          <input
-                                            type='checkbox'
-                                            onChange={e => saveAnswerVal(qIndex, index, e.target.checked)}
-                                          />
-                                          <span className='checkmark'></span>
-                                        </label>
+                                        <input
+                                          type='radio'
+                                          name={`question_${qIndex}_answer`}
+                                          checked={question.ans === item.name}
+                                          onChange={() => saveAnswerVal(qIndex, index, true)}
+                                          style={{ width: '20px', height: '20px', cursor: 'pointer' }}
+                                        />
                                       </div>
                                     </div>
                                   ))}

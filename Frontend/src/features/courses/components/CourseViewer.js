@@ -11,6 +11,8 @@ import { useDispatch } from 'react-redux'
 // ** Layout Import
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
+import CircularProgress from '@mui/material/CircularProgress'
+import Box from '@mui/material/Box'
 
 export const CourseViewer = () => {
   // api call
@@ -18,7 +20,7 @@ export const CourseViewer = () => {
   const [lessonData, setLessonData] = useState(null)
   const getLessonData = useSelector(state => state?.course?.selectedLesson)
 
-  const [moduleData, setModuleData] = useState([])  
+  const [moduleData, setModuleData] = useState([])
   const [totalItem, setTotalItem] = useState(0)
   const [itemNo, setItemNo] = useState(1)
   const [navigationData, setNavigationData] = useState({})
@@ -28,12 +30,15 @@ export const CourseViewer = () => {
   const router = useRouter()
   const dispatch = useDispatch()
 
+  const [isLoading, setIsLoading] = useState(true)
+
   useEffect(() => {
     if (!router.isReady) return
 
     const id = router?.query?.cid
     dispatch({ type: 'COURSE_ID', payload: id })
 
+    setIsLoading(true)
     requestApiData
       .oneCourseRequest(id)
       .then(res => {
@@ -47,6 +52,7 @@ export const CourseViewer = () => {
       .catch(err => {
         console.log('Course Preview', err)
       })
+      .finally(() => setIsLoading(false))
   }, [router.isReady])
 
   useEffect(() => {
@@ -80,10 +86,18 @@ export const CourseViewer = () => {
     setNavigationData(result[0]?.items[0])
   }
 
+  if (isLoading) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '400px' }}>
+        <CircularProgress sx={{ color: '#4f46e5' }} size={60} thickness={4} />
+      </Box>
+    )
+  }
+
   return (
     <div>
       <Grid spacing={6} container>
-        <Grid item xs={12} md={3} sm={12}>
+        <Grid item xs={12} md={3} sm={12} sx={{ borderRight: { md: '1px solid #e0e0e0' } }}>
           <CourseContent data={moduleData} />
         </Grid>
 
@@ -125,20 +139,20 @@ export const CourseViewer = () => {
             </div>
           )}
 
-          <div className='d-flex justify-content-between align-items-center'>
+          <div className='d-flex justify-content-between align-items-center w-100 mt-3'>
             {itemNo > 1 ? (
-              <Button className='beforeLoginbtn my-1 me-3 px-4 mt-3' onClick={() => handlePreClick()}>
+              <Button className='beforeLoginbtn my-1 me-3 px-4' onClick={() => handlePreClick()}>
                 Previous
               </Button>
             ) : (
-              ''
+              <div></div>
             )}
             {itemNo + 1 < totalItem ? (
-              <Button className='beforeLoginbtn my-1 me-3 px-4 mt-3' onClick={() => handleNextClick()}>
+              <Button className='beforeLoginbtn my-1 px-4' onClick={() => handleNextClick()}>
                 Next
               </Button>
             ) : (
-              ''
+              <div></div>
             )}
           </div>
         </Grid>

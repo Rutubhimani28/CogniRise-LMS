@@ -100,7 +100,7 @@ const AuthProvider = ({ children }) => {
       })
       .catch(err => {
         if (errorCallback) errorCallback(err)
-        toast.error('Somthing went wrong')
+        toast.error('Something went wrong')
       })
   }
 
@@ -112,7 +112,7 @@ const AuthProvider = ({ children }) => {
       })
       .catch(err => {
         if (errorCallback) errorCallback(err)
-        toast.error('Somthing went wrong')
+        toast.error('Something went wrong')
       })
   }
 

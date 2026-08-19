@@ -60,7 +60,7 @@ export default function Course({ direction, ...args }) {
         }
       })
       .catch(err => {
-        toast.error('Somthing went wrong')
+        toast.error('Something went wrong')
         console.log('Delet Course', err)
       })
   }

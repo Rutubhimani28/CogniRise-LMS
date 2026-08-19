@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Label, Input } from 'reactstrap'
-import { Typography, Button } from '@mui/material'
+import { Typography, Button, TextField } from '@mui/material'
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
 
 export default function ModuleModal({ moduleClose, moduleSave, moduleData }) {
@@ -19,15 +19,15 @@ export default function ModuleModal({ moduleClose, moduleSave, moduleData }) {
         {isEditMode ? 'Edit Module' : 'Add Module'}
       </Typography>
 
-      <Label className='form-label text-black' for='firstName '>
-        Title
-      </Label>
-      <Input
-        className='myprofile'
+      <TextField
+        fullWidth
+        label='Title'
         name='name'
-        type='text'
-        defaultValue={moduleTitle}
+        value={moduleTitle}
         onChange={e => setModuleTitle(e.target.value)}
+        InputLabelProps={{ shrink: true }}
+        placeholder='Enter Module Title'
+        sx={{ mb: 3 }}
       />
       <div className='d-flex justify-content-end pt-4'>
         <Button type='button' className='me-2 px-4 d-flex align-items-center beforeLoginbtn ' onClick={moduleClose}>

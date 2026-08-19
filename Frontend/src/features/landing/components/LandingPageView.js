@@ -155,7 +155,7 @@ export const LandingPageView = () => {
                           alt='Education Icon'
                           style={{
                             filter:
-                              'invert(41%) sepia(96%) saturate(600%) hue-rotate(27deg) brightness(93%) contrast(102%)'
+                              'invert(26%) sepia(90%) saturate(2340%) hue-rotate(233deg) brightness(96%) contrast(93%)'
                           }}
                         />
                       </Box>
@@ -173,7 +173,7 @@ export const LandingPageView = () => {
                           alt='Community Icon'
                           style={{
                             filter:
-                              'invert(41%) sepia(96%) saturate(600%) hue-rotate(27deg) brightness(93%) contrast(102%)'
+                              'invert(26%) sepia(90%) saturate(2340%) hue-rotate(233deg) brightness(96%) contrast(93%)'
                           }}
                         />
                       </Box>
@@ -250,7 +250,7 @@ export const LandingPageView = () => {
                       src={imgConst.icon1}
                       alt='Blockchain Projects'
                       style={{
-                        filter: 'invert(41%) sepia(96%) saturate(600%) hue-rotate(27deg) brightness(93%) contrast(102%)'
+                        filter: 'invert(26%) sepia(90%) saturate(2340%) hue-rotate(233deg) brightness(96%) contrast(93%)'
                       }}
                     />
                   </Box>
@@ -271,7 +271,7 @@ export const LandingPageView = () => {
                       src={imgConst.icon2}
                       alt='App Developers'
                       style={{
-                        filter: 'invert(41%) sepia(96%) saturate(600%) hue-rotate(27deg) brightness(93%) contrast(102%)'
+                        filter: 'invert(26%) sepia(90%) saturate(2340%) hue-rotate(233deg) brightness(96%) contrast(93%)'
                       }}
                     />
                   </Box>
@@ -293,7 +293,7 @@ export const LandingPageView = () => {
                       src={imgConst.icon3}
                       alt='Everyone'
                       style={{
-                        filter: 'invert(41%) sepia(96%) saturate(600%) hue-rotate(27deg) brightness(93%) contrast(102%)'
+                        filter: 'invert(26%) sepia(90%) saturate(2340%) hue-rotate(233deg) brightness(96%) contrast(93%)'
                       }}
                     />
                   </Box>
@@ -333,7 +333,7 @@ export const LandingPageView = () => {
                       alt={item.label}
                       className='mr-3 w-6 h-6 '
                       style={{
-                        filter: 'invert(41%) sepia(96%) saturate(600%) hue-rotate(27deg) brightness(93%) contrast(102%)'
+                        filter: 'invert(26%) sepia(90%) saturate(2340%) hue-rotate(233deg) brightness(96%) contrast(93%)'
                       }}
                     />
                     <Typography variant='h6' className='text-black ps-1'>

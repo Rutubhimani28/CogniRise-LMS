@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react'
 import { Button, Label } from 'reactstrap'
-import { Typography, Box, Input } from '@mui/material'
+import { Typography, Box, TextField } from '@mui/material'
 import { useDropzone } from 'react-dropzone'
 import ReactDraftWysiwyg from 'src/@core/components/react-draft-wysiwyg'
 import { EditorState, convertToRaw, convertFromRaw } from 'draft-js'
@@ -106,6 +106,7 @@ export default function LessonModal({ lessonClose, lessonSave, lessonData }) {
       }
     } catch (error) {
       console.error('Error rendering preview:', error)
+
       return null
     }
 
@@ -118,15 +119,15 @@ export default function LessonModal({ lessonClose, lessonSave, lessonData }) {
         Edit Lesson: Let's Get Started
       </Typography>
 
-      <Label for='firstName' className='form-label text-black'>
-        Title
-      </Label>
-      <Input
-        className='profile-input-box setProfiletext px-2'
+      <TextField
+        fullWidth
+        label='Title'
         name='name'
-        type='text'
         value={lessonName}
         onChange={e => setLessonName(e.target.value)}
+        InputLabelProps={{ shrink: true }}
+        placeholder='Enter Lesson Title'
+        sx={{ mb: 3 }}
       />
 
       <Box

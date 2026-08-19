@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
 import { Label, Input, Button } from 'reactstrap'
-import { Typography } from '@mui/material'
+import { Typography, TextField } from '@mui/material'
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
 
 export default function OptionModal({ handleOptionClose, handleOptionSave, data }) {
-  const [titleDesc, setTitleDesc] = useState('')
+  const [titleDesc, setTitleDesc] = useState(data?.name || '')
 
   const handleSubmit = e => {
     e.preventDefault()
@@ -17,15 +17,15 @@ export default function OptionModal({ handleOptionClose, handleOptionSave, data 
         Edit option
       </Typography>
 
-      <Label className='form-label text-black' for='firstName'>
-        Title
-      </Label>
-      <Input
-        className='profile-input-box setProfiletext'
+      <TextField
+        fullWidth
+        label='Title'
         name='name'
-        type='text'
-        defaultValue={data?.name || ''}
+        value={titleDesc}
         onChange={e => setTitleDesc(e.target.value)}
+        InputLabelProps={{ shrink: true }}
+        placeholder='Enter Option Title'
+        sx={{ mb: 3 }}
       />
       <div className='d-flex justify-content-end pt-4'>
         <Button

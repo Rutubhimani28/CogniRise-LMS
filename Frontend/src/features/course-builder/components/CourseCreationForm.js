@@ -4,7 +4,7 @@ import Tab from '@mui/material/Tab'
 import TabContext from '@mui/lab/TabContext'
 import TabList from '@mui/lab/TabList'
 import TabPanel from '@mui/lab/TabPanel'
-import { Card, Label, Input } from 'reactstrap'
+import { Label, Input } from 'reactstrap'
 import {
   FormControl,
   MenuItem,
@@ -13,7 +13,8 @@ import {
   Typography,
   Button,
   Autocomplete,
-  CircularProgress
+  CircularProgress,
+  Card
 } from '@mui/material'
 import { useDropzone } from 'react-dropzone'
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
@@ -58,7 +59,7 @@ export const CourseCreationForm = () => {
           if (res?.status === 200) {
             setCourseData(res?.data)
             setModuleData(res?.data?.modules)
-            setTags(res?.data?.tags)
+            setTags(res?.data?.tags ? res.data.tags.filter(tag => tag && tag.trim() !== '' && tag.trim() !== '[]' && tag.trim() !== '[""]') : [])
             setPreRequisitesValue(res?.data?.preRequisites)
           }
         })
@@ -107,24 +108,26 @@ export const CourseCreationForm = () => {
   let img = null
   if (courseBanner.length > 0) {
     img = courseBanner.map(file => (
-      <img
-        key={file.name}
-        alt={file.name}
-        className='single-file-image'
-        src={URL.createObjectURL(file)}
-        width='100px'
-        height='100px'
-      />
+      <Box display='flex' justifyContent='center' alignItems='center' width='100%' height='100%' key={file.name}>
+        <img
+          alt={file.name}
+          className='single-file-image'
+          src={URL.createObjectURL(file)}
+          style={{ maxHeight: '150px', maxWidth: '100%', objectFit: 'contain' }}
+        />
+      </Box>
     ))
-  } else if (courseData?.banner) {
+  } else if (courseData?.banner && courseData.banner.length > 0 && (typeof courseData.banner === 'string' ? courseData.banner : courseData.banner[0])) {
+    const bannerUrl = typeof courseData.banner === 'string' ? courseData.banner : courseData.banner[0];
     img = (
-      <img
-        className='single-file-image'
-        src={courseData.banner[0]}
-        width='100px'
-        height='100px'
-        alt='Course Banner'
-      />
+      <Box display='flex' justifyContent='center' alignItems='center' width='100%' height='100%'>
+        <img
+          className='single-file-image'
+          src={bannerUrl}
+          style={{ maxHeight: '150px', maxWidth: '100%', objectFit: 'contain' }}
+          alt='Course Banner'
+        />
+      </Box>
     )
   }
 
@@ -283,10 +286,10 @@ export const CourseCreationForm = () => {
             </Box>
 
             <TabPanel value='1'>
-              <Card className='border-0 p-4 profile-wrap mt-4 text-start'>
-                <Label className='form-label fs-5 text-black' for='title'>
+              <Card elevation={0} sx={{ borderRadius: 3, border: '1px solid #e8e8e8', p: { xs: 3, md: 4 }, mt: 4, textAlign: 'left' }}>
+                <Typography variant='subtitle1' sx={{ fontWeight: 600, mb: 1, color: '#2F2B3D' }}>
                   Course Banner
-                </Label>
+                </Typography>
                 <Box
                   {...getRootProps({ className: 'dropzone' })}
                   sx={courseBanner.length ? { height: 150 } : {}}
@@ -306,134 +309,75 @@ export const CourseCreationForm = () => {
                   File types supported: JPG, PNG. Max Size: 5 MB
                 </Typography>
 
-                <Label className='form-label fs-5 text-black' for='title'>
-                  Title
-                </Label>
-                <Input
-                  className='profile-input-box'
+                <TextField
+                  fullWidth
+                  label='Title'
                   name='title'
-                  type='text'
                   value={formik.values.title}
                   onChange={formik.handleChange}
+                  InputLabelProps={{ shrink: true }}
+                  placeholder='Enter Title'
+                  sx={{ mb: 3 }}
                 />
 
-                <Label className='form-label fs-5 text-black' for='title'>
-                  Course Slug
-                </Label>
-                <Input
-                  className='profile-input-box'
+                <TextField
+                  fullWidth
+                  label='Course Slug'
                   name='slug'
-                  type='text'
                   value={formik.values.slug}
                   onChange={formik.handleChange}
+                  InputLabelProps={{ shrink: true }}
+                  placeholder='Enter Course Slug'
+                  sx={{ mb: 1 }}
                 />
-                <span className='text-black pb-4'>Course Link: https://collegedao.io/courses/{formik.values.slug}</span>
+                <span className='text-black pb-4 d-block'>Course Link: https://collegedao.io/courses/{formik.values.slug}</span>
 
-                <Label className='form-label fs-5 text-black' for='title'>
-                  Description
-                </Label>
-                <Input
-                  className='profile-input-box'
+                <TextField
+                  fullWidth
+                  label='Description'
                   name='description'
-                  type='textarea'
-                  rows='6'
-                  col='6'
+                  multiline
+                  rows={4}
                   value={formik.values.description}
                   onChange={formik.handleChange}
+                  InputLabelProps={{ shrink: true }}
+                  placeholder='Enter Description'
+                  sx={{ mb: 3 }}
                 />
-                <Label className='form-label fs-5 text-black' for='firstName'>
-                  Category
-                </Label>
-                <FormControl
-                  sx={{
-                    m: 1,
-                    borderRadius: 1,
-                    border: '1px solid black',
-                    boxShadow: 'rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px',
-                    '& .MuiSelect-icon': {
-                      color: 'black'
-                    }
-                  }}
+                <TextField
+                  select
+                  fullWidth
+                  label='Category'
+                  name='category'
+                  value={formik.values.category}
+                  onChange={formik.handleChange}
+                  sx={{ mb: 3 }}
                 >
-                  <Select
-                    name='category'
-                    value={formik.values.category}
-                    onChange={formik.handleChange}
-                    displayEmpty
-                    inputProps={{ 'aria-label': 'Without label' }}
-                  >
-                    {allCategory &&
-                      allCategory.map((item, index) => (
-                        <MenuItem key={index} value={item.name} className='text-black'>
-                          <span className='text-black'>{item.name}</span>
-                        </MenuItem>
-                      ))}
-                  </Select>
-                </FormControl>
-
-                <Label className='form-label pt-3 pe-4 fs-5 text-black' for='firstName'>
-                  Tags
-                </Label>
-
-                <div className='tags-input text-white'>
-                  <ul id='tags' className='d-flex p-0 text-white'>
-                    {tags.map((tag, index) => (
-                      <li key={index} className='tag me-2 list-unstyled'>
-                        <span
-                          className='tag-title text-black bg-white'
-                          style={{
-                            boxShadow: 'rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px'
-                          }}
-                        >
-                          {tag}
-                        </span>
-                      </li>
+                  {allCategory &&
+                    allCategory.map((item, index) => (
+                      <MenuItem key={index} value={item.name}>
+                        {item.name}
+                      </MenuItem>
                     ))}
-                  </ul>
-                  <FormControl variant='standard' sx={{ width: '100%' }}>
-                    <div className='d-flex'>
-                      <TextField
-                        className='custom-input profile-input-box position-relative'
-                        name='tag'
-                        type='text'
-                        sx={{
-                          border: '1px solid black',
-                          '& .MuiInputBase-input': {
-                            color: 'black'
-                          },
-                          '& input:-webkit-autofill': {
-                            WebkitBoxShadow: '0 0 0 100px white inset !important',
-                            WebkitTextFillColor: 'black !important',
-                            caretColor: 'black'
-                          },
-                          '& input:-webkit-autofill:focus': {
-                            WebkitBoxShadow: '0 0 0 100px white inset !important',
-                            WebkitTextFillColor: 'black !important',
-                            caretColor: 'black'
-                          },
-                          '& input::placeholder': {
-                            color: 'grey',
-                            opacity: 1
-                          }
-                        }}
-                        value={tagsInput}
-                        placeholder='Add tag'
-                        onChange={handleInputChange}
-                      />
-                      <Button
-                        type='button'
-                        className='p-0 bg-transparent position-absolute border-0 tag-btn'
-                        style={{ right: '10px', top: '20px', color: 'black' }}
-                        onClick={event => addTagsButton(event)}
-                      >
-                        <AddIcon />
-                      </Button>
-                    </div>
-                  </FormControl>
-                </div>
-                <Label className='form-label pt-3 pe-4 fs-5 text-black' for='firstName'>
-                  Prerequisites
-                </Label>
+                </TextField>
+
+                <Autocomplete
+                  multiple
+                  freeSolo
+                  options={[]}
+                  value={tags}
+                  onChange={(event, newValue) => {
+                    setTags(newValue)
+                  }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Tags"
+                      placeholder="Add tag and press Enter"
+                      sx={{ mb: 3 }}
+                    />
+                  )}
+                />
                 <Autocomplete
                   multiple
                   limitTags={2}
@@ -445,148 +389,129 @@ export const CourseCreationForm = () => {
                   renderInput={params => (
                     <TextField
                       {...params}
-                      placeholder='Course'
-                      sx={{
-                        border: '1px solid black',
-                        borderRadius: 1,
-                        boxShadow: 'rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px',
-                        '& .MuiInputBase-input': {
-                          color: 'black'
-                        }
-                      }}
+                      label='Prerequisites'
+                      placeholder='Select Course'
+                      sx={{ mb: 3 }}
                     />
                   )}
-                  sx={{
-                    width: '100%',
-                    '& .MuiChip-label': {
-                      color: 'black'
-                    },
-                    '& .MuiAutocomplete-tag': {
-                      backgroundColor: '#f0f0f0',
-                      '& .MuiChip-deleteIcon': {
-                        color: 'black'
-                      },
-                      '& .MuiChip-deleteIcon:hover': {
-                        color: 'black'
-                      }
-                    },
-                    '& .MuiAutocomplete-endAdornment svg': {
-                      color: 'black'
-                    }
-                  }}
-                  slotProps={{
-                    paper: {
-                      sx: {
-                        color: 'black',
-                        '& .MuiAutocomplete-option': {
-                          color: 'black'
-                        },
-                        '& .MuiAutocomplete-noOptions': {
-                          color: 'grey'
-                        }
-                      }
-                    },
-                    popper: {
-                      modifiers: [
-                        {
-                          name: 'offset',
-                          options: {
-                            offset: [0, 4]
-                          }
-                        }
-                      ]
-                    }
-                  }}
+                  sx={{ width: '100%' }}
                 />
-                <Label className='form-label pt-3 fs-5 text-black' for='title'>
-                  Course length
-                </Label>
-                <Input
-                  className='profile-input-box'
+                <TextField
+                  fullWidth
+                  label='Course Length'
                   name='courseLength'
-                  type='text'
                   value={formik.values.courseLength}
                   onChange={formik.handleChange}
+                  InputLabelProps={{ shrink: true }}
+                  placeholder='Enter Course Length'
+                  sx={{ mb: 3 }}
                 />
 
-                <Label className='form-label fs-5 text-black' for='firstName'>
-                  Course Level
-                </Label>
-                <FormControl sx={{ m: 1 }}>
-                  <Select
-                    name='level'
-                    value={formik.values.level}
-                    sx={{
-                      border: '1px solid black',
-                      boxShadow: 'rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px',
-                      '& .MuiSelect-icon': {
-                        color: 'black'
-                      },
-                      color: 'black'
-                    }}
-                    onChange={formik.handleChange}
-                    displayEmpty
-                    inputProps={{ 'aria-label': 'Without label' }}
-                  >
-                    <MenuItem value='beginner' className='text-black'>
-                      Beginner
-                    </MenuItem>
-                    <MenuItem value='intermediate' className='text-black'>
-                      Intermediate
-                    </MenuItem>
-                    <MenuItem value='advanced' className='text-black'>
-                      Advanced
-                    </MenuItem>
-                  </Select>
-                </FormControl>
+                <TextField
+                  select
+                  fullWidth
+                  label='Course Level'
+                  name='level'
+                  value={formik.values.level}
+                  onChange={formik.handleChange}
+                  sx={{ mb: 3 }}
+                >
+                  <MenuItem value='beginner'>Beginner</MenuItem>
+                  <MenuItem value='intermediate'>Intermediate</MenuItem>
+                  <MenuItem value='advanced'>Advanced</MenuItem>
+                </TextField>
 
                 <div className='d-flex justify-content-end pt-4'>
                   <Button
                     type='button'
-                    className='me-2 px-4 d-flex align-items-center beforeLoginbtn'
+                    variant='contained'
                     onClick={() => nextTab()}
+                    sx={{
+                      bgcolor: '#4f46e5',
+                      color: 'white',
+                      fontWeight: 600,
+                      px: 4,
+                      py: 1.5,
+                      borderRadius: 2,
+                      textTransform: 'none',
+                      fontSize: '1rem',
+                      '&:hover': { bgcolor: '#4338ca' }
+                    }}
                   >
-                    Next
+                    Next Step
                   </Button>
                 </div>
               </Card>
             </TabPanel>
 
             <TabPanel value='2'>
-              <div className='border-0 p-4 profile-wrap mt-4 '>
+              <Card elevation={0} sx={{ borderRadius: 3, border: '1px solid #e8e8e8', p: { xs: 3, md: 4 }, mt: 4 }}>
                 <CourseBuilder setData={handleModuleData} getData={moduleData} />
 
-                <div className='d-flex justify-content-between pt-5'>
+                <div className='d-flex justify-content-between pt-5 mt-4 border-top'>
                   <Button
                     type='button'
-                    className='me-2 px-4 d-flex align-items-center beforeLoginbtn'
+                    variant='outlined'
                     onClick={() => backTab()}
+                    sx={{
+                      borderColor: '#4f46e5',
+                      color: '#4f46e5',
+                      fontWeight: 600,
+                      px: 4,
+                      py: 1.5,
+                      borderRadius: 2,
+                      textTransform: 'none',
+                      fontSize: '1rem',
+                      '&:hover': { borderColor: '#4338ca', bgcolor: 'rgba(79, 70, 229,0.04)' }
+                    }}
                   >
                     Back
                   </Button>
 
-                  <div className='d-md-flex'>
+                  <div className='d-md-flex gap-3'>
                     <Button
                       disabled={loading}
+                      variant='outlined'
                       onClick={() => {
                         formik.handleSubmit(), setUserStatus({ status: 'draft' })
                       }}
-                      className='me-2 px-4 d-flex align-items-center beforeLoginbtn'
+                      sx={{
+                        borderColor: '#4f46e5',
+                        color: '#4f46e5',
+                        fontWeight: 600,
+                        px: 4,
+                        py: 1.5,
+                        borderRadius: 2,
+                        textTransform: 'none',
+                        fontSize: '1rem',
+                        '&:hover': { borderColor: '#4338ca', bgcolor: 'rgba(79, 70, 229,0.04)' }
+                      }}
                     >
-                      {loading && userStatus?.status === 'draft' ? <CircularProgress size={24} color="inherit" /> : 'Draft'}
+                      {loading && userStatus?.status === 'draft' ? <CircularProgress size={24} color="inherit" /> : 'Save as Draft'}
                     </Button>
                     <Button
                       disabled={loading}
+                      variant='contained'
                       onClick={() => {
                         formik.handleSubmit(), setUserStatus({ status: 'pending' })
                       }}
-                      className='me-2 px-4 mt-md-2 d-flex align-items-center beforeLoginbtn'
+                      sx={{
+                        bgcolor: '#4f46e5',
+                        color: 'white',
+                        fontWeight: 600,
+                        px: 4,
+                        py: 1.5,
+                        borderRadius: 2,
+                        textTransform: 'none',
+                        fontSize: '1rem',
+                        '&:hover': { bgcolor: '#4338ca' }
+                      }}
                     >
-                      {loading && userStatus?.status === 'pending' ? <CircularProgress size={24} color="inherit" /> : 'Publish'}
+                      {loading && userStatus?.status === 'pending' ? <CircularProgress size={24} color="inherit" /> : 'Publish Course'}
                     </Button>
                   </div>
                 </div>
-              </div>
+              </Card>
             </TabPanel>
           </TabContext>
         </Box>
@@ -594,3 +519,4 @@ export const CourseCreationForm = () => {
     </div>
   )
 }
+

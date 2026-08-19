@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Label, Input, Button } from 'reactstrap'
-import { Typography } from '@mui/material'
+import { Typography, TextField } from '@mui/material'
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
 
 export default function QuestionModal({ questionClose, questionSave, questionData }) {
@@ -17,15 +17,15 @@ export default function QuestionModal({ questionClose, questionSave, questionDat
         Edit Question
       </Typography>
 
-      <Label className='form-label text-black' for='firstName'>
-        Title
-      </Label>
-      <Input
-        className='profile-input-box setProfiletext'
+      <TextField
+        fullWidth
+        label='Title'
         name='name'
-        type='text'
-        defaultValue={questionTitle}
+        value={questionTitle}
         onChange={e => setQuestionTitle(e.target.value)}
+        InputLabelProps={{ shrink: true }}
+        placeholder='Enter Question Title'
+        sx={{ mb: 3 }}
       />
       <div className='d-flex justify-content-end pt-4'>
         <Button type='button' className='me-2 px-4 d-flex align-items-center beforeLoginbtn' onClick={questionClose}>

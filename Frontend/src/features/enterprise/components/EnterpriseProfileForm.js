@@ -7,6 +7,7 @@ import {
 } from '@mui/material'
 import { useFormik } from 'formik'
 import { toast } from 'react-hot-toast'
+import { useAuth } from 'src/hooks/useAuth'
 import Modal from '@mui/material/Modal'
 import { useDropzone } from 'react-dropzone'
 import { RiUpload2Fill } from 'react-icons/ri'
@@ -36,6 +37,7 @@ export const EnterpriseProfileForm = () => {
   const [uploadImg, setUploadImg] = useState(false)
   const [loadingProfile, setLoadingProfile] = useState(false)
   const [loadingPhoto, setLoadingPhoto] = useState(false)
+  const { user: authUser, setUser: setAuthUser } = useAuth()
 
   const handleUploadImgOpen = () => setUploadImg(true)
   const handleUploadImgClose = () => setUploadImg(false)
@@ -82,6 +84,14 @@ export const EnterpriseProfileForm = () => {
         toast.success('Profile picture updated successfully')
         setGetData(res.data)
         setFiles([])
+
+        // Update user context and localStorage
+        if (authUser) {
+          const updatedUser = { ...authUser, profile: { ...authUser.profile, profileImg: res.data.profile?.profileImg } }
+          setAuthUser(updatedUser)
+          window.localStorage.setItem('userData', JSON.stringify(updatedUser))
+        }
+
         userApi()
         setUploadImg(false)
       }
@@ -109,6 +119,7 @@ export const EnterpriseProfileForm = () => {
     enableReinitialize: true,
     onSubmit: values => {
       setLoadingProfile(true)
+
       const payload = {
         _id: getData._id,
         email: getData.email,
@@ -127,7 +138,16 @@ export const EnterpriseProfileForm = () => {
         }
       }
       requestApiData.updateUserProfile(payload)
-        .then(res => { if (res?.status === 200) toast.success('Profile updated successfully') })
+        .then(res => {
+          if (res?.status === 200) {
+            toast.success('Profile updated successfully')
+            if (authUser) {
+              const updatedUser = { ...authUser, profile: { ...authUser.profile, name: values.name } }
+              setAuthUser(updatedUser)
+              window.localStorage.setItem('userData', JSON.stringify(updatedUser))
+            }
+          }
+        })
         .catch(() => toast.error('Something went wrong'))
         .finally(() => setLoadingProfile(false))
     }
@@ -149,15 +169,15 @@ export const EnterpriseProfileForm = () => {
                   {getData?.profile?.profileImg ? (
                     <Avatar
                       src={getData.profile.profileImg + '?' + new Date().getTime()}
-                      sx={{ width: 100, height: 100, border: '3px solid #7d9b17' }}
+                      sx={{ width: 100, height: 100, border: '3px solid #4f46e5' }}
                     />
                   ) : files.length > 0 ? (
                     <Avatar
                       src={URL.createObjectURL(files[0])}
-                      sx={{ width: 100, height: 100, border: '3px solid #7d9b17' }}
+                      sx={{ width: 100, height: 100, border: '3px solid #4f46e5' }}
                     />
                   ) : (
-                    <Avatar sx={{ width: 100, height: 100, bgcolor: '#7d9b17', fontSize: '2.5rem', fontWeight: 700 }}>
+                    <Avatar sx={{ width: 100, height: 100, bgcolor: '#4f46e5', fontSize: '2.5rem', fontWeight: 700 }}>
                       {avatarLetter}
                     </Avatar>
                   )}
@@ -166,8 +186,8 @@ export const EnterpriseProfileForm = () => {
                     size='small'
                     sx={{
                       position: 'absolute', bottom: 0, right: 0,
-                      bgcolor: '#7d9b17', color: 'white', width: 28, height: 28,
-                      '&:hover': { bgcolor: '#5a7212' }
+                      bgcolor: '#4f46e5', color: 'white', width: 28, height: 28,
+                      '&:hover': { bgcolor: '#4338ca' }
                     }}
                   >
                     <MdEdit size={14} />
@@ -179,7 +199,7 @@ export const EnterpriseProfileForm = () => {
                   <Typography variant='h5' sx={{ fontWeight: 700, color: '#2F2B3D' }}>
                     {getData?.profile?.name || 'Company Name'}
                   </Typography>
-                  <Typography variant='body2' sx={{ color: '#7d9b17', mt: 0.5 }}>
+                  <Typography variant='body2' sx={{ color: '#4f46e5', mt: 0.5 }}>
                     {getData?.email}
                   </Typography>
                   <Typography variant='body2' sx={{ color: '#6c757d', mt: 0.5 }}>
@@ -204,7 +224,7 @@ export const EnterpriseProfileForm = () => {
                   <TextField
                     fullWidth label='Company Name' name='name'
                     value={formik.values.name} onChange={formik.handleChange}
-                    InputProps={{ startAdornment: <InputAdornment position='start'><FaBuilding color='#7d9b17' /></InputAdornment> }}
+                    InputProps={{ startAdornment: <InputAdornment position='start'><FaBuilding color='#4f46e5' /></InputAdornment> }}
                   />
                 </Grid>
 
@@ -303,7 +323,7 @@ export const EnterpriseProfileForm = () => {
                   <TextField
                     fullWidth label='Website' name='website'
                     value={formik.values.website} onChange={formik.handleChange}
-                    InputProps={{ startAdornment: <InputAdornment position='start'><FaGlobe color='#7d9b17' /></InputAdornment> }}
+                    InputProps={{ startAdornment: <InputAdornment position='start'><FaGlobe color='#4f46e5' /></InputAdornment> }}
                   />
                 </Grid>
               </Grid>
@@ -315,9 +335,9 @@ export const EnterpriseProfileForm = () => {
             <Button
               type='submit' variant='contained' size='large' disabled={loadingProfile}
               sx={{
-                px: 6, py: 1.5, bgcolor: '#7d9b17', borderRadius: 2,
+                px: 6, py: 1.5, bgcolor: '#4f46e5', borderRadius: 2,
                 fontWeight: 600, textTransform: 'none', fontSize: '1rem',
-                '&:hover': { bgcolor: '#5a7212' }
+                '&:hover': { bgcolor: '#4338ca' }
               }}
             >
               {loadingProfile ? <CircularProgress size={24} color="inherit" /> : 'Save Changes'}
@@ -330,24 +350,24 @@ export const EnterpriseProfileForm = () => {
       {/* Upload Image Modal */}
       <Modal open={uploadImg} onClose={handleUploadImgClose}>
         <Box sx={modalStyle}>
-          <Typography variant='h5' sx={{ textAlign: 'center', fontWeight: 700, color: '#7d9b17', pb: 3 }}>
+          <Typography variant='h5' sx={{ textAlign: 'center', fontWeight: 700, color: '#4f46e5', pb: 3 }}>
             Upload Profile Photo
           </Typography>
 
           <Box
             {...getRootProps({ className: 'dropzone' })}
             sx={{
-              border: '2px dashed #7d9b17', borderRadius: 2, p: 4,
+              border: '2px dashed #4f46e5', borderRadius: 2, p: 4,
               minHeight: files.length ? 250 : 150,
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               flexDirection: 'column', textAlign: 'center', cursor: 'pointer',
-              '&:hover': { bgcolor: 'rgba(125,155,23,0.04)' }
+              '&:hover': { bgcolor: 'rgba(79, 70, 229,0.04)' }
             }}
           >
             <input {...getInputProps()} />
             {files.length ? img : (
               <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 1 }}>
-                <RiUpload2Fill size={40} color='#7d9b17' />
+                <RiUpload2Fill size={40} color='#4f46e5' />
                 <Typography variant='body1' color='text.secondary'>
                   Choose a file or drag and drop it here
                 </Typography>
@@ -360,10 +380,10 @@ export const EnterpriseProfileForm = () => {
           </Typography>
 
           <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2, pt: 3 }}>
-            <Button variant='outlined' onClick={handleUploadImgClose} disabled={loadingPhoto} sx={{ borderColor: '#7d9b17', color: '#7d9b17', textTransform: 'none' }}>
+            <Button variant='outlined' onClick={handleUploadImgClose} disabled={loadingPhoto} sx={{ borderColor: '#4f46e5', color: '#4f46e5', textTransform: 'none' }}>
               Cancel
             </Button>
-            <Button variant='contained' onClick={() => uploadFile(selectedFile)} disabled={loadingPhoto} sx={{ bgcolor: '#7d9b17', textTransform: 'none', '&:hover': { bgcolor: '#5a7212' } }}>
+            <Button variant='contained' onClick={() => uploadFile(selectedFile)} disabled={loadingPhoto} sx={{ bgcolor: '#4f46e5', textTransform: 'none', '&:hover': { bgcolor: '#4338ca' } }}>
               {loadingPhoto ? <CircularProgress size={24} color="inherit" /> : 'Save Photo'}
             </Button>
           </Box>
@@ -372,3 +392,4 @@ export const EnterpriseProfileForm = () => {
     </Fragment>
   )
 }
+

@@ -392,7 +392,7 @@ export default function ActiveStudents(props) {
           <TabPane tabId='1'>
             <h2
               style={{
-                color: '#7d9b17',
+                color: '#4f46e5',
                 fontWeight: '500',
                 fontSize: '34px',
                 paddingBottom: '18px',
@@ -490,3 +490,4 @@ export default function ActiveStudents(props) {
     </div>
   ) : null
 }
+

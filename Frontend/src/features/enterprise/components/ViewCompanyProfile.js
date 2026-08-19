@@ -36,10 +36,10 @@ export const ViewCompanyProfile = () => {
                 <Avatar
                   src={getData.profile.profileImg}
                   alt={getData?.profile?.name}
-                  sx={{ width: 100, height: 100, border: '3px solid #7d9b17', flexShrink: 0 }}
+                  sx={{ width: 100, height: 100, border: '3px solid #4f46e5', flexShrink: 0 }}
                 />
               ) : (
-                <Avatar sx={{ width: 100, height: 100, bgcolor: '#7d9b17', fontSize: '2.5rem', fontWeight: 700, flexShrink: 0 }}>
+                <Avatar sx={{ width: 100, height: 100, bgcolor: '#4f46e5', fontSize: '2.5rem', fontWeight: 700, flexShrink: 0 }}>
                   {avatarLetter}
                 </Avatar>
               )}
@@ -49,7 +49,7 @@ export const ViewCompanyProfile = () => {
                 <Typography variant='h4' sx={{ fontWeight: 700, color: '#2F2B3D', mb: 0.5 }}>
                   {getData?.profile?.name}
                 </Typography>
-                <Typography variant='body1' sx={{ color: '#7d9b17', mb: 1.5 }}>
+                <Typography variant='body1' sx={{ color: '#4f46e5', mb: 1.5 }}>
                   {getData?.email}
                 </Typography>
 
@@ -59,7 +59,7 @@ export const ViewCompanyProfile = () => {
                     <Chip
                       label={getData.profile.companyType}
                       size='small'
-                      sx={{ bgcolor: 'rgba(125,155,23,0.1)', color: '#7d9b17', fontWeight: 600, borderRadius: 1 }}
+                      sx={{ bgcolor: 'rgba(79, 70, 229,0.1)', color: '#4f46e5', fontWeight: 600, borderRadius: 1 }}
                     />
                   )}
                   {getData?.profile?.industryVerticale && (
@@ -67,7 +67,7 @@ export const ViewCompanyProfile = () => {
                       label={getData.profile.industryVerticale}
                       size='small'
                       variant='outlined'
-                      sx={{ borderColor: '#7d9b17', color: '#7d9b17', borderRadius: 1 }}
+                      sx={{ borderColor: '#4f46e5', color: '#4f46e5', borderRadius: 1 }}
                     />
                   )}
                   {getData?.profile?.employeeSize && (
@@ -96,8 +96,11 @@ export const ViewCompanyProfile = () => {
                   )}
                   {getData?.profile?.website && (
                     <Link href={getData.profile.website} target='_blank' rel='noopener noreferrer'
-                      style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 36, height: 36, borderRadius: '50%', background: 'rgba(125,155,23,0.1)' }}>
-                      <FaGlobe color='#7d9b17' size={18} />
+                      style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '0 12px', height: 36, borderRadius: '18px', background: 'rgba(79, 70, 229,0.1)', textDecoration: 'none' }}>
+                      <FaGlobe color='#4f46e5' size={18} />
+                      <Typography variant='body2' sx={{ color: '#4f46e5', fontWeight: 600 }}>
+                        {getData.profile.website.replace(/^https?:\/\//, '')}
+                      </Typography>
                     </Link>
                   )}
                 </Box>
@@ -133,8 +136,8 @@ export const ViewCompanyProfile = () => {
               {getData?.profile?.industryVerticale && (
                 <Grid item xs={12} sm={6}>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-                    <Box sx={{ width: 40, height: 40, borderRadius: 2, bgcolor: 'rgba(125,155,23,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <FaIndustry color='#7d9b17' size={18} />
+                    <Box sx={{ width: 40, height: 40, borderRadius: 2, bgcolor: 'rgba(79, 70, 229,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <FaIndustry color='#4f46e5' size={18} />
                     </Box>
                     <Box>
                       <Typography variant='caption' color='text.secondary'>Industry Vertical</Typography>
@@ -149,8 +152,8 @@ export const ViewCompanyProfile = () => {
               {getData?.profile?.employeeSize && (
                 <Grid item xs={12} sm={6}>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-                    <Box sx={{ width: 40, height: 40, borderRadius: 2, bgcolor: 'rgba(125,155,23,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <FaUsers color='#7d9b17' size={18} />
+                    <Box sx={{ width: 40, height: 40, borderRadius: 2, bgcolor: 'rgba(79, 70, 229,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <FaUsers color='#4f46e5' size={18} />
                     </Box>
                     <Box>
                       <Typography variant='caption' color='text.secondary'>Company Size</Typography>
@@ -165,8 +168,8 @@ export const ViewCompanyProfile = () => {
               {getData?.profile?.companyType && (
                 <Grid item xs={12} sm={6}>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-                    <Box sx={{ width: 40, height: 40, borderRadius: 2, bgcolor: 'rgba(125,155,23,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <FaBuilding color='#7d9b17' size={18} />
+                    <Box sx={{ width: 40, height: 40, borderRadius: 2, bgcolor: 'rgba(79, 70, 229,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <FaBuilding color='#4f46e5' size={18} />
                     </Box>
                     <Box>
                       <Typography variant='caption' color='text.secondary'>Company Type</Typography>
@@ -181,8 +184,8 @@ export const ViewCompanyProfile = () => {
               {getData?.profile?.foundingDate && (
                 <Grid item xs={12} sm={6}>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-                    <Box sx={{ width: 40, height: 40, borderRadius: 2, bgcolor: 'rgba(125,155,23,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <FaCalendarAlt color='#7d9b17' size={18} />
+                    <Box sx={{ width: 40, height: 40, borderRadius: 2, bgcolor: 'rgba(79, 70, 229,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <FaCalendarAlt color='#4f46e5' size={18} />
                     </Box>
                     <Box>
                       <Typography variant='caption' color='text.secondary'>Founded</Typography>
@@ -201,3 +204,4 @@ export const ViewCompanyProfile = () => {
     </Fragment>
   )
 }
+

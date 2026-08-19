@@ -21,11 +21,13 @@ export const AppLayout = ({ children }) => {
     { label: 'Enterprises', href: '/admin-enterprises', subject: 'admin' },
     { label: 'Courses', href: '/admin-courses', subject: 'admin' },
     { label: 'Categories', href: '/admin-category', subject: 'admin' },
+
     // Enterprise Links
     { label: 'Dashboard', href: '/enterprise', subject: 'enterprise' },
     { label: 'My Courses', href: '/enterprise-courses', subject: 'enterprise' },
     { label: 'Create Course', href: '/course-creation', subject: 'enterprise' },
     { label: 'Profile', href: '/enterprise-profile', subject: 'enterprise' },
+
     // Student Links
     { label: 'All Courses', href: '/Course-listing', subject: 'student' },
     { label: 'Student Profile', href: '/student-profile', subject: 'student' },
@@ -64,7 +66,7 @@ export const AppLayout = ({ children }) => {
                 href={user?.role === 'admin' ? '/admin-enterprises' : user?.role === 'enterprise' ? '/enterprise' : '/student'}
                 sx={{
                   textDecoration: 'none',
-                  color: '#7d9b17',
+                  color: '#4f46e5',
                   fontWeight: 800,
                   fontSize: '1.4rem',
                   letterSpacing: '0.5px'
@@ -77,18 +79,19 @@ export const AppLayout = ({ children }) => {
               <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 1 }}>
                 {navLinks.map(link => {
                   const isActive = router.pathname === link.href
-                  return (
+                  
+return (
                     <Button
                       key={link.href}
                       component={Link}
                       href={link.href}
                       sx={{
-                        color: isActive ? '#7d9b17' : '#4B465C',
-                        backgroundColor: isActive ? 'rgba(125, 155, 23, 0.12)' : 'transparent',
+                        color: isActive ? '#4f46e5' : '#4B465C',
+                        backgroundColor: isActive ? 'rgba(79, 70, 229, 0.12)' : 'transparent',
                         fontWeight: isActive ? 700 : 500,
                         '&:hover': {
-                          backgroundColor: 'rgba(125, 155, 23, 0.08)',
-                          color: '#7d9b17'
+                          backgroundColor: 'rgba(79, 70, 229, 0.08)',
+                          color: '#4f46e5'
                         }
                       }}
                     >
@@ -118,7 +121,7 @@ export const AppLayout = ({ children }) => {
                         sx={{
                           width: 36,
                           height: 36,
-                          bgcolor: '#7d9b17',
+                          bgcolor: '#4f46e5',
                           fontSize: '0.9rem',
                           fontWeight: 700
                         }}
@@ -170,9 +173,9 @@ export const AppLayout = ({ children }) => {
                           fontWeight: 700,
                           fontSize: '0.7rem',
                           height: 24,
-                          backgroundColor: 'rgba(125, 155, 23, 0.12)',
-                          color: '#7d9b17',
-                          border: '1px solid rgba(125, 155, 23, 0.3)'
+                          backgroundColor: 'rgba(79, 70, 229, 0.12)',
+                          color: '#4f46e5',
+                          border: '1px solid rgba(79, 70, 229, 0.3)'
                         }}
                       />
                     </MenuItem>
@@ -205,3 +208,4 @@ export const AppLayout = ({ children }) => {
 }
 
 export default AppLayout
+

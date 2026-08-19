@@ -21,24 +21,22 @@ export default function Enrolled() {
   }, [])
 
   return (
-    <div
-      className='learnningTimeBox d-flex align-items-center justify-content-between'
-      style={{ height: '95%' }}
-    >
-      <div>
-        <h6 style={{ fontSize: '14px', color: '#7d9b17', fontWeight: 'bold' }}>Enrolled</h6>
-        <h2 style={{ color: 'black', fontWeight: 'bold' }} className='fw-bolder fs-4'>
-          {totalEnrollment?.data ? totalEnrollment?.data : 0}
-        </h2>
+    <div className='learnningTimeBox d-flex align-items-center justify-content-between' style={{ height: '100%', padding: '20px' }}>
+      <div className='d-flex align-items-center'>
+        <div className='iconBox me-3 d-flex align-items-center justify-content-center' style={{ width: '48px', height: '48px', backgroundColor: 'rgba(79, 70, 229, 0.1)', borderRadius: '12px' }}>
+          <img src={imgConst.icon2} style={{ width: '24px', filter: 'invert(26%) sepia(90%) saturate(2340%) hue-rotate(233deg) brightness(96%) contrast(93%)' }} />
+        </div>
+        <div>
+          <h6 style={{ fontSize: '15px', color: '#4f46e5', fontWeight: '600', margin: 0, paddingBottom: '4px' }}>Enrolled</h6>
+          <h2 style={{ color: '#2F2B3D', fontWeight: '700', margin: 0 }} className='fs-3'>
+            {totalEnrollment?.data ? totalEnrollment?.data : 0}
+          </h2>
+        </div>
       </div>
       <div>
-        <img
-          src={imgConst.graph2}
-          style={{
-            filter: 'invert(41%) sepia(96%) saturate(600%) hue-rotate(27deg) brightness(93%) contrast(102%)'
-          }}
-        />
+        <img src={imgConst.graph2} style={{ width: '80px', filter: 'invert(26%) sepia(90%) saturate(2340%) hue-rotate(233deg) brightness(96%) contrast(93%)' }} />
       </div>
     </div>
   )
 }
+
