@@ -10,7 +10,9 @@ import {
   IconButton,
   InputAdornment,
   Grid,
-  Divider
+  Divider,
+  CircularProgress,
+  Tooltip
 } from '@mui/material'
 import { useFormik } from 'formik'
 import * as yup from 'yup'
@@ -21,6 +23,7 @@ export const StudentSettingForm = () => {
   const [showOld, setShowOld] = useState(false)
   const [showNew, setShowNew] = useState(false)
   const [showConfirm, setShowConfirm] = useState(false)
+  const [loading, setLoading] = useState(false)
 
   const userData = typeof window !== 'undefined' ? JSON.parse(window.localStorage.getItem('userData')) : null
   const id = userData?.id
@@ -51,14 +54,19 @@ export const StudentSettingForm = () => {
     enableReinitialize: true,
     validationSchema: validationSchema,
     onSubmit: async (values, { resetForm }) => {
+      setLoading(true)
       const payload = {
         id: id,
         oldPassword: values?.oldPassword,
         password: values?.password,
         confirmPassword: values?.confirmPassword
       }
-      resetForm()
-      auth.updatePassword(payload)
+      try {
+        await auth.updatePassword(payload)
+        resetForm()
+      } finally {
+        setLoading(false)
+      }
     }
   })
 
@@ -95,6 +103,7 @@ export const StudentSettingForm = () => {
                       </InputAdornment>
                     )
                   }}
+                  sx={{ '& .MuiOutlinedInput-root': { borderRadius: '8px', '&:hover fieldset': { borderColor: '#7d9b17' }, '&.Mui-focused fieldset': { borderColor: '#7d9b17', borderWidth: '2px' } } }}
                 />
               </Grid>
 
@@ -120,6 +129,7 @@ export const StudentSettingForm = () => {
                       </InputAdornment>
                     )
                   }}
+                  sx={{ '& .MuiOutlinedInput-root': { borderRadius: '8px', '&:hover fieldset': { borderColor: '#7d9b17' }, '&.Mui-focused fieldset': { borderColor: '#7d9b17', borderWidth: '2px' } } }}
                 />
               </Grid>
 
@@ -145,14 +155,20 @@ export const StudentSettingForm = () => {
                       </InputAdornment>
                     )
                   }}
+                  sx={{ '& .MuiOutlinedInput-root': { borderRadius: '8px', '&:hover fieldset': { borderColor: '#7d9b17' }, '&.Mui-focused fieldset': { borderColor: '#7d9b17', borderWidth: '2px' } } }}
                 />
               </Grid>
 
               {/* Submit Button */}
-              <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'flex-end', mt: 1 }}>
-                <Button variant='contained' color='primary' type='submit' size='large' sx={{ px: 4, fontWeight: 700 }}>
-                  Update Password
-                </Button>
+              <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
+                <Tooltip title={!formik.dirty ? "Make changes to enable updating" : ""} placement="bottom" arrow>
+                  <span>
+                    <Button variant='contained' color='primary' type='submit' size='large' disabled={loading || !formik.dirty} sx={{ px: 4, fontWeight: 700, minWidth: '180px', position: 'relative' }}>
+                      {loading && <CircularProgress size={24} color="inherit" sx={{ position: 'absolute', top: '50%', left: '50%', marginTop: '-12px', marginLeft: '-12px' }} />}
+                      <span style={{ opacity: loading ? 0 : 1 }}>Update Password</span>
+                    </Button>
+                  </span>
+                </Tooltip>
               </Grid>
             </Grid>
           </Box>

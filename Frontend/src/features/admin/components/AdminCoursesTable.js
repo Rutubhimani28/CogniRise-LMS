@@ -293,7 +293,7 @@ export const AdminCoursesTable = () => {
     <Box sx={{ width: '100%' }} className='enaterpriseCourseWrap'>
       <Row className='justify-content-between align-items-center pb-3'>
         <Col md={6} className='mb-1'>
-          <Typography sx={{ fontSize: '1.3rem', color: '#4f46e5' }} variant='h6' className='addHeadingColor'>
+          <Typography sx={{ fontSize: '1.3rem', color: '#7d9b17' }} variant='h6' className='addHeadingColor'>
             Course Approvals
           </Typography>
         </Col>
@@ -335,7 +335,7 @@ export const AdminCoursesTable = () => {
               {loading ? (
                 <TableRow>
                   <TableCell colSpan={7} align="center" sx={{ height: '300px', borderBottom: 'none !important' }}>
-                    <CircularProgress sx={{ color: '#4f46e5' }} />
+                    <CircularProgress sx={{ color: '#7d9b17' }} />
                   </TableCell>
                 </TableRow>
               ) : filteredCourse.length === 0 ? (<TableRow><TableCell colSpan={7} align='center' sx={{ height: '300px', borderBottom: 'none !important' }}><Typography variant='h6' color='textSecondary'>No data found</Typography></TableCell></TableRow>) : stableSort(filteredCourse, getComparator(order, orderBy))
@@ -371,7 +371,7 @@ export const AdminCoursesTable = () => {
                       </TableCell>
                       <TableCell align='center' sx={{ py: 0.5, px: 1 }}>
                         <Link className='text-light text-decoration-none' href={`/courses/${row?.slug || 'unknown'}/${row?._id}`}>
-                          <Button variant='contained' size='small' sx={{ bgcolor: '#4f46e5', '&:hover': { bgcolor: '#4338ca' }, mr: 1, textTransform: 'none' }}>
+                          <Button variant='contained' size='small' sx={{ bgcolor: '#7d9b17', '&:hover': { bgcolor: '#4338ca' }, mr: 1, textTransform: 'none' }}>
                             Preview
                           </Button>
                         </Link>
@@ -424,14 +424,14 @@ export const AdminCoursesTable = () => {
         aria-describedby='modal-modal-description'
       >
         <Box sx={modalStyle}>
-          <Typography id='modal-modal-title' variant='h6' component='h2' color={'#4f46e5'}>
+          <Typography id='modal-modal-title' variant='h6' component='h2' color={'#7d9b17'}>
             Approval Confirmation
           </Typography>
           <Typography id='modal-modal-description' className='text-black mt-2'>
             Are you sure you want to approve this course?
           </Typography>
           <Box display={'flex'} justifyContent='end'>
-            <Button variant='outlined' onClick={() => modalApproveClose()} sx={{ mr: 2, mt: 3, color: '#4f46e5', borderColor: '#4f46e5', '&:hover': { borderColor: '#4338ca' }, textTransform: 'none' }}>
+            <Button variant='outlined' onClick={() => modalApproveClose()} sx={{ mr: 2, mt: 3, color: '#7d9b17', borderColor: '#7d9b17', '&:hover': { borderColor: '#4338ca' }, textTransform: 'none' }}>
               Cancel
             </Button>
             <Button variant='contained' disabled={isApproving} onClick={() => approveCourse(courseId)} sx={{ mt: 3, bgcolor: '#1976d2', '&:hover': { bgcolor: '#115293' }, textTransform: 'none' }}>

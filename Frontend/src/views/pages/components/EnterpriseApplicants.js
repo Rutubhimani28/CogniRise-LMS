@@ -27,7 +27,7 @@ export default function EnterpriseApplicants() {
   return (
     <div className='learnningTimeBox'>
       <div style={{ minHeight: '295.57px' }}>
-        <h2 className=' fw-bold pb-3' style={{ color: '#4f46e5' }}>
+        <h2 className=' fw-bold pb-3' style={{ color: '#7d9b17' }}>
           Enterprise Applicants
         </h2>
         <div>

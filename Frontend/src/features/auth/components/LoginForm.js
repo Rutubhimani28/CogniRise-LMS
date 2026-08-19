@@ -101,23 +101,23 @@ export const LoginForm = () => {
         <RightWrapper>
           <Box
             sx={{
-              p: [6, 12],
+              p: { xs: 4, sm: 6, md: 8 },
               height: '100%',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center'
             }}
           >
-            <Box sx={{ width: '100%', maxWidth: 400 }}>
-              <div className='pb-5 d-flex align-items-center justify-content-center w-100'>
-                <img src={imgConst.mainLogo} alt='LOGO' className='text-black' width={'80px'} height={'80px'} />
+            <Box sx={{ width: '100%' }}>
+              <div className='pb-4 d-flex align-items-center justify-content-center w-100'>
+                <img src={imgConst.mainLogo} alt='LOGO' className='text-black' width={'100px'} height={'100px'} />
               </div>
 
               <form noValidate autoComplete='off' onSubmit={handleSubmit(onSubmit)} className='auth-register-form'>
-                <InputLabel htmlFor='auth-login-v2-password' error={Boolean(errors.email)} className='text-black'>
+                <InputLabel htmlFor='auth-login-v2-email' error={Boolean(errors.email)} sx={{ color: '#333', mb: 1, fontWeight: 500 }}>
                   Email
                 </InputLabel>
-                <FormControl fullWidth sx={{ mb: 5 }}>
+                <FormControl fullWidth sx={{ mb: 4 }}>
                   <Controller
                     name='email'
                     control={control}
@@ -126,60 +126,58 @@ export const LoginForm = () => {
                       <TextField
                         autoFocus
                         value={value}
-                        className='custom-input'
-                        sx={{
-                          border: '1px solid black',
-                          borderRadius: '5px',
-                          '& input': {
-                            color: 'black'
-                          },
-                          '& input:focus': {
-                            color: 'black'
-                          }
-                        }}
+                        id='auth-login-v2-email'
                         onBlur={onBlur}
                         onChange={onChange}
-                        InputProps={{
-                          classes: { input: 'custom-input' }
-                        }}
                         placeholder='admin@example.com'
+                        error={Boolean(errors.email)}
+                        disabled={isSubmitting}
+                        sx={{
+                          '& .MuiOutlinedInput-root': {
+                            borderRadius: '8px',
+                            '&:hover fieldset': {
+                              borderColor: '#7d9b17',
+                            },
+                            '&.Mui-focused fieldset': {
+                              borderColor: '#7d9b17',
+                              borderWidth: '2px',
+                            },
+                          }
+                        }}
                       />
                     )}
                   />
                   {errors.email && <FormHelperText sx={{ color: 'error.main' }}>{errors.email.message}</FormHelperText>}
                 </FormControl>
-                <InputLabel htmlFor='auth-login-v2-password' error={Boolean(errors.password)} className='text-black'>
+
+                <InputLabel htmlFor='auth-login-v2-password' error={Boolean(errors.password)} sx={{ color: '#333', mb: 1, fontWeight: 500 }}>
                   Password
                 </InputLabel>
-                <FormControl fullWidth sx={{ mb: 1.5 }}>
+                <FormControl fullWidth sx={{ mb: 2 }}>
                   <Controller
                     name='password'
                     control={control}
                     rules={{ required: true }}
                     render={({ field: { value, onChange, onBlur } }) => (
                       <OutlinedInput
-                        className='custom-input'
                         value={value}
                         onBlur={onBlur}
-                        sx={{
-                          border: '1px solid black',
-                          borderRadius: '5px',
-                          '& input': {
-                            color: 'black'
-                          },
-                          '& input:focus': {
-                            color: 'black'
-                          }
-                        }}
                         onChange={onChange}
                         id='auth-login-v2-password'
                         error={Boolean(errors.password)}
                         type={showPassword ? 'text' : 'password'}
                         placeholder='Password'
-                        inputProps={{
-                          className: 'custom-input'
+                        disabled={isSubmitting}
+                        sx={{
+                          borderRadius: '8px',
+                          '&:hover .MuiOutlinedInput-notchedOutline': {
+                            borderColor: '#7d9b17',
+                          },
+                          '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                            borderColor: '#7d9b17',
+                            borderWidth: '2px',
+                          },
                         }}
-
                         endAdornment={
                           <InputAdornment position='end'>
                             <IconButton
@@ -200,15 +198,16 @@ export const LoginForm = () => {
                     </FormHelperText>
                   )}
                 </FormControl>
+
                 <Box
                   sx={{
-                    mb: 1.75,
+                    mb: 3,
                     display: 'flex',
                     flexWrap: 'wrap',
                     alignItems: 'center',
                     justifyContent: 'space-between',
                     '& .MuiTypography-root': {
-                      color: 'black !important',
+                      color: '#555 !important',
                       fontSize: '0.875rem'
                     }
                   }}
@@ -219,37 +218,56 @@ export const LoginForm = () => {
                       <Checkbox
                         checked={rememberMe}
                         onChange={e => setRememberMe(e.target.checked)}
-                        icon={
-                          <CheckBoxOutlineBlankIcon
-                            sx={{
-                              color: 'black',
-                              borderRadius: '6px'
-                            }}
-                          />
-                        }
-                        checkedIcon={<CheckBoxIcon />}
+                        sx={{
+                          color: '#ccc',
+                          '&.Mui-checked': {
+                            color: '#7d9b17',
+                          },
+                        }}
                       />
                     }
                   />
-                  <LinkStyled href='/forgot-password' className='text-black'>
+                  <LinkStyled href='/forgot-password' sx={{ color: '#7d9b17 !important', fontWeight: 500 }}>
                     Forgot Password?
                   </LinkStyled>
                 </Box>
-                <Button fullWidth size='large' type='submit' className='beforeLoginbtn' disabled={isSubmitting}>
+
+                <Button
+                  fullWidth
+                  size='large'
+                  type='submit'
+                  variant='contained'
+                  disabled={isSubmitting}
+                  sx={{
+                    backgroundColor: '#7d9b17',
+                    color: 'white',
+                    borderRadius: '8px',
+                    py: 1.5,
+                    fontWeight: 600,
+                    fontSize: '1rem',
+                    textTransform: 'none',
+                    boxShadow: '0 4px 14px 0 rgba(79, 70, 229, 0.39)',
+                    '&:hover': {
+                      backgroundColor: '#4338ca',
+                      boxShadow: '0 6px 20px rgba(79, 70, 229, 0.23)'
+                    }
+                  }}
+                >
                   {isSubmitting ? <CircularProgress size={24} color='inherit' /> : 'Login'}
                 </Button>
+
                 <Box
                   sx={{
                     display: 'flex',
                     alignItems: 'center',
                     flexWrap: 'wrap',
                     justifyContent: 'center',
-                    marginTop: '10px'
+                    marginTop: '24px'
                   }}
                 >
-                  <Typography sx={{ color: 'black', mr: 2 }}>New on our platform?</Typography>
+                  <Typography sx={{ color: '#555', mr: 1 }}>New on our platform?</Typography>
                   <Typography variant='body2'>
-                    <LinkStyled href='/register' className='text-black' sx={{ fontSize: '1rem' }}>
+                    <LinkStyled href='/register' sx={{ color: '#7d9b17 !important', fontWeight: 600, fontSize: '1rem' }}>
                       Create an account
                     </LinkStyled>
                   </Typography>

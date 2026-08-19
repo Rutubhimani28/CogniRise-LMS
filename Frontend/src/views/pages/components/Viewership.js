@@ -26,37 +26,44 @@ export default function Viewership(props) {
   const [monthHaver, setManthHover] = useState('')
   const [monthAddUsers, setMonthAddUsers] = useState('')
   const [manthCompletedgraduation, setManthCompletedgraduation] = useState('')
-  const user = JSON.parse(window.localStorage.getItem('userData'))
-
-  const enterpriseID = { enterpriseID: user?.id }
+  const [user, setUser] = useState(null)
 
   useEffect(() => {
-    requestApiData
-      .enterpriseViewers(enterpriseID)
-      .then(res => {
-        setViewers(res?.data?.Totalusersinmanth)
-      })
-      .catch(err => {
-        console.log('Get all categories', err)
-      })
-
-    requestApiData
-      .enterpriseCompletedgraduations(enterpriseID)
-      .then(res => {
-        setCompletedgraduations(res?.data?.Totalusersinmanth)
-      })
-      .catch(err => {
-        console.log('Get all categories', err)
-      })
-    requestApiData
-      .enterpriseMonthUser(enterpriseID)
-      .then(res => {
-        setMonthUser(res?.data?.Totalusersinmanth)
-      })
-      .catch(err => {
-        console.log('Get all categories', err)
-      })
+    if (typeof window !== 'undefined') {
+      setUser(JSON.parse(window.localStorage.getItem('userData')))
+    }
   }, [])
+
+  useEffect(() => {
+    if (user?.id) {
+      const enterpriseID = { enterpriseID: user.id }
+      requestApiData
+        .enterpriseViewers(enterpriseID)
+        .then(res => {
+          setViewers(res?.data?.Totalusersinmanth)
+        })
+        .catch(err => {
+          console.log('Get all categories', err)
+        })
+
+      requestApiData
+        .enterpriseCompletedgraduations(enterpriseID)
+        .then(res => {
+          setCompletedgraduations(res?.data?.Totalusersinmanth)
+        })
+        .catch(err => {
+          console.log('Get all categories', err)
+        })
+      requestApiData
+        .enterpriseMonthUser(enterpriseID)
+        .then(res => {
+          setMonthUser(res?.data?.Totalusersinmanth)
+        })
+        .catch(err => {
+          console.log('Get all categories', err)
+        })
+    }
+  }, [user])
 
   const viewer = Object?.keys(viewers)
     ?.filter(key => key.includes(new Date()?.getFullYear()))
@@ -402,7 +409,7 @@ export default function Viewership(props) {
           <TabPane tabId='1'>
             <h2
               style={{
-                color: '#4f46e5',
+                color: '#7d9b17',
                 fontWeight: '500',
                 fontSize: '34px',
                 paddingBottom: '18px',

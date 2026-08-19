@@ -69,7 +69,8 @@ const AuthProvider = ({ children }) => {
         })
       })
       .catch(err => {
-        toast.error(err?.response?.data?.error)
+        if (errorCallback) errorCallback(err)
+        toast.error(err?.response?.data?.error || 'Login failed')
       })
   }
 

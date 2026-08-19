@@ -475,6 +475,23 @@ code[class*='language-'] {
   background: Red !important;
 }
 
+/* Table heading text white */
+.MuiTableCell-head {
+  color: white !important;
+}
+
+/* Button default white background, #7d9b17 text; hover #7d9b17 background, white text */
+.MuiButton-root {
+  background-color: white !important;
+  color: #7d9b17 !important;
+}
+
+.MuiButton-root:hover {
+  background-color: #7d9b17 !important;
+  color: white !important;
+}
+
+
 /* login */
 .login-page {
   /* background-image: url(../public/images/landingpage/bg-hero\ 1.png); */
@@ -510,8 +527,9 @@ code[class*='language-'] {
   background-color: white !important;
 } */
 .login-wrap {
-  height: 580px;
-  width: 550px;
+  min-height: auto;
+  width: 100%;
+  max-width: 450px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -621,7 +639,7 @@ code[class*='language-'] {
 }
 
 .addHeadingColor {
-  color: #4f46e5 !important;
+  color: #7d9b17 !important;
 }
 
 .list-unstyled a {
@@ -646,11 +664,13 @@ code[class*='language-'] {
 } */
 
 /* Custom autofill styling for input fields */
+input:-webkit-autofill,
 .custom-input:-webkit-autofill {
   -webkit-box-shadow: 0 0 0 100px white inset !important;
   -webkit-text-fill-color: black !important;
 }
 
+input:-webkit-autofill:focus,
 .custom-input:-webkit-autofill:focus {
   -webkit-box-shadow: 0 0 0 100px white inset !important;
   -webkit-text-fill-color: black !important;

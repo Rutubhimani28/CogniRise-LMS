@@ -130,22 +130,12 @@ export const CourseListingCatalog = () => {
     }
   }, [data])
 
-  const le = () => {
-    requestApiData.TotalCouses().then(res => {
-      SetcardDetails(res.data)
-    })
-  }
-
   for (var i = 0; i < lev.length; i++) {
     let data = lev[i].level
     if (objlevel[data] === undefined) {
       objlevel[data] = true
     }
   }
-
-  useEffect(() => {
-    le()
-  }, [])
 
   const searchCourse = e => {
     const query = e.target.value.toLowerCase()
@@ -184,6 +174,7 @@ export const CourseListingCatalog = () => {
   }
 
   const applyFilters = (levels, duration) => {
+    setLoading(true)
     requestApiData.TotalCouses().then(res => {
       let filteredData = res.data
 
@@ -202,7 +193,8 @@ export const CourseListingCatalog = () => {
       })
 
       SetcardDetails(filteredData)
-    })
+      setLoading(false)
+    }).catch(() => setLoading(false))
   }
 
   const handleChangeSlider = e => {
@@ -259,7 +251,7 @@ export const CourseListingCatalog = () => {
           }}
         >
           {/* LEVEL */}
-          <Typography variant='subtitle1' sx={{ mb: 1, fontWeight: 700, fontSize: '1.1rem', color: '#4f46e5' }}>
+          <Typography variant='subtitle1' sx={{ mb: 1, fontWeight: 700, fontSize: '1.1rem', color: '#7d9b17' }}>
             Level
           </Typography>
           <FormGroup sx={{ mb: 4 }}>
@@ -272,8 +264,8 @@ export const CourseListingCatalog = () => {
                     value={el.name}
                     name={el.name}
                     onChange={handlechange}
-                    icon={<RadioButtonUncheckedIcon sx={{ color: '#4f46e5' }} />}
-                    checkedIcon={<RadioButtonCheckedIcon sx={{ color: '#4f46e5' }} />}
+                    icon={<RadioButtonUncheckedIcon sx={{ color: '#7d9b17' }} />}
+                    checkedIcon={<RadioButtonCheckedIcon sx={{ color: '#7d9b17' }} />}
                   />
                 }
                 label={el.name}
@@ -288,7 +280,7 @@ export const CourseListingCatalog = () => {
           </FormGroup>
 
           {/* DURATION */}
-          <Typography variant='subtitle1' sx={{ fontWeight: 700, fontSize: '1.1rem', color: '#4f46e5' }}>
+          <Typography variant='subtitle1' sx={{ fontWeight: 700, fontSize: '1.1rem', color: '#7d9b17' }}>
             Duration
           </Typography>
           <Box
@@ -342,7 +334,7 @@ export const CourseListingCatalog = () => {
           </Box>
 
           {/* ACTIVE FILTERS */}
-          <Typography variant='subtitle1' sx={{ pt: 4, fontWeight: 700, fontSize: '1.1rem', color: '#4f46e5' }}>
+          <Typography variant='subtitle1' sx={{ pt: 4, fontWeight: 700, fontSize: '1.1rem', color: '#7d9b17' }}>
             Active Filters
           </Typography>
 
@@ -386,7 +378,7 @@ export const CourseListingCatalog = () => {
             pb: 3
           }}
         >
-          <Typography variant='h4' sx={{ color: '#4f46e5', fontWeight: 700, mb: 3 }} gutterBottom>
+          <Typography variant='h4' sx={{ color: '#7d9b17', fontWeight: 700, mb: 3 }} gutterBottom>
             Explore Courses
           </Typography>
 
@@ -396,7 +388,7 @@ export const CourseListingCatalog = () => {
               onChange={searchCourse}
               startAdornment={
                 <InputAdornment position='start'>
-                  <HiSearch size={22} color='#4f46e5' />
+                  <HiSearch size={22} color='#7d9b17' />
                 </InputAdornment>
               }
               sx={{
@@ -410,10 +402,10 @@ export const CourseListingCatalog = () => {
                   borderWidth: '1px',
                 },
                 '&:hover fieldset': {
-                  borderColor: '#4f46e5',
+                  borderColor: '#7d9b17',
                 },
                 '&.Mui-focused fieldset': {
-                  borderColor: '#4f46e5',
+                  borderColor: '#7d9b17',
                   borderWidth: '2px',
                 },
                 '&.Mui-focused': {
@@ -425,7 +417,7 @@ export const CourseListingCatalog = () => {
 
           {loading ? (
             <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '400px' }}>
-              <CircularProgress sx={{ color: '#4f46e5' }} size={60} thickness={4} />
+              <CircularProgress sx={{ color: '#7d9b17' }} size={60} thickness={4} />
             </Box>
           ) : AllData?.length === 0 ? (
             <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', minHeight: '400px', textAlign: 'center' }}>
@@ -463,7 +455,7 @@ export const CourseListingCatalog = () => {
                       <Typography variant='h6' sx={{ fontWeight: 700, mb: 1, lineHeight: 1.3 }}>
                         {item.title}
                       </Typography>
-                      <Typography variant='subtitle2' sx={{ color: '#4f46e5', mb: 1, fontWeight: 600 }}>
+                      <Typography variant='subtitle2' sx={{ color: '#7d9b17', mb: 1, fontWeight: 600 }}>
                         {item.category}
                       </Typography>
                       <Typography variant='body2' sx={{ color: '#555', mb: 2, flexGrow: 1 }}>
@@ -476,7 +468,7 @@ export const CourseListingCatalog = () => {
                           <HiStar color='#FFD700' size={18} />
                           <Typography variant='body2' sx={{ color: '#777', whiteSpace: 'nowrap' }}>({item.review || 0} Reviews)</Typography>
                         </Box>
-                        <Chip label={item.level || 'Beginner'} size='small' sx={{ backgroundColor: 'rgba(79, 70, 229, 0.1)', color: '#4f46e5', fontWeight: 600 }} />
+                        <Chip label={item.level || 'Beginner'} size='small' sx={{ backgroundColor: 'rgba(79, 70, 229, 0.1)', color: '#7d9b17', fontWeight: 600 }} />
                       </Box>
 
                       <Button
@@ -487,7 +479,7 @@ export const CourseListingCatalog = () => {
                           setEnrollCourse(item)
                         }}
                         sx={{
-                          backgroundColor: '#4f46e5',
+                          backgroundColor: '#7d9b17',
                           color: 'white',
                           '&:hover': { backgroundColor: '#4338ca' },
                           py: 1,
@@ -538,7 +530,7 @@ export const CourseListingCatalog = () => {
         }}
       >
         <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', pb: 1 }}>
-          <Typography variant='h5' sx={{ fontWeight: 700, color: '#4f46e5' }}>
+          <Typography variant='h5' sx={{ fontWeight: 700, color: '#7d9b17' }}>
             Confirm Enrollment
           </Typography>
           <IconButton onClick={() => setHandlEnrollModel(false)} size='small'>
@@ -555,8 +547,8 @@ export const CourseListingCatalog = () => {
             variant='outlined'
             onClick={() => setHandlEnrollModel(false)}
             sx={{
-              borderColor: '#4f46e5',
-              color: '#4f46e5',
+              borderColor: '#7d9b17',
+              color: '#7d9b17',
               borderRadius: '8px',
               px: 4,
               py: 1,
@@ -571,7 +563,7 @@ export const CourseListingCatalog = () => {
             disabled={isEnrolling}
             onClick={() => enrollCourseStudent(enrollCourse)}
             sx={{
-              backgroundColor: '#4f46e5',
+              backgroundColor: '#7d9b17',
               color: 'white',
               borderRadius: '8px',
               px: 4,

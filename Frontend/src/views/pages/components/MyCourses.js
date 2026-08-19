@@ -81,7 +81,7 @@ export default function MyCourses({ studentCourse }) {
         <h5 className='text-black m-0' style={{ fontWeight: 700 }}>My Courses</h5>
         <button
           onClick={() => router.push('/Course-listing')}
-          style={{ backgroundColor: '#4f46e5', color: 'white', border: 'none', borderRadius: '8px', padding: '8px 20px', fontWeight: 600, cursor: 'pointer' }}
+          style={{ backgroundColor: '#7d9b17', color: 'white', border: 'none', borderRadius: '8px', padding: '8px 20px', fontWeight: 600, cursor: 'pointer' }}
         >
           Explore Courses
         </button>
@@ -115,7 +115,7 @@ export default function MyCourses({ studentCourse }) {
                       <span style={{ fontSize: '12px', color: '#777' }}>Next up:</span>
                       <CardText
                         className='cursor-pointer m-0'
-                        style={{ fontWeight: 600, color: '#4f46e5' }}
+                        style={{ fontWeight: 600, color: '#7d9b17' }}
                         onClick={() =>
                           nextLesson(
                             item?.course_slug,
@@ -133,14 +133,14 @@ export default function MyCourses({ studentCourse }) {
                   ) : item.completeTask?.length === item.totalTask ? (
                     <span style={{ fontWeight: 600, color: '#28a745' }}>Completed</span>
                   ) : (
-                    <span style={{ fontWeight: 600, color: '#4f46e5' }}>Start Course</span>
+                    <span style={{ fontWeight: 600, color: '#7d9b17' }}>Start Course</span>
                   )}
                 </div>
               </div>
             ))}
           </div>
           <div className='text-end mt-3'>
-            <Link href='/my-all-courses' style={{ textDecoration: 'none', color: '#4f46e5', fontWeight: 600 }}>
+            <Link href='/my-all-courses' style={{ textDecoration: 'none', color: '#7d9b17', fontWeight: 600 }}>
               View all
               <HiArrowNarrowRight className='ms-1' />
             </Link>

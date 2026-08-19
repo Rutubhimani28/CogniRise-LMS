@@ -30,7 +30,7 @@ export default function CoursesPendingApproval() {
                 if (r?.status === 200) {
                   nameMap[id] = r.data?.profile?.name || r.data?.name || r.data?.email || id
                 }
-              }).catch(() => {})
+              }).catch(() => { })
             )
           ).then(() => setUsersMap({ ...nameMap }))
         }
@@ -54,14 +54,14 @@ export default function CoursesPendingApproval() {
   const getCreatorName = (createdBy, createdName) => {
     if (usersMap[createdBy]) return usersMap[createdBy]
     if (createdName) return createdName
-    
-return ''
+
+    return ''
   }
 
   const getCategoryName = (categoryId) => {
     const found = categories.find(cat => cat._id === categoryId)
-    
-return found ? found.name : categoryId
+
+    return found ? found.name : categoryId
   }
 
   return (
@@ -69,7 +69,7 @@ return found ? found.name : categoryId
       <div style={{ minHeight: '291.57px' }}>
         <h5
           className='fw-bold pb-1 '
-          style={{ color: '#4f46e5', fontSize: window.innerWidth <= 600 ? '22px' : '30px' }}
+          style={{ color: '#7d9b17', fontSize: window.innerWidth <= 600 ? '22px' : '30px' }}
         >
           Courses Pending Approval
         </h5>

@@ -58,7 +58,7 @@ const ModulesData = () => {
     <Box sx={{ width: '100%', p: 3 }} className='moduleWrap'>
       <Row className='justify-content-between align-items-center pb-3'>
         <Col md={6} className='mb-1'>
-          <Typography sx={{ fontSize: '1.3rem', color: '#4f46e5' }} variant='h6' className='addHeadingColor'>
+          <Typography sx={{ fontSize: '1.3rem', color: '#7d9b17' }} variant='h6' className='addHeadingColor'>
             Modules
           </Typography>
         </Col>
@@ -93,7 +93,7 @@ const ModulesData = () => {
             {loading ? (
               <TableRow>
                 <TableCell colSpan={2} align="center" sx={{ height: '300px', borderBottom: 'none !important' }}>
-                  <CircularProgress sx={{ color: '#4f46e5' }} />
+                  <CircularProgress sx={{ color: '#7d9b17' }} />
                 </TableCell>
               </TableRow>
             ) : filteredModules.length > 0 ? (

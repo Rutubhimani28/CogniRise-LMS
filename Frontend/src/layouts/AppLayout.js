@@ -66,7 +66,7 @@ export const AppLayout = ({ children }) => {
                 href={user?.role === 'admin' ? '/admin-enterprises' : user?.role === 'enterprise' ? '/enterprise' : '/student'}
                 sx={{
                   textDecoration: 'none',
-                  color: '#4f46e5',
+                  color: '#7d9b17',
                   fontWeight: 800,
                   fontSize: '1.4rem',
                   letterSpacing: '0.5px'
@@ -79,24 +79,32 @@ export const AppLayout = ({ children }) => {
               <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 1 }}>
                 {navLinks.map(link => {
                   const isActive = router.pathname === link.href
-                  
-return (
-                    <Button
+
+                  return (
+                    <Typography
                       key={link.href}
                       component={Link}
                       href={link.href}
                       sx={{
-                        color: isActive ? '#4f46e5' : '#4B465C',
-                        backgroundColor: isActive ? 'rgba(79, 70, 229, 0.12)' : 'transparent',
-                        fontWeight: isActive ? 700 : 500,
+                        textDecoration: 'none',
+                        color: isActive ? '#7d9b17 !important' : '#4B465C !important',
+                        fontWeight: isActive ? 700 : 600,
+                        fontSize: '1rem',
+                        minWidth: '140px',
+                        height: '42px',
+                        borderRadius: '8px',
+                        transition: 'all 0.2s',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
                         '&:hover': {
-                          backgroundColor: 'rgba(79, 70, 229, 0.08)',
-                          color: '#4f46e5'
+                          color: '#7d9b17 !important',
+                          backgroundColor: 'rgba(125, 155, 23, 0.08) !important'
                         }
                       }}
                     >
                       {link.label}
-                    </Button>
+                    </Typography>
                   )
                 })}
               </Box>
@@ -121,7 +129,7 @@ return (
                         sx={{
                           width: 36,
                           height: 36,
-                          bgcolor: '#4f46e5',
+                          bgcolor: '#7d9b17',
                           fontSize: '0.9rem',
                           fontWeight: 700
                         }}
@@ -174,7 +182,7 @@ return (
                           fontSize: '0.7rem',
                           height: 24,
                           backgroundColor: 'rgba(79, 70, 229, 0.12)',
-                          color: '#4f46e5',
+                          color: '#7d9b17',
                           border: '1px solid rgba(79, 70, 229, 0.3)'
                         }}
                       />

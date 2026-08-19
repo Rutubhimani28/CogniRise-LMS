@@ -427,7 +427,7 @@ export const CourseCreationForm = () => {
                     variant='contained'
                     onClick={() => nextTab()}
                     sx={{
-                      bgcolor: '#4f46e5',
+                      bgcolor: '#7d9b17',
                       color: 'white',
                       fontWeight: 600,
                       px: 4,
@@ -454,8 +454,8 @@ export const CourseCreationForm = () => {
                     variant='outlined'
                     onClick={() => backTab()}
                     sx={{
-                      borderColor: '#4f46e5',
-                      color: '#4f46e5',
+                      borderColor: '#7d9b17',
+                      color: '#7d9b17',
                       fontWeight: 600,
                       px: 4,
                       py: 1.5,
@@ -476,8 +476,8 @@ export const CourseCreationForm = () => {
                         formik.handleSubmit(), setUserStatus({ status: 'draft' })
                       }}
                       sx={{
-                        borderColor: '#4f46e5',
-                        color: '#4f46e5',
+                        borderColor: '#7d9b17',
+                        color: '#7d9b17',
                         fontWeight: 600,
                         px: 4,
                         py: 1.5,
@@ -496,7 +496,7 @@ export const CourseCreationForm = () => {
                         formik.handleSubmit(), setUserStatus({ status: 'pending' })
                       }}
                       sx={{
-                        bgcolor: '#4f46e5',
+                        bgcolor: '#7d9b17',
                         color: 'white',
                         fontWeight: 600,
                         px: 4,

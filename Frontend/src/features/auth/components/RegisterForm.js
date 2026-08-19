@@ -15,7 +15,7 @@ import IconButton from '@mui/material/IconButton'
 import Icon from 'src/@core/components/icon'
 import FormHelperText from '@mui/material/FormHelperText'
 import Button from '@mui/material/Button'
-import { MenuItem, Select } from '@mui/material'
+import { MenuItem, Select, Tooltip } from '@mui/material'
 
 import imgConst from 'src/configs/imgConst'
 
@@ -139,8 +139,8 @@ export const RegisterForm = () => {
           <RightWrapper>
             <Box
               sx={{
-                p: [6, 12],
-                height: '100%',
+                p: [4, 6],
+                height: 'auto',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center'
@@ -152,24 +152,27 @@ export const RegisterForm = () => {
                 </div>
 
                 <form noValidate autoComplete='off' onSubmit={formik1.handleSubmit} className='auth-register-form'>
-                  <InputLabel htmlFor='register-email' error={Boolean(formik1.errors.email && formik1.touched.email)} className='text-black'>
-                    Email
+                  <InputLabel htmlFor='register-email' error={Boolean(formik1.errors.email && formik1.touched.email)} sx={{ color: '#333', mb: 1, fontWeight: 500 }}>
+                    Email <span style={{ color: 'red' }}>*</span>
                   </InputLabel>
-                  <FormControl fullWidth sx={{ mb: 3 }}>
+                  <FormControl fullWidth sx={{ mb: 2 }}>
                     <TextField
+                      size='small'
                       autoFocus
                       name='email'
                       id='register-email'
                       value={formik1.values.email}
                       className='custom-input'
                       sx={{
-                        border: '1px solid black',
-                        borderRadius: '5px',
-                        '& input': {
-                          color: 'black'
-                        },
-                        '& input:focus': {
-                          color: 'black'
+                        '& .MuiOutlinedInput-root': {
+                          borderRadius: '8px',
+                          '&:hover fieldset': {
+                            borderColor: '#7d9b17',
+                          },
+                          '&.Mui-focused fieldset': {
+                            borderColor: '#7d9b17',
+                            borderWidth: '2px',
+                          },
                         }
                       }}
                       onBlur={formik1.handleBlur}
@@ -185,11 +188,12 @@ export const RegisterForm = () => {
                     )}
                   </FormControl>
 
-                  <InputLabel htmlFor='register-password' error={Boolean(formik1.errors.password && formik1.touched.password)} className='text-black'>
-                    Password
+                  <InputLabel htmlFor='register-password' error={Boolean(formik1.errors.password && formik1.touched.password)} sx={{ color: '#333', mb: 1, fontWeight: 500 }}>
+                    Password <span style={{ color: 'red' }}>*</span>
                   </InputLabel>
-                  <FormControl fullWidth sx={{ mb: 3 }}>
+                  <FormControl fullWidth sx={{ mb: 2 }}>
                     <OutlinedInput
+                      size='small'
                       name='password'
                       id='register-password'
                       className='custom-input'
@@ -197,14 +201,14 @@ export const RegisterForm = () => {
                       onBlur={formik1.handleBlur}
                       onChange={formik1.handleChange}
                       sx={{
-                        border: '1px solid black',
-                        borderRadius: '5px',
-                        '& input': {
-                          color: 'black'
+                        borderRadius: '8px',
+                        '&:hover .MuiOutlinedInput-notchedOutline': {
+                          borderColor: '#7d9b17',
                         },
-                        '& input:focus': {
-                          color: 'black'
-                        }
+                        '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                          borderColor: '#7d9b17',
+                          borderWidth: '2px',
+                        },
                       }}
                       error={Boolean(formik1.errors.password && formik1.touched.password)}
                       type={showPassword ? 'text' : 'password'}
@@ -229,11 +233,12 @@ export const RegisterForm = () => {
                     )}
                   </FormControl>
 
-                  <InputLabel htmlFor='register-confirmpassword' error={Boolean(formik1.errors.confirmPassword && formik1.touched.confirmPassword)} className='text-black'>
-                    Confirm Password
+                  <InputLabel htmlFor='register-confirmpassword' error={Boolean(formik1.errors.confirmPassword && formik1.touched.confirmPassword)} sx={{ color: '#333', mb: 1, fontWeight: 500 }}>
+                    Confirm Password <span style={{ color: 'red' }}>*</span>
                   </InputLabel>
-                  <FormControl fullWidth sx={{ mb: 4 }}>
+                  <FormControl fullWidth sx={{ mb: 3 }}>
                     <OutlinedInput
+                      size='small'
                       name='confirmPassword'
                       id='register-confirmpassword'
                       className='custom-input'
@@ -241,14 +246,14 @@ export const RegisterForm = () => {
                       onBlur={formik1.handleBlur}
                       onChange={formik1.handleChange}
                       sx={{
-                        border: '1px solid black',
-                        borderRadius: '5px',
-                        '& input': {
-                          color: 'black'
+                        borderRadius: '8px',
+                        '&:hover .MuiOutlinedInput-notchedOutline': {
+                          borderColor: '#7d9b17',
                         },
-                        '& input:focus': {
-                          color: 'black'
-                        }
+                        '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                          borderColor: '#7d9b17',
+                          borderWidth: '2px',
+                        },
                       }}
                       error={Boolean(formik1.errors.confirmPassword && formik1.touched.confirmPassword)}
                       type={showConfirmPassword ? 'text' : 'password'}
@@ -273,9 +278,33 @@ export const RegisterForm = () => {
                     )}
                   </FormControl>
 
-                  <Button fullWidth size='large' type='submit' className='beforeLoginbtn'>
-                    Next
-                  </Button>
+                  <Tooltip title={!(formik1.isValid && formik1.dirty) ? "Fill all required fields to proceed" : ""} placement="top" arrow>
+                    <span>
+                      <Button
+                        fullWidth
+                        size='large'
+                        type='submit'
+                        variant='contained'
+                        disabled={!(formik1.isValid && formik1.dirty)}
+                        sx={{
+                          backgroundColor: '#7d9b17',
+                          color: 'white',
+                          borderRadius: '8px',
+                          py: 1.5,
+                          fontWeight: 600,
+                          fontSize: '1rem',
+                          textTransform: 'none',
+                          boxShadow: '0 4px 14px 0 rgba(79, 70, 229, 0.39)',
+                          '&:hover': {
+                            backgroundColor: '#4338ca',
+                            boxShadow: '0 6px 20px rgba(79, 70, 229, 0.23)'
+                          }
+                        }}
+                      >
+                        Next
+                      </Button>
+                    </span>
+                  </Tooltip>
 
                   <Box
                     sx={{
@@ -283,12 +312,12 @@ export const RegisterForm = () => {
                       alignItems: 'center',
                       flexWrap: 'wrap',
                       justifyContent: 'center',
-                      marginTop: '20px'
+                      marginTop: '24px'
                     }}
                   >
-                    <Typography sx={{ color: 'black', mr: 2 }}>If you already have an account?</Typography>
+                    <Typography sx={{ color: '#555', mr: 1 }}>If you already have an account?</Typography>
                     <Typography variant='body2'>
-                      <LinkStyled href='/login' className='text-black' sx={{ fontSize: '1rem' }}>
+                      <LinkStyled href='/login' sx={{ color: '#7d9b17 !important', fontWeight: 600, fontSize: '1rem' }}>
                         Sign In
                       </LinkStyled>
                     </Typography>
@@ -301,211 +330,229 @@ export const RegisterForm = () => {
       )}
 
       {show && (
-        <Box className='login-wrap' sx={{ height: 'auto', maxHeight: '90vh', overflowY: 'auto', width: '700px', py: 4 }}>
-          <RightWrapper sx={{ maxWidth: '100% !important' }}>
-            <Box
-              sx={{
-                p: [4, 8],
-                height: '100%',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center'
-              }}
-            >
-              <Box sx={{ width: '100%' }}>
-                <Typography variant='h5' className='text-black mb-4' sx={{ fontWeight: 'bold' }}>
-                  Profile Details
-                </Typography>
+        <Box className='login-wrap' sx={{ height: 'auto', maxHeight: '95vh', overflowY: 'auto', width: '100%', maxWidth: '850px', p: { xs: 2, sm: 3, md: 4 } }}>
+          <Box sx={{ width: '100%' }}>
+            <Typography variant='h5' sx={{ color: '#333', fontWeight: 'bold', mb: 2 }}>
+              Profile Details
+            </Typography>
 
-                <form noValidate autoComplete='off' onSubmit={formik2.handleSubmit} className='auth-register-form'>
-                  <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 3 }}>
-                    <Box>
-                      <InputLabel className='text-black'>Name</InputLabel>
-                      <FormControl fullWidth>
-                        <TextField
-                          name='name'
-                          value={formik2.values.name || ''}
-                          className='custom-input'
-                          sx={{ border: '1px solid black', borderRadius: '5px', '& input': { color: 'black' } }}
-                          onBlur={formik2.handleBlur}
-                          onChange={formik2.handleChange}
-                          error={Boolean(formik2.errors.name && formik2.touched.name)}
-                        />
-                        {formik2.errors.name && formik2.touched.name && (
-                          <FormHelperText sx={{ color: 'error.main' }}>{formik2.errors.name}</FormHelperText>
-                        )}
-                      </FormControl>
-                    </Box>
+            <form noValidate autoComplete='off' onSubmit={formik2.handleSubmit} className='auth-register-form'>
+              <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', md: '1fr 1fr 1fr' }, gap: 2 }}>
+                <Box>
+                  <InputLabel sx={{ color: '#333', mb: 0.5, fontWeight: 500 }}>Name <span style={{ color: 'red' }}>*</span></InputLabel>
+                  <FormControl fullWidth>
+                    <TextField
+                      size="small"
+                      name='name'
+                      value={formik2.values.name || ''}
+                      sx={{ '& .MuiOutlinedInput-root': { borderRadius: '8px', '&:hover fieldset': { borderColor: '#7d9b17' }, '&.Mui-focused fieldset': { borderColor: '#7d9b17', borderWidth: '2px' } } }}
+                      onBlur={formik2.handleBlur}
+                      onChange={formik2.handleChange}
+                      error={Boolean(formik2.errors.name && formik2.touched.name)}
+                    />
+                    {formik2.errors.name && formik2.touched.name && (
+                      <FormHelperText sx={{ color: 'error.main' }}>{formik2.errors.name}</FormHelperText>
+                    )}
+                  </FormControl>
+                </Box>
 
-                    <Box>
-                      <InputLabel className='text-black'>Graduation</InputLabel>
-                      <FormControl fullWidth>
-                        <TextField
-                          name='graduation'
-                          value={formik2.values.graduation || ''}
-                          className='custom-input'
-                          sx={{ border: '1px solid black', borderRadius: '5px', '& input': { color: 'black' } }}
-                          onChange={formik2.handleChange}
-                        />
-                      </FormControl>
-                    </Box>
+                <Box>
+                  <InputLabel sx={{ color: '#333', mb: 0.5, fontWeight: 500 }}>Graduation</InputLabel>
+                  <FormControl fullWidth>
+                    <TextField
+                      size="small"
+                      name='graduation'
+                      value={formik2.values.graduation || ''}
+                      sx={{ '& .MuiOutlinedInput-root': { borderRadius: '8px', '&:hover fieldset': { borderColor: '#7d9b17' }, '&.Mui-focused fieldset': { borderColor: '#7d9b17', borderWidth: '2px' } } }}
+                      onChange={formik2.handleChange}
+                    />
+                  </FormControl>
+                </Box>
 
-                    <Box sx={{ gridColumn: '1 / -1' }}>
-                      <InputLabel className='text-black'>Profile Slug</InputLabel>
-                      <FormControl fullWidth>
-                        <TextField
-                          name='profileSlug'
-                          value={formik2.values.profileSlug || ''}
-                          className='custom-input'
-                          sx={{ border: '1px solid black', borderRadius: '5px', '& input': { color: 'black' } }}
-                          onChange={formik2.handleChange}
-                        />
-                        <FormHelperText sx={{ color: 'black' }}>
-                          Profile Link: https://collegedao.io/person/{formik2.values.profileSlug}
-                        </FormHelperText>
-                      </FormControl>
-                    </Box>
+                <Box>
+                  <InputLabel sx={{ color: '#333', mb: 0.5, fontWeight: 500 }}>Profile Slug</InputLabel>
+                  <FormControl fullWidth>
+                    <TextField
+                      size="small"
+                      name='profileSlug'
+                      value={formik2.values.profileSlug || ''}
+                      sx={{ '& .MuiOutlinedInput-root': { borderRadius: '8px', '&:hover fieldset': { borderColor: '#7d9b17' }, '&.Mui-focused fieldset': { borderColor: '#7d9b17', borderWidth: '2px' } } }}
+                      onChange={formik2.handleChange}
+                    />
+                    <FormHelperText sx={{ color: '#555' }}>
+                      Profile Link: https://collegedao.io/person/{formik2.values.profileSlug}
+                    </FormHelperText>
+                  </FormControl>
+                </Box>
 
-                    <Box>
-                      <InputLabel className='text-black'>Major</InputLabel>
-                      <FormControl fullWidth>
-                        <TextField
-                          name='major'
-                          value={formik2.values.major || ''}
-                          className='custom-input'
-                          sx={{ border: '1px solid black', borderRadius: '5px', '& input': { color: 'black' } }}
-                          onChange={formik2.handleChange}
-                        />
-                      </FormControl>
-                    </Box>
+                <Box>
+                  <InputLabel sx={{ color: '#333', mb: 0.5, fontWeight: 500 }}>Major</InputLabel>
+                  <FormControl fullWidth>
+                    <TextField
+                      size="small"
+                      name='major'
+                      value={formik2.values.major || ''}
+                      sx={{ '& .MuiOutlinedInput-root': { borderRadius: '8px', '&:hover fieldset': { borderColor: '#7d9b17' }, '&.Mui-focused fieldset': { borderColor: '#7d9b17', borderWidth: '2px' } } }}
+                      onChange={formik2.handleChange}
+                    />
+                  </FormControl>
+                </Box>
 
-                    <Box>
-                      <InputLabel className='text-black'>Minor</InputLabel>
-                      <FormControl fullWidth>
-                        <TextField
-                          name='minor'
-                          value={formik2.values.minor || ''}
-                          className='custom-input'
-                          sx={{ border: '1px solid black', borderRadius: '5px', '& input': { color: 'black' } }}
-                          onChange={formik2.handleChange}
-                        />
-                      </FormControl>
-                    </Box>
+                <Box>
+                  <InputLabel sx={{ color: '#333', mb: 0.5, fontWeight: 500 }}>Minor</InputLabel>
+                  <FormControl fullWidth>
+                    <TextField
+                      size="small"
+                      name='minor'
+                      value={formik2.values.minor || ''}
+                      sx={{ '& .MuiOutlinedInput-root': { borderRadius: '8px', '&:hover fieldset': { borderColor: '#7d9b17' }, '&.Mui-focused fieldset': { borderColor: '#7d9b17', borderWidth: '2px' } } }}
+                      onChange={formik2.handleChange}
+                    />
+                  </FormControl>
+                </Box>
 
-                    <Box>
-                      <InputLabel className='text-black'>University</InputLabel>
-                      <FormControl fullWidth>
-                        <TextField
-                          name='university'
-                          value={formik2.values.university || ''}
-                          className='custom-input'
-                          sx={{ border: '1px solid black', borderRadius: '5px', '& input': { color: 'black' } }}
-                          onChange={formik2.handleChange}
-                        />
-                      </FormControl>
-                    </Box>
+                <Box>
+                  <InputLabel sx={{ color: '#333', mb: 0.5, fontWeight: 500 }}>University</InputLabel>
+                  <FormControl fullWidth>
+                    <TextField
+                      size="small"
+                      name='university'
+                      value={formik2.values.university || ''}
+                      sx={{ '& .MuiOutlinedInput-root': { borderRadius: '8px', '&:hover fieldset': { borderColor: '#7d9b17' }, '&.Mui-focused fieldset': { borderColor: '#7d9b17', borderWidth: '2px' } } }}
+                      onChange={formik2.handleChange}
+                    />
+                  </FormControl>
+                </Box>
 
-                    <Box>
-                      <InputLabel className='text-black'>Location</InputLabel>
-                      <FormControl fullWidth>
-                        <TextField
-                          name='location'
-                          value={formik2.values.location || ''}
-                          className='custom-input'
-                          sx={{ border: '1px solid black', borderRadius: '5px', '& input': { color: 'black' } }}
-                          onChange={formik2.handleChange}
-                        />
-                      </FormControl>
-                    </Box>
+                <Box>
+                  <InputLabel sx={{ color: '#333', mb: 0.5, fontWeight: 500 }}>Location</InputLabel>
+                  <FormControl fullWidth>
+                    <TextField
+                      size="small"
+                      name='location'
+                      value={formik2.values.location || ''}
+                      sx={{ '& .MuiOutlinedInput-root': { borderRadius: '8px', '&:hover fieldset': { borderColor: '#7d9b17' }, '&.Mui-focused fieldset': { borderColor: '#7d9b17', borderWidth: '2px' } } }}
+                      onChange={formik2.handleChange}
+                    />
+                  </FormControl>
+                </Box>
 
-                    <Box>
-                      <InputLabel className='text-black'>Interests</InputLabel>
-                      <FormControl fullWidth>
-                        <Select
-                          name='interests'
-                          value={formik2.values.interests || ''}
-                          onChange={formik2.handleChange}
-                          displayEmpty
-                          sx={{
-                            border: '1px solid black',
-                            borderRadius: '5px',
-                            color: 'black',
-                            backgroundColor: 'white',
-                            '.MuiSelect-icon': { color: 'black' },
-                            '& .MuiOutlinedInput-notchedOutline': { border: 'none' }
-                          }}
-                        >
-                          {allCategory &&
-                            allCategory.map((item, index) => (
-                              <MenuItem key={index} value={item.name} className='text-black'>
-                                {item.name}
-                              </MenuItem>
-                            ))}
-                        </Select>
-                      </FormControl>
-                    </Box>
+                <Box>
+                  <InputLabel sx={{ color: '#333', mb: 0.5, fontWeight: 500 }}>Interests</InputLabel>
+                  <FormControl fullWidth>
+                    <Select
+                      size="small"
+                      name='interests'
+                      value={formik2.values.interests || ''}
+                      onChange={formik2.handleChange}
+                      displayEmpty
+                      sx={{
+                        borderRadius: '8px',
+                        color: 'black',
+                        backgroundColor: 'white',
+                        '.MuiSelect-icon': { color: 'black' },
+                        '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: '#7d9b17' },
+                        '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: '#7d9b17', borderWidth: '2px' }
+                      }}
+                    >
+                      {allCategory &&
+                        allCategory.map((item, index) => (
+                          <MenuItem key={index} value={item.name} sx={{ color: 'black' }}>
+                            {item.name}
+                          </MenuItem>
+                        ))}
+                    </Select>
+                  </FormControl>
+                </Box>
 
-                    <Box>
-                      <InputLabel className='text-black'>Experience Level</InputLabel>
-                      <FormControl fullWidth>
-                        <TextField
-                          name='expLevel'
-                          value={formik2.values.expLevel || ''}
-                          className='custom-input'
-                          sx={{ border: '1px solid black', borderRadius: '5px', '& input': { color: 'black' } }}
-                          onChange={formik2.handleChange}
-                        />
-                      </FormControl>
-                    </Box>
+                <Box>
+                  <InputLabel sx={{ color: '#333', mb: 0.5, fontWeight: 500 }}>Experience Level</InputLabel>
+                  <FormControl fullWidth>
+                    <TextField
+                      size="small"
+                      name='expLevel'
+                      value={formik2.values.expLevel || ''}
+                      sx={{ '& .MuiOutlinedInput-root': { borderRadius: '8px', '&:hover fieldset': { borderColor: '#7d9b17' }, '&.Mui-focused fieldset': { borderColor: '#7d9b17', borderWidth: '2px' } } }}
+                      onChange={formik2.handleChange}
+                    />
+                  </FormControl>
+                </Box>
 
-                    <Box sx={{ gridColumn: '1 / -1', mt: 2 }}>
-                      <Typography variant='h6' className='text-black mb-2'>
-                        Social accounts
-                      </Typography>
-                    </Box>
+                <Box>
+                  <InputLabel sx={{ color: '#333', mb: 0.5, fontWeight: 500 }}>Twitter</InputLabel>
+                  <FormControl fullWidth>
+                    <TextField
+                      size="small"
+                      name='twitter'
+                      value={formik2.values.twitter || ''}
+                      sx={{ '& .MuiOutlinedInput-root': { borderRadius: '8px', '&:hover fieldset': { borderColor: '#7d9b17' }, '&.Mui-focused fieldset': { borderColor: '#7d9b17', borderWidth: '2px' } } }}
+                      onChange={formik2.handleChange}
+                    />
+                  </FormControl>
+                </Box>
 
-                    <Box>
-                      <InputLabel className='text-black'>Twitter</InputLabel>
-                      <FormControl fullWidth>
-                        <TextField
-                          name='twitter'
-                          value={formik2.values.twitter || ''}
-                          className='custom-input'
-                          sx={{ border: '1px solid black', borderRadius: '5px', '& input': { color: 'black' } }}
-                          onChange={formik2.handleChange}
-                        />
-                      </FormControl>
-                    </Box>
+                <Box>
+                  <InputLabel sx={{ color: '#333', mb: 0.5, fontWeight: 500 }}>LinkedIn</InputLabel>
+                  <FormControl fullWidth>
+                    <TextField
+                      size="small"
+                      name='linkedin'
+                      value={formik2.values.linkedin || ''}
+                      sx={{ '& .MuiOutlinedInput-root': { borderRadius: '8px', '&:hover fieldset': { borderColor: '#7d9b17' }, '&.Mui-focused fieldset': { borderColor: '#7d9b17', borderWidth: '2px' } } }}
+                      onChange={formik2.handleChange}
+                    />
+                  </FormControl>
+                </Box>
+              </Box>
 
-                    <Box>
-                      <InputLabel className='text-black'>LinkedIn</InputLabel>
-                      <FormControl fullWidth>
-                        <TextField
-                          name='linkedin'
-                          value={formik2.values.linkedin || ''}
-                          className='custom-input'
-                          sx={{ border: '1px solid black', borderRadius: '5px', '& input': { color: 'black' } }}
-                          onChange={formik2.handleChange}
-                        />
-                      </FormControl>
-                    </Box>
-                  </Box>
-
-                  <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 4, gap: 2 }}>
-                    <Button size='large' className='beforeLoginbtn' onClick={handleBack}>
-                      Back
-                    </Button>
-                    <Button size='large' type='submit' className='beforeLoginbtn'>
+              <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 3, gap: 2 }}>
+                <Button
+                  size='medium'
+                  variant='outlined'
+                  onClick={handleBack}
+                  sx={{
+                    borderColor: '#7d9b17',
+                    color: '#7d9b17',
+                    borderRadius: '8px',
+                    fontWeight: 600,
+                    textTransform: 'none',
+                    '&:hover': {
+                      borderColor: '#4338ca',
+                      backgroundColor: 'rgba(79, 70, 229, 0.04)'
+                    }
+                  }}
+                >
+                  Back
+                </Button>
+                <Tooltip title={!(formik2.isValid && formik2.dirty) ? "Fill all required fields to submit" : ""} placement="top" arrow>
+                  <span>
+                    <Button
+                      size='medium'
+                      type='submit'
+                      variant='contained'
+                      disabled={!(formik2.isValid && formik2.dirty)}
+                      sx={{
+                        backgroundColor: '#7d9b17',
+                        color: 'white',
+                        borderRadius: '8px',
+                        fontWeight: 600,
+                        textTransform: 'none',
+                        boxShadow: '0 4px 14px 0 rgba(79, 70, 229, 0.39)',
+                        '&:hover': {
+                          backgroundColor: '#4338ca',
+                          boxShadow: '0 6px 20px rgba(79, 70, 229, 0.23)'
+                        }
+                      }}
+                    >
                       Submit
                     </Button>
-                  </Box>
-                </form>
+                  </span>
+                </Tooltip>
               </Box>
-            </Box>
-          </RightWrapper>
+            </form>
+          </Box>
         </Box>
       )}
     </div>
   )
 }
-

@@ -4,7 +4,7 @@ const theme = createTheme({
   palette: {
     mode: 'light',
     primary: {
-      main: '#4f46e5',
+      main: '#7d9b17',
       light: '#6366f1',
       dark: '#4338ca',
       contrastText: '#FFFFFF'
@@ -102,12 +102,12 @@ const theme = createTheme({
     MuiTableHead: {
       styleOverrides: {
         root: {
-          backgroundColor: '#4f46e5',
+          backgroundColor: '#7d9b17',
           '& .MuiTableCell-head': {
             position: 'sticky',
             top: 0,
             zIndex: 2,
-            backgroundColor: '#4f46e5',
+            backgroundColor: '#7d9b17',
             color: '#FFFFFF',
             fontWeight: 700,
             fontSize: '0.8125rem',
@@ -144,7 +144,7 @@ const theme = createTheme({
             borderColor: 'rgba(47, 43, 61, 0.22)'
           },
           '&:hover fieldset': {
-            borderColor: '#4f46e5'
+            borderColor: '#7d9b17'
           }
         }
       }
@@ -160,7 +160,7 @@ const theme = createTheme({
     MuiAppBar: {
       styleOverrides: {
         root: {
-          backgroundColor: '#4f46e5',
+          backgroundColor: '#7d9b17',
           color: '#FFFFFF'
         }
       }

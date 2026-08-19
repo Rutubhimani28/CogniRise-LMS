@@ -22,7 +22,7 @@ export default function EnrolledSuper() {
   return (
     <div className='learnningTimeBox d-flex align-items-center justify-content-between'>
       <div>
-        <h6 className='text-start' style={{ fontSize: '14px', color: '#4f46e5' }}>Enrolled</h6>
+        <h6 className='text-start' style={{ fontSize: '14px', color: '#7d9b17' }}>Enrolled</h6>
         <h4 className='text-black fw-bolder text-start' style={{ marginBottom: '0' }}>
           {allCourse.length}
         </h4>

@@ -339,7 +339,7 @@ export const EnterpriseCoursesTable = () => {
     <Box sx={{ width: '100%' }} className='enaterpriseCourseWrap'>
       <Row className='justify-content-between align-items-center pb-3'>
         <Col md={6} className='mb-1'>
-          <Typography sx={{ fontSize: '1.3rem', color: '#4f46e5' }} variant='h6' className='addHeadingColor'>
+          <Typography sx={{ fontSize: '1.3rem', color: '#7d9b17' }} variant='h6' className='addHeadingColor'>
             Courses
           </Typography>
         </Col>
@@ -390,7 +390,7 @@ export const EnterpriseCoursesTable = () => {
               {loading ? (
                 <TableRow>
                   <TableCell colSpan={5} align="center" sx={{ height: '300px', borderBottom: 'none !important' }}>
-                    <CircularProgress sx={{ color: '#4f46e5' }} />
+                    <CircularProgress sx={{ color: '#7d9b17' }} />
                   </TableCell>
                 </TableRow>
               ) : filteredCourse.length === 0 ? (<TableRow><TableCell colSpan={5} align='center' sx={{ height: '300px', borderBottom: 'none !important' }}><Typography variant='h6' color='textSecondary'>No data found</Typography></TableCell></TableRow>) : stableSort(filteredCourse, getComparator(order, orderBy))
@@ -456,7 +456,7 @@ export const EnterpriseCoursesTable = () => {
           </Typography>
           <Typography className='text-black mt-2'>Are you sure you want to delete this course?</Typography>
           <Box display={'flex'} justifyContent={'flex-end'}>
-            <Button variant='outlined' onClick={() => modalDeletClose()} sx={{ mr: 2, mt: 3, color: '#4f46e5', borderColor: '#4f46e5', '&:hover': { borderColor: '#4338ca' }, textTransform: 'none' }}>Cancel</Button>
+            <Button variant='outlined' onClick={() => modalDeletClose()} sx={{ mr: 2, mt: 3, color: '#7d9b17', borderColor: '#7d9b17', '&:hover': { borderColor: '#4338ca' }, textTransform: 'none' }}>Cancel</Button>
             <Button variant='contained' disabled={isDeleting} onClick={() => deleteCourse(courseId)} sx={{ mt: 3, bgcolor: '#d32f2f', '&:hover': { bgcolor: '#c62828' }, textTransform: 'none' }}>
               {isDeleting ? <CircularProgress size={20} color="inherit" /> : 'Delete'}
             </Button>

@@ -83,12 +83,11 @@ export const ForgotPasswordForm = () => {
             <img src={imgConst.mainLogo} alt='logo' className='text-black' width={'80px'} height={'80px'} />
             <Box sx={{ my: 6 }}>
               <Typography
-                className='text-black'
-                sx={{ mb: 1.5, fontWeight: 500, fontSize: '1.625rem', lineHeight: 1.385 }}
+                sx={{ mb: 1.5, fontWeight: 700, fontSize: '1.625rem', lineHeight: 1.385, color: '#333' }}
               >
                 Forgot Password? 🔒
               </Typography>
-              <Typography className='text-black'>
+              <Typography sx={{ color: '#555' }}>
                 Enter your email and we&prime;ll send you instructions to reset your password
               </Typography>
             </Box>
@@ -100,22 +99,48 @@ export const ForgotPasswordForm = () => {
                 sx={{
                   display: 'flex',
                   mb: 4,
+                  '& .MuiOutlinedInput-root': {
+                    borderRadius: '8px',
+                    '&:hover fieldset': {
+                      borderColor: '#7d9b17',
+                    },
+                    '&.Mui-focused fieldset': {
+                      borderColor: '#7d9b17',
+                      borderWidth: '2px',
+                    },
+                  },
                   '& .MuiOutlinedInput-input': {
                     color: 'black !important'
-                  },
-                  '& .MuiOutlinedInput-root': {
-                    border: '1px solid black',
-                    borderRadius: '5px'
                   }
                 }}
               />
-              <Button fullWidth size='large' type='submit' className='beforeLoginbtn' sx={{ mb: 4 }}>
+              <Button
+                fullWidth
+                size='large'
+                type='submit'
+                variant='contained'
+                sx={{
+                  mb: 4,
+                  backgroundColor: '#7d9b17',
+                  color: 'white',
+                  borderRadius: '8px',
+                  py: 1.5,
+                  fontWeight: 600,
+                  fontSize: '1rem',
+                  textTransform: 'none',
+                  boxShadow: '0 4px 14px 0 rgba(79, 70, 229, 0.39)',
+                  '&:hover': {
+                    backgroundColor: '#4338ca',
+                    boxShadow: '0 6px 20px rgba(79, 70, 229, 0.23)'
+                  }
+                }}
+              >
                 Send reset link
               </Button>
               <Typography sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', '& svg': { mr: 1 } }}>
-                <LinkStyled href='/login'>
-                  <Icon fontSize='1.25rem' className='text-black' icon='tabler:chevron-left' />
-                  <span className='text-black'>Back to login</span>
+                <LinkStyled href='/login' sx={{ color: '#7d9b17 !important', fontWeight: 600 }}>
+                  <Icon fontSize='1.25rem' icon='tabler:chevron-left' />
+                  <span>Back to login</span>
                 </LinkStyled>
               </Typography>
             </form>

@@ -34,7 +34,7 @@ export const ViewStudentProfile = () => {
   if (loading) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh' }}>
-        <CircularProgress sx={{ color: '#4f46e5' }} />
+        <CircularProgress sx={{ color: '#7d9b17' }} />
       </Box>
     )
   }

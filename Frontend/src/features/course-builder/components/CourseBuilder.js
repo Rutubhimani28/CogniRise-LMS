@@ -361,7 +361,7 @@ export const CourseBuilder = Props => {
           onClick={() => setModuleModal(true)}
           sx={{
             mt: 3,
-            bgcolor: '#4f46e5',
+            bgcolor: '#7d9b17',
             color: 'white',
             fontWeight: 600,
             px: 4,

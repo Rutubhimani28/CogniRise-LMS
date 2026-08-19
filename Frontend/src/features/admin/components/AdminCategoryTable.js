@@ -357,7 +357,7 @@ export const AdminCategoryTable = () => {
               {loading ? (
                 <TableRow>
                   <TableCell colSpan={5} align="center" sx={{ height: '300px', borderBottom: 'none !important' }}>
-                    <CircularProgress sx={{ color: '#4f46e5' }} />
+                    <CircularProgress sx={{ color: '#7d9b17' }} />
                   </TableCell>
                 </TableRow>
               ) : filteredCategory.length === 0 ? (<TableRow><TableCell colSpan={5} align='center' sx={{ height: '300px', borderBottom: 'none !important' }}><Typography variant='h6' color='textSecondary'>No data found</Typography></TableCell></TableRow>) : stableSort(filteredCategory, getComparator(order, orderBy))
@@ -391,7 +391,7 @@ export const AdminCategoryTable = () => {
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                           <RiDeleteBin6Line className='fs-5 cursor-pointer text-danger' onClick={() => modalDeletOpen(row?._id)} />
                           <Link href={`/add-category/?id=${row?._id}`}>
-                            <RiEdit2Fill className='fs-5 cursor-pointer' style={{ color: '#4f46e5' }} />
+                            <RiEdit2Fill className='fs-5 cursor-pointer' style={{ color: '#7d9b17' }} />
                           </Link>
                         </Box>
                       </TableCell>
@@ -430,7 +430,7 @@ export const AdminCategoryTable = () => {
             Are you sure you want to delete all course records? This action cannot be undone.
           </Typography>
           <Box display={'flex'} justifyContent={'end'}>
-            <Button variant='outlined' onClick={() => multiDeleteModelClose()} sx={{ mr: 2, mt: 3, color: '#4f46e5', borderColor: '#4f46e5', '&:hover': { borderColor: '#4338ca' }, textTransform: 'none' }}>
+            <Button variant='outlined' onClick={() => multiDeleteModelClose()} sx={{ mr: 2, mt: 3, color: '#7d9b17', borderColor: '#7d9b17', '&:hover': { borderColor: '#4338ca' }, textTransform: 'none' }}>
               Cancel
             </Button>
             <Button variant='contained' disabled={isMultiDeleting} onClick={() => multiDeleteCategory()} sx={{ mt: 3, bgcolor: '#d32f2f', '&:hover': { bgcolor: '#c62828' }, textTransform: 'none' }}>
@@ -450,7 +450,7 @@ export const AdminCategoryTable = () => {
             Are you sure you want to delete this category?
           </Typography>
           <Box display={'flex'} justifyContent={'end'}>
-            <Button variant='outlined' onClick={() => modalDeletClose()} sx={{ mr: 2, mt: 3, color: '#4f46e5', borderColor: '#4f46e5', '&:hover': { borderColor: '#4338ca' }, textTransform: 'none' }}>
+            <Button variant='outlined' onClick={() => modalDeletClose()} sx={{ mr: 2, mt: 3, color: '#7d9b17', borderColor: '#7d9b17', '&:hover': { borderColor: '#4338ca' }, textTransform: 'none' }}>
               Cancel
             </Button>
             <Button variant='contained' disabled={isDeleting} onClick={() => deleteCategory(categoryId)} sx={{ mt: 3, bgcolor: '#d32f2f', '&:hover': { bgcolor: '#c62828' }, textTransform: 'none' }}>

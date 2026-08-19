@@ -29,7 +29,7 @@ export default function CourseContent({ data }) {
         }}
       >
         <Box flexDirection={'column'}>
-          <h5 className='video-small-heading addHeadingColor' style={{ fontSize: '1rem', color: '#4f46e5' }}>
+          <h5 className='video-small-heading addHeadingColor' style={{ fontSize: '1rem', color: '#7d9b17' }}>
             Course content
           </h5>
         </Box>

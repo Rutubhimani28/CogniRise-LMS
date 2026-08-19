@@ -20,7 +20,8 @@ import {
   DialogActions,
   DialogContentText,
   InputAdornment,
-  CircularProgress
+  CircularProgress,
+  Tooltip
 } from '@mui/material'
 import { useFormik } from 'formik'
 import { toast } from 'react-hot-toast'
@@ -49,6 +50,7 @@ export const StudentProfileForm = () => {
   const [emaildata, setEmaildata] = useState('')
   const [showloginButton, setShowloginButton] = useState(true)
   const [loading, setLoading] = useState(false)
+  const [deleteImg, setDeleteImg] = useState(false)
 
   // Fetch Categories
   useEffect(() => {
@@ -219,58 +221,13 @@ export const StudentProfileForm = () => {
   })
 
   const handleUpload = async (file) => {
-    try {
-      const formData = new FormData()
-      formData.append('profile', file)
-      formData.append('_id', getData._id)
-
-      if (getData.profile) {
-        Object.keys(getData.profile).forEach(key => {
-          if (key !== 'profileImg') formData.append(`profile[${key}]`, getData.profile[key] || '')
-        })
-      }
-      const res = await requestApiData.updateUserProfile(formData)
-      if (res?.status === 200) {
-        toast.success('Profile picture updated successfully')
-        setGetData(res.data)
-        setFiles([])
-        userApi()
-        setUploadImgOpen(false)
-
-        const updatedUser = { ...user, profileImg: res.data.profile?.profileImg }
-        if (updatedUser.profile) updatedUser.profile.profileImg = res.data.profile?.profileImg
-        setUser(updatedUser)
-        window.localStorage.setItem('userData', JSON.stringify(updatedUser))
-      }
-    } catch (err) {
-      toast.error(err.response?.data?.error || 'Something went wrong')
-    }
+    // This function is no longer used directly from the modal.
+    // The upload logic has been moved to the form's onSubmit handler.
   }
 
   const handleDeleteProfileImg = async () => {
-    try {
-      const payload = {
-        _id: getData._id,
-        profile: {
-          ...getData.profile,
-          profileImg: ''
-        }
-      }
-      const res = await requestApiData.updateUserProfile(payload)
-      if (res?.status === 200) {
-        toast.success('Profile picture deleted successfully')
-        setGetData(res.data)
-        setFiles([])
-        userApi()
-
-        const updatedUser = { ...user, profileImg: '' }
-        if (updatedUser.profile) updatedUser.profile.profileImg = ''
-        setUser(updatedUser)
-        window.localStorage.setItem('userData', JSON.stringify(updatedUser))
-      }
-    } catch (err) {
-      toast.error('Failed to delete profile picture')
-    }
+    setDeleteImg(true)
+    setFiles([])
   }
 
   const formik = useFormik({
@@ -292,27 +249,71 @@ export const StudentProfileForm = () => {
     onSubmit: async (values) => {
       setLoading(true)
 
-      const payload = {
-        _id: getData._id,
-        profile: {
-          name: values?.name,
-          graduation: values?.graduation,
-          profileSlug: values?.profileSlug,
-          major: values?.major,
-          minor: values?.minor,
-          university: values?.university,
-          location: values?.location,
-          interests: values?.interests,
-          expLevel: values?.expLevel,
-          linkedin: values?.linkedin,
-          twitter: values?.twitter,
-          google: getData?.profile?.google,
-          wallet: walletAddress !== '' ? walletAddress : getData?.profile?.wallet
-        }
-      }
       try {
-        const res = await requestApiData.updateUserProfile(payload)
-        if (res?.status === 200) toast.success('Profile updated successfully')
+        let res;
+        if (files.length > 0) {
+          const formData = new FormData()
+          formData.append('profile', files[0])
+          formData.append('_id', getData._id)
+
+          const profileData = {
+            name: values?.name,
+            graduation: values?.graduation,
+            profileSlug: values?.profileSlug,
+            major: values?.major,
+            minor: values?.minor,
+            university: values?.university,
+            location: values?.location,
+            interests: values?.interests,
+            expLevel: values?.expLevel,
+            linkedin: values?.linkedin,
+            twitter: values?.twitter,
+            google: getData?.profile?.google,
+            wallet: walletAddress !== '' ? walletAddress : getData?.profile?.wallet
+          }
+
+          Object.keys(profileData).forEach(key => {
+            formData.append(`profile[${key}]`, profileData[key] || '')
+          })
+
+          res = await requestApiData.updateUserProfile(formData)
+        } else {
+          const payload = {
+            _id: getData._id,
+            profile: {
+              name: values?.name,
+              graduation: values?.graduation,
+              profileSlug: values?.profileSlug,
+              major: values?.major,
+              minor: values?.minor,
+              university: values?.university,
+              location: values?.location,
+              interests: values?.interests,
+              expLevel: values?.expLevel,
+              linkedin: values?.linkedin,
+              twitter: values?.twitter,
+              google: getData?.profile?.google,
+              wallet: walletAddress !== '' ? walletAddress : getData?.profile?.wallet
+            }
+          }
+          if (deleteImg) {
+            payload.profile.profileImg = ''
+          }
+          res = await requestApiData.updateUserProfile(payload)
+        }
+
+        if (res?.status === 200) {
+          toast.success('Profile updated successfully')
+          setGetData(res.data)
+          if (files.length > 0 || deleteImg) {
+            const updatedUser = { ...user, profileImg: res.data.profile?.profileImg || '' }
+            if (updatedUser.profile) updatedUser.profile.profileImg = res.data.profile?.profileImg || ''
+            setUser(updatedUser)
+            window.localStorage.setItem('userData', JSON.stringify(updatedUser))
+            setFiles([])
+            setDeleteImg(false)
+          }
+        }
       } catch (err) {
         toast.error('Failed to update profile')
       } finally {
@@ -321,131 +322,144 @@ export const StudentProfileForm = () => {
     }
   })
 
-  if (!getData) return null
+  if (!getData) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh' }}>
+        <CircularProgress sx={{ color: '#7d9b17' }} size={60} thickness={4} />
+      </Box>
+    )
+  }
 
   return (
-    <Box sx={{ maxWidth: 900, mx: 'auto', mt: 2 }}>
+    <Box sx={{ width: '100%', mt: 0 }}>
       <Card elevation={0} sx={{ border: '1px solid rgba(47, 43, 61, 0.12)', borderRadius: 2 }}>
-        <CardHeader
-          title={<Typography variant='h5' sx={{ fontWeight: 700, color: '#2F2B3D' }}>Student Profile</Typography>}
-          subheader={<Typography variant='body2' color='text.secondary'>Manage your personal information and preferences</Typography>}
-        />
-        <Divider sx={{ mb: 4 }} />
-
-        <CardContent>
+        <CardContent sx={{ py: 2, px: { xs: 2, md: 4 } }}>
           <Box component='form' onSubmit={formik.handleSubmit}>
+            <Grid container spacing={4}>
 
-            {/* Avatar Section */}
-            <Box sx={{ display: 'flex', alignItems: 'center', mb: 6, gap: 3 }}>
-              <Box onClick={() => setUploadImgOpen(true)} sx={{ cursor: 'pointer', position: 'relative' }}>
-                <Avatar
-                  src={files.length > 0 ? URL.createObjectURL(files[0]) : (getData?.profile?.profileImg ? getData.profile.profileImg + '?' + new Date().getTime() : '')}
-                  sx={{ width: 120, height: 120, border: '4px solid #F4F5FA' }}
-                />
-                <Box sx={{
-                  position: 'absolute', bottom: 0, right: 0,
-                  backgroundColor: '#4f46e5', color: 'white',
-                  borderRadius: '50%', p: 1,
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  border: '2px solid white'
-                }}>
-                  <FaPlus size={14} />
+              {/* Column 1: Profile Picture & Socials */}
+              <Grid item xs={12} md={4}>
+                <Box sx={{ mb: 3 }}>
+                  <Typography variant='h5' sx={{ fontWeight: 700, color: '#2F2B3D' }}>Student Profile</Typography>
+                  <Typography variant='body2' color='text.secondary'>Manage your personal information and preferences</Typography>
                 </Box>
-              </Box>
-              <Box>
-                <Typography variant='h6' sx={{ fontWeight: 600, color: '#2F2B3D' }}>Profile Picture</Typography>
-                <Typography variant='body2' color='text.secondary' sx={{ mb: 1 }}>JPG or PNG. Max size 5MB.</Typography>
-                {getData?.profile?.profileImg && (
-                  <Button variant='outlined' color='error' size='small' onClick={handleDeleteProfileImg} sx={{ mt: 1, borderRadius: '8px', textTransform: 'none', fontWeight: 600 }}>
-                    Delete Picture
-                  </Button>
-                )}
-              </Box>
-            </Box>
 
-            <Grid container spacing={3}>
-              <Grid item xs={12} sm={6}>
-                <TextField fullWidth label='Full Name' name='name' value={formik.values.name} onChange={formik.handleChange} />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField fullWidth label='Email' name='email' value={formik.values.email} disabled />
-              </Grid>
+                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mb: 3 }}>
+                  <Box onClick={() => setUploadImgOpen(true)} sx={{ cursor: 'pointer', position: 'relative', mb: 2 }}>
+                    <Avatar
+                      src={files.length > 0 ? URL.createObjectURL(files[0]) : (deleteImg ? '' : (getData?.profile?.profileImg ? getData.profile.profileImg + '?' + new Date().getTime() : ''))}
+                      sx={{ width: 140, height: 140, border: '4px solid #F4F5FA' }}
+                    />
+                    <Box sx={{
+                      position: 'absolute', bottom: 5, right: 5,
+                      backgroundColor: '#7d9b17', color: 'white',
+                      borderRadius: '50%', p: 1,
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      border: '2px solid white'
+                    }}>
+                      <FaPlus size={16} />
+                    </Box>
+                  </Box>
+                  <Typography variant='subtitle1' sx={{ fontWeight: 600, color: '#2F2B3D' }}>Profile Picture</Typography>
+                  <Typography variant='caption' color='text.secondary' sx={{ display: 'block', mb: 1 }}>JPG or PNG. Max size 5MB.</Typography>
+                  {getData?.profile?.profileImg && !deleteImg && (
+                    <Button
+                      variant='contained'
+                      size='small'
+                      onClick={handleDeleteProfileImg}
+                      sx={{
+                        borderRadius: '8px',
+                        textTransform: 'none',
+                        fontWeight: 600,
+                        py: 0.5,
+                        px: 2,
+                        backgroundColor: '#ef4444 !important',
+                        color: 'white !important',
+                        '&:hover': {
+                          backgroundColor: '#dc2626 !important'
+                        }
+                      }}
+                    >
+                      Delete Picture
+                    </Button>
+                  )}
+                </Box>
 
-              <Grid item xs={12} sm={6}>
-                <TextField fullWidth label='University / School' name='university' value={formik.values.university} onChange={formik.handleChange} />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField fullWidth label='Graduation Year' name='graduation' value={formik.values.graduation} onChange={formik.handleChange} />
-              </Grid>
-
-              <Grid item xs={12} sm={6}>
-                <TextField fullWidth label='Profile Slug' name='profileSlug' value={formik.values.profileSlug} onChange={formik.handleChange}
-                  helperText={`Profile Link: https://collegedao.io/person/${formik.values.profileSlug}`} />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField fullWidth label='Major' name='major' value={formik.values.major} onChange={formik.handleChange} />
-              </Grid>
-
-              <Grid item xs={12} sm={6}>
-                <TextField fullWidth label='Minor' name='minor' value={formik.values.minor} onChange={formik.handleChange} />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField fullWidth label='Location' name='location' value={formik.values.location} onChange={formik.handleChange} />
-              </Grid>
-
-              <Grid item xs={12} sm={6}>
-                <FormControl fullWidth>
-                  <InputLabel>Primary Interest</InputLabel>
-                  <Select name='interests' value={formik.values.interests} onChange={formik.handleChange} label='Primary Interest'>
-                    {allCategory.map((cat, idx) => (
-                      <MenuItem key={idx} value={cat.name}>{cat.name}</MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField fullWidth label='Experience Level' name='expLevel' value={formik.values.expLevel} onChange={formik.handleChange} />
-              </Grid>
-
-              {/* Socials */}
-              <Grid item xs={12}>
-                <Typography variant='subtitle1' sx={{ fontWeight: 600, mt: 2, mb: 1 }}>Social Links</Typography>
+                <Typography variant='subtitle2' sx={{ fontWeight: 600, mb: 1.5, color: '#2F2B3D' }}>Social Links</Typography>
                 <Divider sx={{ mb: 2 }} />
+
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2.5 }}>
+                  <TextField fullWidth label='LinkedIn URL' name='linkedin' value={formik.values.linkedin} onChange={formik.handleChange}
+                    InputProps={{ startAdornment: <InputAdornment position="start"><FaLinkedin color="#0077B5" /></InputAdornment> }} sx={{ '& .MuiOutlinedInput-root': { borderRadius: '8px', '&:hover fieldset': { borderColor: '#7d9b17' }, '&.Mui-focused fieldset': { borderColor: '#7d9b17', borderWidth: '2px' } } }} />
+                  <TextField fullWidth label='Twitter / X Handle' name='twitter' value={formik.values.twitter} onChange={formik.handleChange}
+                    InputProps={{ startAdornment: <InputAdornment position="start"><FaTwitter color="#1DA1F2" /></InputAdornment> }} sx={{ '& .MuiOutlinedInput-root': { borderRadius: '8px', '&:hover fieldset': { borderColor: '#7d9b17' }, '&.Mui-focused fieldset': { borderColor: '#7d9b17', borderWidth: '2px' } } }} />
+                </Box>
               </Grid>
 
-              <Grid item xs={12} sm={6}>
-                <TextField fullWidth label='LinkedIn URL' name='linkedin' value={formik.values.linkedin} onChange={formik.handleChange}
-                  InputProps={{ startAdornment: <InputAdornment position="start"><FaLinkedin color="#0077B5" /></InputAdornment> }} />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField fullWidth label='Twitter / X Handle' name='twitter' value={formik.values.twitter} onChange={formik.handleChange}
-                  InputProps={{ startAdornment: <InputAdornment position="start"><FaTwitter color="#1DA1F2" /></InputAdornment> }} />
+              {/* Column 2: Personal Info */}
+              <Grid item xs={12} md={4}>
+                <Typography variant='subtitle2' sx={{ fontWeight: 600, mb: 1.5, color: '#2F2B3D' }}>Personal Information</Typography>
+                <Divider sx={{ mb: 2 }} />
+
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2.5 }}>
+                  <TextField fullWidth label='Full Name' name='name' value={formik.values.name} onChange={formik.handleChange} sx={{ '& .MuiOutlinedInput-root': { borderRadius: '8px', '&:hover fieldset': { borderColor: '#7d9b17' }, '&.Mui-focused fieldset': { borderColor: '#7d9b17', borderWidth: '2px' } } }} />
+                  <TextField fullWidth label='Email' name='email' value={formik.values.email} disabled sx={{ '& .MuiOutlinedInput-root': { borderRadius: '8px', '&:hover fieldset': { borderColor: '#7d9b17' }, '&.Mui-focused fieldset': { borderColor: '#7d9b17', borderWidth: '2px' } } }} />
+                  <TextField fullWidth label='Location' name='location' value={formik.values.location} onChange={formik.handleChange} sx={{ '& .MuiOutlinedInput-root': { borderRadius: '8px', '&:hover fieldset': { borderColor: '#7d9b17' }, '&.Mui-focused fieldset': { borderColor: '#7d9b17', borderWidth: '2px' } } }} />
+                  <FormControl fullWidth>
+                    <InputLabel>Primary Interest</InputLabel>
+                    <Select name='interests' value={formik.values.interests} onChange={formik.handleChange} label='Primary Interest' sx={{ borderRadius: '8px', '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: '#7d9b17' }, '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: '#7d9b17', borderWidth: '2px' } }}>
+                      {allCategory.map((cat, idx) => (
+                        <MenuItem key={idx} value={cat.name}>{cat.name}</MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                  <TextField fullWidth label='Experience Level' name='expLevel' value={formik.values.expLevel} onChange={formik.handleChange} sx={{ '& .MuiOutlinedInput-root': { borderRadius: '8px', '&:hover fieldset': { borderColor: '#7d9b17' }, '&.Mui-focused fieldset': { borderColor: '#7d9b17', borderWidth: '2px' } } }} />
+                </Box>
               </Grid>
 
+              {/* Column 3: Education */}
+              <Grid item xs={12} md={4}>
+                <Typography variant='subtitle2' sx={{ fontWeight: 600, mb: 1.5, color: '#2F2B3D' }}>Education & Profile</Typography>
+                <Divider sx={{ mb: 2 }} />
 
-
-              {/* Submit Button */}
-              <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'flex-end', mt: 4 }}>
-                <Button variant='contained' color='primary' type='submit' size='large' disabled={loading} sx={{ px: 5, fontWeight: 700 }}>
-                  {loading ? <CircularProgress size={24} color="inherit" /> : 'Save Profile'}
-                </Button>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2.5 }}>
+                  <TextField fullWidth label='University / School' name='university' value={formik.values.university} onChange={formik.handleChange} sx={{ '& .MuiOutlinedInput-root': { borderRadius: '8px', '&:hover fieldset': { borderColor: '#7d9b17' }, '&.Mui-focused fieldset': { borderColor: '#7d9b17', borderWidth: '2px' } } }} />
+                  <TextField fullWidth label='Graduation Year' name='graduation' value={formik.values.graduation} onChange={formik.handleChange} sx={{ '& .MuiOutlinedInput-root': { borderRadius: '8px', '&:hover fieldset': { borderColor: '#7d9b17' }, '&.Mui-focused fieldset': { borderColor: '#7d9b17', borderWidth: '2px' } } }} />
+                  <TextField fullWidth label='Major' name='major' value={formik.values.major} onChange={formik.handleChange} sx={{ '& .MuiOutlinedInput-root': { borderRadius: '8px', '&:hover fieldset': { borderColor: '#7d9b17' }, '&.Mui-focused fieldset': { borderColor: '#7d9b17', borderWidth: '2px' } } }} />
+                  <TextField fullWidth label='Minor' name='minor' value={formik.values.minor} onChange={formik.handleChange} sx={{ '& .MuiOutlinedInput-root': { borderRadius: '8px', '&:hover fieldset': { borderColor: '#7d9b17' }, '&.Mui-focused fieldset': { borderColor: '#7d9b17', borderWidth: '2px' } } }} />
+                  <TextField fullWidth label='Profile Slug' name='profileSlug' value={formik.values.profileSlug} onChange={formik.handleChange}
+                    helperText={`Profile Link: https://collegedao.io/person/${formik.values.profileSlug}`} sx={{ '& .MuiOutlinedInput-root': { borderRadius: '8px', '&:hover fieldset': { borderColor: '#7d9b17' }, '&.Mui-focused fieldset': { borderColor: '#7d9b17', borderWidth: '2px' } }, '& .MuiFormHelperText-root': { margin: '3px 0 0 0', fontSize: '0.75rem' } }} />
+                </Box>
               </Grid>
+
             </Grid>
+
+            {/* Submit Button */}
+            <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 3 }}>
+              <Tooltip title={(!formik.dirty && files.length === 0 && !deleteImg) ? "Make changes to enable saving" : ""} placement="top" arrow>
+                <span>
+                  <Button variant='contained' color='primary' type='submit' size='large' disabled={loading || (!formik.dirty && files.length === 0 && !deleteImg)} sx={{ px: 6, py: 1.5, fontWeight: 700, minWidth: '180px', position: 'relative', borderRadius: '8px', fontSize: '1rem' }}>
+                    {loading && <CircularProgress size={24} color="inherit" sx={{ position: 'absolute', top: '50%', left: '50%', marginTop: '-12px', marginLeft: '-12px' }} />}
+                    <span style={{ opacity: loading ? 0 : 1 }}>Save Profile</span>
+                  </Button>
+                </span>
+              </Tooltip>
+            </Box>
           </Box>
         </CardContent>
       </Card>
 
       {/* Upload Dialog */}
       <Dialog open={uploadImgOpen} onClose={() => { setUploadImgOpen(false); setFiles([]); }} maxWidth="sm" fullWidth>
-        <DialogTitle sx={{ textAlign: 'center', fontWeight: 700, color: '#4f46e5' }}>Upload Profile Photo</DialogTitle>
+        <DialogTitle sx={{ textAlign: 'center', fontWeight: 700, color: '#7d9b17' }}>Upload Profile Photo</DialogTitle>
         <DialogContent>
-          <Box {...getRootProps()} sx={{ border: '2px dashed #4f46e5', borderRadius: 4, p: 4, textAlign: 'center', cursor: 'pointer', mt: 1, minHeight: '250px', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+          <Box {...getRootProps()} sx={{ border: '2px dashed #7d9b17', borderRadius: 4, p: 4, textAlign: 'center', cursor: 'pointer', mt: 1, minHeight: '250px', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
             <input {...getInputProps()} />
             {files.length > 0 ? (
               <img src={URL.createObjectURL(files[0])} alt="Preview" style={{ maxHeight: '200px', maxWidth: '100%', objectFit: 'contain', borderRadius: '8px' }} />
             ) : (
               <>
-                <RiUpload2Fill size={50} color="#4f46e5" />
+                <RiUpload2Fill size={50} color="#7d9b17" />
                 <Typography sx={{ mt: 2, fontWeight: 600, color: '#333' }}>Click or drag file to this area to upload</Typography>
                 <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>Supported: JPG, PNG • Max: 5 MB</Typography>
               </>
@@ -456,15 +470,15 @@ export const StudentProfileForm = () => {
           <Button
             variant="outlined"
             onClick={() => { setUploadImgOpen(false); setFiles([]); }}
-            sx={{ borderColor: '#4f46e5', color: '#4f46e5', borderRadius: '8px', px: 4, fontWeight: 600, '&:hover': { borderColor: '#4338ca', backgroundColor: 'rgba(79, 70, 229, 0.08)' } }}
+            sx={{ borderColor: '#7d9b17', color: '#7d9b17', borderRadius: '8px', px: 4, fontWeight: 600, '&:hover': { borderColor: '#4338ca', backgroundColor: 'rgba(79, 70, 229, 0.08)' } }}
           >
             Cancel
           </Button>
           <Button
             variant="contained"
-            onClick={() => handleUpload(files[0])}
+            onClick={() => setUploadImgOpen(false)}
             disabled={files.length === 0}
-            sx={{ backgroundColor: '#4f46e5', color: 'white', borderRadius: '8px', px: 4, fontWeight: 600, '&:hover': { backgroundColor: '#4338ca' } }}
+            sx={{ backgroundColor: '#7d9b17', color: 'white', borderRadius: '8px', px: 4, fontWeight: 600, '&:hover': { backgroundColor: '#4338ca' } }}
           >
             Save Photo
           </Button>

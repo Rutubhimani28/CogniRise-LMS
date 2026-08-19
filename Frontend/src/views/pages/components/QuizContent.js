@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Grid } from '@mui/material'
 import { Formik, Field, Form } from 'formik'
 import * as yup from 'yup'
@@ -19,8 +19,14 @@ export default function QuizContent({ courseName, instructor, lesson, data }) {
   const [resultMessage, setResultMessage] = useState('')
 
   const requestApiData = new Requests()
-  const user = JSON.parse(window.localStorage.getItem('userData'))
+  const [user, setUser] = useState(null)
   const courseId = useSelector(state => state?.course?.courseId)
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setUser(JSON.parse(window.localStorage.getItem('userData')))
+    }
+  }, [])
 
   // For show quiz result modal
   const modalShowResultClose = () => {

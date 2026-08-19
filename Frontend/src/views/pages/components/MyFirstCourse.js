@@ -8,7 +8,7 @@ export default function MyFirstCourse() {
 
   return (
     <Box className='learnningTimeBox' sx={{ backgroundColor: 'white', display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '120px' }}>
-      <Button variant='outlined' onClick={() => router.push('/Course-listing')} sx={{ borderColor: '#4f46e5', color: '#4f46e5', borderRadius: '8px', py: 1, px: 3, '&:hover': { backgroundColor: 'rgba(79, 70, 229, 0.08)', borderColor: '#4f46e5' } }}>
+      <Button variant='outlined' onClick={() => router.push('/Course-listing')} sx={{ borderColor: '#7d9b17', color: '#7d9b17', borderRadius: '8px', py: 1, px: 3, '&:hover': { backgroundColor: 'rgba(79, 70, 229, 0.08)', borderColor: '#7d9b17' } }}>
         <FaPlus size={20} className='me-2' /> Add my first course
       </Button>
     </Box>

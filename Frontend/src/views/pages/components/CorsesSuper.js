@@ -30,7 +30,7 @@ export default function CorsesSuper() {
         />
       </div>
       <div>
-        <h6 style={{ fontSize: '14px', color: '#4f46e5' }}>Courses</h6>
+        <h6 style={{ fontSize: '14px', color: '#7d9b17' }}>Courses</h6>
         <h4 className='text-black'>{allCourse.length}</h4>
       </div>
     </div>

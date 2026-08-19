@@ -78,7 +78,7 @@
 }
 
 .enrollBtn {
-  background: #4f46e5;
+  background: #7d9b17;
   border: none;
   border-radius: 70px;
   padding: 10px 50px;
@@ -144,8 +144,7 @@
   color: #fcfcfc;
 }
 
-@media (max-width: 1400px) {
-}
+@media (max-width: 1400px) {}
 
 @media (max-width: 1200px) {
   .learnningTimeBox {
@@ -177,18 +176,22 @@
     text-align: center;
   }
 }
+
 .google-btn {
   text-align: center;
 }
+
 .google-btn button {
   background-color: transparent !important;
   color: #fff !important;
   box-shadow: none !important;
   font-size: 16px !important;
 }
-.google-btn button > div {
+
+.google-btn button>div {
   background-color: transparent !important;
 }
+
 .google-btn svg g {
   fill: #fff;
 }

@@ -30,7 +30,7 @@ export default function Graduate() {
           <img src={imgConst.graduate} style={{ width: '24px', filter: 'invert(26%) sepia(90%) saturate(2340%) hue-rotate(233deg) brightness(96%) contrast(93%)' }} />
         </div>
         <div>
-          <h6 style={{ fontSize: '15px', color: '#4f46e5', fontWeight: '600', margin: 0, paddingBottom: '4px' }}>Graduates</h6>
+          <h6 style={{ fontSize: '15px', color: '#7d9b17', fontWeight: '600', margin: 0, paddingBottom: '4px' }}>Graduates</h6>
           <h2 style={{ color: '#2F2B3D', fontWeight: '700', margin: 0 }} className='fs-3'>
             {totalGraduate === undefined ? 0 : totalGraduate?.total}
           </h2>

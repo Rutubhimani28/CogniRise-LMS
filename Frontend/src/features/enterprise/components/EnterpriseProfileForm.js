@@ -120,13 +120,17 @@ export const EnterpriseProfileForm = () => {
     onSubmit: values => {
       setLoadingProfile(true)
 
-      const payload = {
-        _id: getData._id,
-        email: getData.email,
-        profile: {
+      let requestPromise;
+
+      if (files.length > 0) {
+        const formData = new FormData()
+        formData.append('profile', files[0])
+        formData.append('_id', getData._id)
+        formData.append('email', getData.email)
+
+        const profileData = {
           name: values.name,
           companySlug: values.companySlug,
-          profileImg: getData?.profile?.profileImg,
           employeeSize: values.employeeSize,
           industryVerticale: values.industryVerticale,
           companyType: values.companyType,
@@ -136,13 +140,44 @@ export const EnterpriseProfileForm = () => {
           linkedin: values.linkedin,
           website: values.website
         }
+
+        Object.keys(profileData).forEach(key => {
+          formData.append(`profile[${key}]`, profileData[key] || '')
+        })
+
+        requestPromise = requestApiData.updateUserProfile(formData)
+      } else {
+        const payload = {
+          _id: getData._id,
+          email: getData.email,
+          profile: {
+            name: values.name,
+            companySlug: values.companySlug,
+            profileImg: getData?.profile?.profileImg,
+            employeeSize: values.employeeSize,
+            industryVerticale: values.industryVerticale,
+            companyType: values.companyType,
+            foundingDate: values.foundingDate,
+            description: values.description,
+            twitter: values.twitter,
+            linkedin: values.linkedin,
+            website: values.website
+          }
+        }
+        requestPromise = requestApiData.updateUserProfile(payload)
       }
-      requestApiData.updateUserProfile(payload)
+
+      requestPromise
         .then(res => {
           if (res?.status === 200) {
             toast.success('Profile updated successfully')
+            setGetData(res.data)
             if (authUser) {
               const updatedUser = { ...authUser, profile: { ...authUser.profile, name: values.name } }
+              if (files.length > 0) {
+                updatedUser.profile.profileImg = res.data.profile?.profileImg
+                setFiles([])
+              }
               setAuthUser(updatedUser)
               window.localStorage.setItem('userData', JSON.stringify(updatedUser))
             }
@@ -169,15 +204,15 @@ export const EnterpriseProfileForm = () => {
                   {getData?.profile?.profileImg ? (
                     <Avatar
                       src={getData.profile.profileImg + '?' + new Date().getTime()}
-                      sx={{ width: 100, height: 100, border: '3px solid #4f46e5' }}
+                      sx={{ width: 100, height: 100, border: '3px solid #7d9b17' }}
                     />
                   ) : files.length > 0 ? (
                     <Avatar
                       src={URL.createObjectURL(files[0])}
-                      sx={{ width: 100, height: 100, border: '3px solid #4f46e5' }}
+                      sx={{ width: 100, height: 100, border: '3px solid #7d9b17' }}
                     />
                   ) : (
-                    <Avatar sx={{ width: 100, height: 100, bgcolor: '#4f46e5', fontSize: '2.5rem', fontWeight: 700 }}>
+                    <Avatar sx={{ width: 100, height: 100, bgcolor: '#7d9b17', fontSize: '2.5rem', fontWeight: 700 }}>
                       {avatarLetter}
                     </Avatar>
                   )}
@@ -186,7 +221,7 @@ export const EnterpriseProfileForm = () => {
                     size='small'
                     sx={{
                       position: 'absolute', bottom: 0, right: 0,
-                      bgcolor: '#4f46e5', color: 'white', width: 28, height: 28,
+                      bgcolor: '#7d9b17', color: 'white', width: 28, height: 28,
                       '&:hover': { bgcolor: '#4338ca' }
                     }}
                   >
@@ -199,7 +234,7 @@ export const EnterpriseProfileForm = () => {
                   <Typography variant='h5' sx={{ fontWeight: 700, color: '#2F2B3D' }}>
                     {getData?.profile?.name || 'Company Name'}
                   </Typography>
-                  <Typography variant='body2' sx={{ color: '#4f46e5', mt: 0.5 }}>
+                  <Typography variant='body2' sx={{ color: '#7d9b17', mt: 0.5 }}>
                     {getData?.email}
                   </Typography>
                   <Typography variant='body2' sx={{ color: '#6c757d', mt: 0.5 }}>
@@ -224,7 +259,7 @@ export const EnterpriseProfileForm = () => {
                   <TextField
                     fullWidth label='Company Name' name='name'
                     value={formik.values.name} onChange={formik.handleChange}
-                    InputProps={{ startAdornment: <InputAdornment position='start'><FaBuilding color='#4f46e5' /></InputAdornment> }}
+                    InputProps={{ startAdornment: <InputAdornment position='start'><FaBuilding color='#7d9b17' /></InputAdornment> }}
                   />
                 </Grid>
 
@@ -323,7 +358,7 @@ export const EnterpriseProfileForm = () => {
                   <TextField
                     fullWidth label='Website' name='website'
                     value={formik.values.website} onChange={formik.handleChange}
-                    InputProps={{ startAdornment: <InputAdornment position='start'><FaGlobe color='#4f46e5' /></InputAdornment> }}
+                    InputProps={{ startAdornment: <InputAdornment position='start'><FaGlobe color='#7d9b17' /></InputAdornment> }}
                   />
                 </Grid>
               </Grid>
@@ -335,12 +370,14 @@ export const EnterpriseProfileForm = () => {
             <Button
               type='submit' variant='contained' size='large' disabled={loadingProfile}
               sx={{
-                px: 6, py: 1.5, bgcolor: '#4f46e5', borderRadius: 2,
+                px: 6, py: 1.5, bgcolor: '#7d9b17', borderRadius: 2,
                 fontWeight: 600, textTransform: 'none', fontSize: '1rem',
+                minWidth: '180px', position: 'relative',
                 '&:hover': { bgcolor: '#4338ca' }
               }}
             >
-              {loadingProfile ? <CircularProgress size={24} color="inherit" /> : 'Save Changes'}
+              {loadingProfile && <CircularProgress size={24} color="inherit" sx={{ position: 'absolute', top: '50%', left: '50%', marginTop: '-12px', marginLeft: '-12px' }} />}
+              <span style={{ opacity: loadingProfile ? 0 : 1 }}>Save Changes</span>
             </Button>
           </Box>
 
@@ -350,14 +387,14 @@ export const EnterpriseProfileForm = () => {
       {/* Upload Image Modal */}
       <Modal open={uploadImg} onClose={handleUploadImgClose}>
         <Box sx={modalStyle}>
-          <Typography variant='h5' sx={{ textAlign: 'center', fontWeight: 700, color: '#4f46e5', pb: 3 }}>
+          <Typography variant='h5' sx={{ textAlign: 'center', fontWeight: 700, color: '#7d9b17', pb: 3 }}>
             Upload Profile Photo
           </Typography>
 
           <Box
             {...getRootProps({ className: 'dropzone' })}
             sx={{
-              border: '2px dashed #4f46e5', borderRadius: 2, p: 4,
+              border: '2px dashed #7d9b17', borderRadius: 2, p: 4,
               minHeight: files.length ? 250 : 150,
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               flexDirection: 'column', textAlign: 'center', cursor: 'pointer',
@@ -367,7 +404,7 @@ export const EnterpriseProfileForm = () => {
             <input {...getInputProps()} />
             {files.length ? img : (
               <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 1 }}>
-                <RiUpload2Fill size={40} color='#4f46e5' />
+                <RiUpload2Fill size={40} color='#7d9b17' />
                 <Typography variant='body1' color='text.secondary'>
                   Choose a file or drag and drop it here
                 </Typography>
@@ -380,10 +417,10 @@ export const EnterpriseProfileForm = () => {
           </Typography>
 
           <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2, pt: 3 }}>
-            <Button variant='outlined' onClick={handleUploadImgClose} disabled={loadingPhoto} sx={{ borderColor: '#4f46e5', color: '#4f46e5', textTransform: 'none' }}>
+            <Button variant='outlined' onClick={handleUploadImgClose} disabled={loadingPhoto} sx={{ borderColor: '#7d9b17', color: '#7d9b17', textTransform: 'none' }}>
               Cancel
             </Button>
-            <Button variant='contained' onClick={() => uploadFile(selectedFile)} disabled={loadingPhoto} sx={{ bgcolor: '#4f46e5', textTransform: 'none', '&:hover': { bgcolor: '#4338ca' } }}>
+            <Button variant='contained' onClick={() => setUploadImg(false)} disabled={loadingPhoto} sx={{ bgcolor: '#7d9b17', textTransform: 'none', '&:hover': { bgcolor: '#4338ca' } }}>
               {loadingPhoto ? <CircularProgress size={24} color="inherit" /> : 'Save Photo'}
             </Button>
           </Box>

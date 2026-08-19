@@ -89,7 +89,7 @@ export const CourseViewer = () => {
   if (isLoading) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '400px' }}>
-        <CircularProgress sx={{ color: '#4f46e5' }} size={60} thickness={4} />
+        <CircularProgress sx={{ color: '#7d9b17' }} size={60} thickness={4} />
       </Box>
     )
   }

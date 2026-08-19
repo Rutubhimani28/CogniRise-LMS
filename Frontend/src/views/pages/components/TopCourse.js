@@ -30,7 +30,7 @@ export default function TopCourse() {
   return (
     <div className='learnningTimeBox2'>
       <div style={{ minHeight: '295.57px' }}>
-        <h2 className='fw-bold pb-1 fs-3' style={{ color: '#4f46e5', fontSize: '20px' }}>
+        <h2 className='fw-bold pb-1 fs-3' style={{ color: '#7d9b17', fontSize: '20px' }}>
           Top Courses
         </h2>
         <div>

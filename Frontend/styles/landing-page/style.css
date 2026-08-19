@@ -263,10 +263,10 @@ footer.footer {
 .LoginBtn {
   background: transparent !important;
   /* background: #0000008c !important; */
-  border: 1px solid #f6c1c1 !important;
-  color: white !important;
+  border: 1px solid black !important;
+  color: black !important;
   /* background-color: #396EFE !important; */
-  border: 1px solid white !important;
+  border: 1px solid black !important;
   border-radius: 6px;
 }
 
@@ -284,7 +284,7 @@ footer.footer {
 }
 
 .beforeLoginbtn:hover {
-  background: #7c9b177f !important;
+  background: transparent !important;
   color: black !important;
 }
 
@@ -294,7 +294,7 @@ footer.footer {
 }
 
 .beforeLoginbtn:focus {
-  background: #7c9b177f !important;
+  background: transparent !important;
   color: black !important;
 }
 
@@ -358,7 +358,7 @@ footer.footer {
 }
 
 .joinBtn:hover {
-  background-color: #7c9b177f !important;
+  background-color: rgba(79, 70, 229, 0.1) !important;
   border: none;
 }
 
@@ -602,7 +602,7 @@ footer.footer {
   font-weight: 700;
   font-size: 40px;
   line-height: 48px;
-  color: #4f46e5 !important;
+  color: black !important;
   text-shadow:
     0px 4px 20px rgba(89, 112, 17, 0.25),
     0px 0px 50px rgba(79, 70, 229, 0.4);
@@ -785,7 +785,7 @@ footer.footer {
 }
 
 .shapinImgRound {
-  border: 1px solid #4f46e5;
+  border: 1px solid black;
   /* // padding: 25px; */
   width: 122px;
   height: 122px;
@@ -1086,7 +1086,7 @@ footer.footer {
 }
 
 .socialIcon:hover {
-  color: #4f46e5;
+  color: black;
   transform: scale(1.2) translateY(-5px);
   text-shadow: 0 5px 15px rgba(177, 166, 247, 0.4);
 }
@@ -1125,7 +1125,7 @@ footer.footer {
   top: 1270.64px;
   background: linear-gradient(173.66deg,
       rgba(79, 70, 229, 0) -3.84%,
-      #4f46e5 23.34%,
+      #7d9b17 23.34%,
       #a1b738 50%,
       rgba(79, 70, 229, 0) 80.47%);
   /* background: linear-gradient(173.66deg, rgba(0, 9, 15, 0) -3.84%, #a4a5c1 23.34%, rgba(255, 255, 255, 0) 80.47%); */

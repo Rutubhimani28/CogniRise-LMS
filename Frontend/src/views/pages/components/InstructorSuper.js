@@ -19,7 +19,7 @@ export default function InstructorSuper() {
 
   return (
     <div className='learnningTimeBox '>
-      <h6 className='text-start' style={{ fontSize: '14px', color:'#4f46e5' }}>
+      <h6 className='text-start' style={{ fontSize: '14px', color: '#7d9b17' }}>
         Instructors
       </h6>
       <h4 className='text-black fw-bolder text-start'>{enterprise?.length}</h4>

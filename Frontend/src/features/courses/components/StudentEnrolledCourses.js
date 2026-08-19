@@ -281,7 +281,7 @@ export const StudentEnrolledCourses = () => {
                 onClick={() => {
                   toggle('1')
                 }}
-                style={{ cursor: 'pointer', border: 'none', borderBottom: active === '1' ? '2px solid #4f46e5' : 'none', color: active === '1' ? '#4f46e5' : '#555', fontWeight: 600, backgroundColor: 'transparent' }}
+                style={{ cursor: 'pointer', border: 'none', borderBottom: active === '1' ? '2px solid #7d9b17' : 'none', color: active === '1' ? '#7d9b17' : '#555', fontWeight: 600, backgroundColor: 'transparent' }}
               >
                 In Progress
               </NavLink>
@@ -292,7 +292,7 @@ export const StudentEnrolledCourses = () => {
                 onClick={() => {
                   toggle('2')
                 }}
-                style={{ cursor: 'pointer', border: 'none', borderBottom: active === '2' ? '2px solid #4f46e5' : 'none', color: active === '2' ? '#4f46e5' : '#555', fontWeight: 600, backgroundColor: 'transparent' }}
+                style={{ cursor: 'pointer', border: 'none', borderBottom: active === '2' ? '2px solid #7d9b17' : 'none', color: active === '2' ? '#7d9b17' : '#555', fontWeight: 600, backgroundColor: 'transparent' }}
               >
                 Completed
               </NavLink>
@@ -307,7 +307,7 @@ export const StudentEnrolledCourses = () => {
               item.status === 'Ongoing' ? (
                 <div key={i} className='row learnningTimeBox justify-content-between align-items-center py-3 my-3' style={{ backgroundColor: 'white', borderRadius: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
                   <div className='col-sm-12 col-md-6 col-lg-6 col-xl-3 my-2  d-flex'>
-                    <Avatar sx={{ bgcolor: '#4f46e5', mr: 2, width: 45, height: 45, fontWeight: 'bold', fontSize: '1.2rem' }}>
+                    <Avatar sx={{ bgcolor: '#7d9b17', mr: 2, width: 45, height: 45, fontWeight: 'bold', fontSize: '1.2rem' }}>
                       {item.course_title?.charAt(0)?.toUpperCase() || 'C'}
                     </Avatar>
                     <div>
@@ -338,7 +338,7 @@ export const StudentEnrolledCourses = () => {
                     ) : item.totalTask === 0 ? (
                       <span style={{ fontWeight: 600, color: '#f39c12' }}>No content yet</span>
                     ) : (
-                      <span style={{ fontWeight: 600, color: '#4f46e5' }}>Start Course</span>
+                      <span style={{ fontWeight: 600, color: '#7d9b17' }}>Start Course</span>
                     )}
                   </div>
                   <div className='col-1 ps-auto' style={{ float: 'right' }}>
@@ -474,7 +474,7 @@ export const StudentEnrolledCourses = () => {
               item.status === 'Completed' ? (
                 <div key={i} className='row learnningTimeBox justify-content-between align-items-center py-3 my-3' style={{ backgroundColor: 'white', borderRadius: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
                   <div className='col-sm-12 col-md-6 col-lg-6 col-xl-2 my-2  d-flex'>
-                    <Avatar sx={{ bgcolor: '#4f46e5', mr: 2, width: 45, height: 45, fontWeight: 'bold', fontSize: '1.2rem' }}>
+                    <Avatar sx={{ bgcolor: '#7d9b17', mr: 2, width: 45, height: 45, fontWeight: 'bold', fontSize: '1.2rem' }}>
                       {item.course_title?.charAt(0)?.toUpperCase() || 'C'}
                     </Avatar>
                     <div>

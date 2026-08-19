@@ -185,7 +185,7 @@ export default function ActiveStudents(props) {
       labels: {
         style: {
           fontSize: '14px',
-          color:"black",
+          color: "black",
           fontFamily: theme.typography.fontFamily
         }
       }
@@ -257,7 +257,7 @@ export default function ActiveStudents(props) {
       labels: {
         style: {
           fontSize: '14px',
-          color : "black",
+          color: "black",
           fontFamily: theme.typography.fontFamily
         }
       }
@@ -329,7 +329,7 @@ export default function ActiveStudents(props) {
       labels: {
         style: {
           fontSize: '14px',
-          color : "black",
+          color: "black",
           fontFamily: theme.typography.fontFamily
         }
       }
@@ -392,7 +392,7 @@ export default function ActiveStudents(props) {
           <TabPane tabId='1'>
             <h2
               style={{
-                color: '#4f46e5',
+                color: '#7d9b17',
                 fontWeight: '500',
                 fontSize: '34px',
                 paddingBottom: '18px',

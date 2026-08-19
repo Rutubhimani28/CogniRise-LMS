@@ -30,7 +30,7 @@ export default function LessoinDraft() {
           style={{
             // color: '#3A5BCD'
             // color:"#64748b"
-            color: " #4f46e5"
+            color: " #7d9b17"
           }}
         >
           Lesson Drafts
